@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scraapy_pro/screens/services/presenation/screens/service_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -35,14 +36,14 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            _buildProfileMenuItem(Icons.person_outline, 'معلومات الحساب'),
-            _buildProfileMenuItem(Icons.list_alt, 'قوائمي'),
-            _buildProfileMenuItem(Icons.sync_alt, 'العمليات'),
-            _buildProfileMenuItem(Icons.local_shipping_outlined, 'الخدمات اللوجستية'),
-            _buildProfileMenuItem(Icons.description_outlined, 'العقود والوثائق'),
-            _buildProfileMenuItem(Icons.search_outlined, 'الفحص والهدم'),
-            _buildProfileMenuItem(Icons.bar_chart_outlined, 'التقارير'),
-            _buildProfileMenuItem(Icons.settings_outlined, 'الإعدادات والقانونية'),
+            _buildProfileMenuItem(Icons.person_outline, 'معلومات الحساب',context),
+            _buildProfileMenuItem(Icons.list_alt, 'قوائمي',context),
+            _buildProfileMenuItem(Icons.sync_alt, 'العمليات',context),
+            _buildProfileMenuItem(Icons.local_shipping_outlined, 'الخدمات اللوجستية',context),
+            _buildProfileMenuItem(Icons.description_outlined, 'العقود والوثائق',context),
+            _buildProfileMenuItem(Icons.search_outlined, 'الفحص والهدم',context),
+            _buildProfileMenuItem(Icons.bar_chart_outlined, 'التقارير',context),
+            _buildProfileMenuItem(Icons.settings_outlined, 'الإعدادات والقانونية',context),
             const SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -66,7 +67,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileMenuItem(IconData icon, String title) {
+  Widget _buildProfileMenuItem(IconData icon, String title,BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
@@ -78,7 +79,13 @@ class ProfileScreen extends StatelessWidget {
         leading: Icon(icon, color: Colors.blue[900]),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-        onTap: () {},
+        onTap: () {
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const ServicesPage()),
+          );
+        },
       ),
     );
   }

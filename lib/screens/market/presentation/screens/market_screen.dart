@@ -1,63 +1,89 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scraapy_pro/screens/market/presentation/cubit/market_cubit.dart';
+import 'package:scraapy_pro/screens/market/presentation/cubit/market_state.dart';
+
+import '../../../../core/di/injection.dart';
 
 class MarketScreen extends StatelessWidget {
   const MarketScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text('السوق', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'البحث بالاسم / كود HS',
-                prefixIcon: const Icon(Icons.search),
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
+    return BlocProvider(
+      create: (_) => getIt<MarketCubit>()..getMarket(),
+
+      child: Scaffold(
+        backgroundColor: Colors.grey[50],
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: const Text('السوق', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+          centerTitle: true,
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'البحث بالاسم / كود HS',
+                  prefixIcon: const Icon(Icons.search),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 24),
-            const Text('الفئات', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            SizedBox(
-              height: 40,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  _buildCategoryChip('الكل', true),
-                  _buildCategoryChip('إلكترونيات / بطاريات', false),
-                  _buildCategoryChip('زجاج / مطاط', false),
-                  _buildCategoryChip('ورق', false),
-                  _buildCategoryChip('بلاستيك', false),
-                  _buildCategoryChip('خردة حديد', false),
-                  _buildCategoryChip('معادن', false),
-                ],
+              const SizedBox(height: 24),
+              const Text('الفئات', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              SizedBox(
+                height: 40,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    _buildCategoryChip('الكل', true),
+                    _buildCategoryChip('إلكترونيات / بطاريات', false),
+                    _buildCategoryChip('زجاج / مطاط', false),
+                    _buildCategoryChip('ورق', false),
+                    _buildCategoryChip('بلاستيك', false),
+                    _buildCategoryChip('خردة حديد', false),
+                    _buildCategoryChip('معادن', false),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 4,
-              itemBuilder: (context, index) {
-                return _buildProductCard();
-              },
-            ),
-          ],
+              const SizedBox(height: 24),
+
+              BlocBuilder<MarketCubit, MarketState>(
+                builder: (context, state) {
+                  if (state is MarketLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (state is MarketLoaded) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: 4,
+                      itemBuilder: (context, index) {
+                        return _buildProductCard();
+                      },
+                    );
+                  }
+
+                  if (state is MarketError) {
+                    return const Text('حدث خطأ');
+                  }
+
+                  return const SizedBox();
+                },
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../cubit/app_cubit.dart';
 import '../../cubit/app_state.dart';
 import '../home/home_screen.dart';
-import '../market/market_screen.dart';
+import '../market/presentation/screens/market_screen.dart';
 import '../quotes/quotes_screen.dart';
 import '../contracts/contracts_screen.dart';
 import '../profile/profile_screen.dart';
