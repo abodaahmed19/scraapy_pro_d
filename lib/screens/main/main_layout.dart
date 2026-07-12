@@ -30,36 +30,34 @@ class MainLayout extends StatelessWidget {
 
         return Scaffold(
           body: _screens[currentIndex],
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: currentIndex,
-            onTap: (index) {
-              context.read<AppCubit>().changeBottomNavBar(index);
-            },
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: Colors.blue,
-            unselectedItemColor: Colors.grey,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'الرئيسية',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.store),
-                label: 'السوق',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.request_quote),
-                label: 'طلب عرض سعر',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.description),
-                label: 'العقود',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'الحساب الشخصي',
-              ),
-            ],
+          bottomNavigationBar: Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, -5),
+                ),
+              ],
+            ),
+            child: BottomNavigationBar(
+              currentIndex: currentIndex,
+              onTap: (index) {
+                context.read<AppCubit>().changeBottomNavBar(index);
+              },
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              selectedItemColor: Theme.of(context).colorScheme.primary,
+              unselectedItemColor: Colors.grey,
+              elevation: 0,
+              items: const [
+                BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'الصفحة الرئيسية'),
+                BottomNavigationBarItem(icon: Icon(Icons.insights_outlined), activeIcon: Icon(Icons.insights), label: 'السوق'),
+                BottomNavigationBarItem(icon: Icon(Icons.local_offer_outlined), activeIcon: Icon(Icons.local_offer), label: 'طلب عرض سعر'),
+                BottomNavigationBarItem(icon: Icon(Icons.edit_document), activeIcon: Icon(Icons.edit_document), label: 'العقود'),
+                BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'الحساب الشخصي'),
+              ],
+            ),
           ),
         );
       },

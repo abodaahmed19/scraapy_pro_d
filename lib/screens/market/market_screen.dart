@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/responsive_layout.dart';
 
 class MarketScreen extends StatelessWidget {
   const MarketScreen({super.key});
@@ -6,125 +7,163 @@ class MarketScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text('السوق', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-        centerTitle: true,
+        title: const Text('الخدمات'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'البحث بالاسم / كود HS',
-                prefixIcon: const Icon(Icons.search),
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Text('الفئات', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            SizedBox(
-              height: 40,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  _buildCategoryChip('الكل', true),
-                  _buildCategoryChip('إلكترونيات / بطاريات', false),
-                  _buildCategoryChip('زجاج / مطاط', false),
-                  _buildCategoryChip('ورق', false),
-                  _buildCategoryChip('بلاستيك', false),
-                  _buildCategoryChip('خردة حديد', false),
-                  _buildCategoryChip('معادن', false),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 4,
-              itemBuilder: (context, index) {
-                return _buildProductCard();
-              },
-            ),
-          ],
+      body: ResponsiveLayout(
+        child: ListView.builder(
+          padding: const EdgeInsets.all(16.0),
+          itemCount: 4,
+          itemBuilder: (context, index) {
+            return _buildProductCard(context);
+          },
         ),
       ),
     );
   }
 
-  Widget _buildCategoryChip(String label, bool isSelected) {
+  Widget _buildProductCard(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: isSelected ? Colors.blue[900] : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: isSelected ? Colors.blue[900]! : Colors.grey[300]!),
-      ),
-      child: Center(
-        child: Text(
-          label,
-          style: TextStyle(color: isSelected ? Colors.white : Colors.black),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProductCard() {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: 24),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[200]!),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 4))
+        ],
       ),
-      child: Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
           Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(8),
+            height: 180,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: Color(0xFF82DADB),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+              image: DecorationImage(
+                image: NetworkImage('https://images.unsplash.com/photo-1581092160562-40aa08e78837?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'),
+                fit: BoxFit.cover,
+              )
             ),
-            child: const Icon(Icons.image, color: Colors.grey),
+            child: Stack(
+              children: [
+
+                Positioned(
+                  top: 12,
+                  right: 12,
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF02D58E),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Icon(Icons.list, color: Colors.white, size: 20),
+                  ),
+                ),
+
+                Positioned(
+                  top: 20,
+                  left: -10,
+                  child: Transform.rotate(
+                    angle: -0.2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                          color: Colors.red,
+                          child: const Text('الموديل\nSF-X30KG', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                        ),
+                        const SizedBox(height: 4),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                          color: Colors.red,
+                          child: const Text('السعر\n4500 دولار', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
-          const SizedBox(width: 16),
-          Expanded(
+          
+
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('اسم المنتج', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                const SizedBox(height: 4),
-                const Text('اسم التاجر | الرياض', style: TextStyle(color: Colors.grey, fontSize: 12)),
-                const SizedBox(height: 8),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('1500 ر.س', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                        minimumSize: const Size(60, 30),
-                      ),
-                      child: const Text('عرض', style: TextStyle(fontSize: 12)),
-                    )
+                    const Text('فك نقل وعفش', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Row(
+                      children: [
+                        Text('1500', style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20, fontWeight: FontWeight.bold)),
+                        const SizedBox(width: 4),
+                        Text('ر.س', style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 14, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
                   ],
                 ),
+                const SizedBox(height: 12),
+                
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Text('28 الكمية المتوفرة', style: TextStyle(color: Colors.grey, fontSize: 14)),
+                    const SizedBox(width: 8),
+                    Icon(Icons.inventory_2_outlined, color: Colors.grey[600], size: 18),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                
+
+                Row(
+                  children: [
+
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.remove, size: 16),
+                            onPressed: () {},
+                            constraints: const BoxConstraints(),
+                            padding: const EdgeInsets.all(8),
+                          ),
+                          const Text('1', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                          IconButton(
+                            icon: const Icon(Icons.add, size: 16),
+                            onPressed: () {},
+                            constraints: const BoxConstraints(),
+                            padding: const EdgeInsets.all(8),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        child: const Text('إضافة عرض سعر', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           )
