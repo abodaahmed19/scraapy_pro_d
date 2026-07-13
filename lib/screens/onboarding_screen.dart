@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scraapy_pro/core/di/injection.dart';
+import 'package:scraapy_pro/screens/home/presentation/cubit/service_cubit.dart';
 import '../../widgets/responsive_layout.dart';
 import 'main/main_layout.dart';
 
@@ -38,9 +41,18 @@ class OnboardingScreen extends StatelessWidget {
                   children: [
                     TextButton(
                       onPressed: () {
+                        // Navigator.pushReplacement(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) => const MainLayout()),
+                        // );
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => const MainLayout()),
+                          MaterialPageRoute(
+                            builder: (_) => BlocProvider(
+                              create: (_) => getIt<ServicesCubit>()..getServices('service'),
+                              child: const MainLayout(),
+                            ),
+                          ),
                         );
                       },
                       child: Text('تخطي', style: TextStyle(color: Theme.of(context).colorScheme.secondary)),

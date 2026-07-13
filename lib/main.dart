@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scraapy_pro/core/di/injection.dart';
 import 'cubit/app_cubit.dart';
 import 'cubit/theme_cubit.dart';
 import 'screens/splash_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  setup();
   runApp(const ScraapyProApp());
 }
 

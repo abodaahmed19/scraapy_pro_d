@@ -1,23 +1,48 @@
 import 'package:flutter/material.dart';
-import '../../widgets/responsive_layout.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scraapy_pro/core/di/injection.dart';
+import 'package:scraapy_pro/screens/market/presentation/cubit/market_cubit.dart';
+import 'package:scraapy_pro/screens/market/presentation/cubit/market_state.dart';
+import '../../../../widgets/responsive_layout.dart';
 
 class MarketScreen extends StatelessWidget {
   const MarketScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('الخدمات'),
-      ),
-      body: ResponsiveLayout(
-        child: ListView.builder(
-          padding: const EdgeInsets.all(16.0),
-          itemCount: 4,
-          itemBuilder: (context, index) {
-            return _buildProductCard(context);
-          },
+    return BlocProvider(
+      create: (_)=> getIt<MarketCubit>()..getMarket(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('الخدمات'),
         ),
+        body: BlocBuilder<MarketCubit, MarketState>(
+          builder: (context, state) {
+            if (state is MarketLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (state is MarketLoaded) {
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  // physics: const NeverScrollableScrollPhysics(),
+                  itemCount: 4,
+                  itemBuilder: (context, index) {
+                    return _buildProductCard(context);
+                  },
+                ),
+              );
+            }
+
+            if (state is MarketError) {
+              return const Text('حدث خطأ');
+            }
+
+            return const SizedBox();
+          },
+        )
       ),
     );
   }

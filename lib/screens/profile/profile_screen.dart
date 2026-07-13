@@ -4,7 +4,7 @@ import '../address/add_address_screen.dart';
 import '../checkout/checkout_screen.dart';
 import '../inspection/inspection_request_screen.dart';
 import '../notifications/notifications_screen.dart';
-import '../favorites/favorites_screen.dart';
+import '../favorites/presentation/screens/favorites_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});

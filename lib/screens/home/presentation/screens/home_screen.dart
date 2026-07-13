@@ -1,12 +1,40 @@
 import 'package:flutter/material.dart';
-import '../../widgets/responsive_layout.dart';
-import '../notifications/notifications_screen.dart';
-import '../favorites/favorites_screen.dart';
-import '../checkout/checkout_screen.dart';
-import '../inspection/inspection_request_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scraapy_pro/core/di/injection.dart';
+import 'package:scraapy_pro/screens/home/presentation/cubit/service_cubit.dart';
+import 'package:scraapy_pro/screens/home/presentation/cubit/service_state.dart';
+import '../../../../widgets/responsive_layout.dart';
+import '../../../notifications/notifications_screen.dart';
+import '../../../favorites/presentation/screens/favorites_screen.dart';
+import '../../../checkout/checkout_screen.dart';
+import '../../../inspection/inspection_request_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  final ScrollController controller = ScrollController();
+  final String typeSelect = 'service';
+
+  @override
+  void initState() {
+    super.initState();
+
+    getIt<ServicesCubit>()..getServices('service');
+
+    controller.addListener(() {
+      if (controller.position.pixels >=
+          controller.position.maxScrollExtent - 200) {
+        context.read<ServicesCubit>().loadMore(typeSelect);
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +224,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             const Text('اسعار البورصة', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             TextButton(
-              onPressed: () {}, 
+              onPressed: () {},
               child: Text('عرض الكل', style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 14)),
             ),
           ],
@@ -259,11 +287,23 @@ class HomeScreen extends StatelessWidget {
         const SizedBox(height: 16),
         Row(
           children: [
-            Expanded(child: _buildTabButton(context, 'المنتجات', true)),
+            Expanded(child: InkWell(
+                onTap: (){
+                  context.read<ServicesCubit>().getServices('service');
+                },
+                child: _buildTabButton(context, ' الخدمات', true))),
             const SizedBox(width: 8),
-            Expanded(child: _buildTabButton(context, 'الخدمات', false)),
+            Expanded(child: InkWell(
+                onTap: (){
+                  context.read<ServicesCubit>().getServices('service');
+                },
+                child: _buildTabButton(context, 'المنتجات', false))),
             const SizedBox(width: 8),
-            Expanded(child: _buildTabButton(context, 'تأجير المعدات', false)),
+            Expanded(child: InkWell(
+                onTap: (){
+                  context.read<ServicesCubit>().getServices('rental');
+                },
+                child: _buildTabButton(context, 'تأجير المعدات', false))),
           ],
         ),
         const SizedBox(height: 20),
@@ -279,6 +319,54 @@ class HomeScreen extends StatelessWidget {
             _buildFeaturedItem(context, 'سكراب الحديد', 'تداول وبيع وشراء سكراب الحديد بمختلف أنواعه'),
           ],
         ),
+
+
+        ///////////
+        BlocBuilder<ServicesCubit, ServiceState>(
+            builder: (context,state){
+              if(state.status == ServicesStatus.loading){
+                return  const Center(child: CircularProgressIndicator());
+              }
+              if (state.status == ServicesStatus.error) {
+                return Center(child: Text(state.error ?? 'Error'));
+              }
+              final items = state.items;
+
+              return GridView.builder(
+                controller: controller,
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(16),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  childAspectRatio: 0.85,
+                ),
+                itemCount: items.length +
+                    (state.status == ServicesStatus.loadingMore ? 1 : 0),
+                itemBuilder: (context, index) {
+                  /// 🔥 loader item (آخر عنصر)
+                  if (index >= items.length) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  final item = items[index];
+
+                  return _buildFeaturedItem(
+                    context,
+                    item.name ?? '',
+                    item.city ?? '',
+
+                  );
+                },
+              );
+
+
+            }
+        )
+        ///////////
       ],
     );
   }

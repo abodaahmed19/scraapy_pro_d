@@ -1,29 +1,63 @@
 import 'package:flutter/material.dart';
-import '../../widgets/responsive_layout.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scraapy_pro/core/di/injection.dart';
+import 'package:scraapy_pro/screens/favorites/domain/entities/favorite_item_entity.dart';
+import 'package:scraapy_pro/screens/favorites/presentation/cubit/favorite_cubit.dart';
+import 'package:scraapy_pro/screens/favorites/presentation/cubit/favorite_state.dart';
+import '../../../../widgets/responsive_layout.dart';
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('المفضلة'),
-        centerTitle: true,
-      ),
-      body: ResponsiveLayout(
-        child: ListView.builder(
-          padding: const EdgeInsets.all(16.0),
-          itemCount: 3,
-          itemBuilder: (context, index) {
-            return _buildFavoriteCard(context);
-          },
+    return BlocProvider(
+      create: (_)=> getIt<FavoriteCubit>()..getFavorites(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('المفضلة'),
+          centerTitle: true,
+        ),
+        body: ResponsiveLayout(
+          child:
+
+          BlocBuilder<FavoriteCubit, FavoriteState>(
+            builder: (context, state) {
+              if (state is FavoriteLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (state is FavoriteLoaded) {
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child:
+
+                  ListView.builder(
+                    padding: const EdgeInsets.all(16.0),
+                    itemCount: state.favorites.length,
+                    itemBuilder: (context, index) {
+                      return _buildFavoriteCard(context,state.favorites[index]);
+                    },
+                  ),
+
+                );
+              }
+
+              if (state is FavoriteError) {
+                return const Text('حدث خطأ');
+              }
+
+              return const SizedBox();
+            },
+          )
+
+
         ),
       ),
     );
   }
 
-  Widget _buildFavoriteCard(BuildContext context) {
+  Widget _buildFavoriteCard(BuildContext context,FavoriteItemModel item) {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       shape: RoundedRectangleBorder(
@@ -67,13 +101,13 @@ class FavoritesScreen extends StatelessWidget {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children:  [
                     Text(
-                      'فك نقل وعفش',
+                      '${item.name}',
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, fontFamily: 'Cairo'),
                     ),
                     Text(
-                      '1500 ﷼',
+                      '﷼'+'${item.price}',
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF234777)),
                     ),
                   ],
