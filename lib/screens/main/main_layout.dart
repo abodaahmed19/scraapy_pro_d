@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scraapy_pro/screens/home/presentation/screens/home_screen.dart';
 import '../../cubit/app_cubit.dart';
 import '../../cubit/app_state.dart';
-import '../home/presentation/screens/home_screen.dart';
 import '../market/presentation/screens/market_screen.dart';
 import '../quotes/quotes_screen.dart';
 import '../contracts/contracts_screen.dart';

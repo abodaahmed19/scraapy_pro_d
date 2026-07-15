@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scraapy_pro/core/di/injection.dart';
+import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
+import 'package:scraapy_pro/screens/home/presentation/screens/home_screen.dart';
+import 'package:scraapy_pro/screens/main/main_layout.dart';
 import 'package:scraapy_pro/screens/market/presentation/cubit/market_cubit.dart';
 import 'package:scraapy_pro/screens/market/presentation/cubit/market_state.dart';
 import '../../../../widgets/responsive_layout.dart';
@@ -12,37 +15,60 @@ class MarketScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_)=> getIt<MarketCubit>()..getMarket(),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('الخدمات'),
-        ),
-        body: BlocBuilder<MarketCubit, MarketState>(
-          builder: (context, state) {
-            if (state is MarketLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
+      child: WillPopScope(
+        onWillPop: () async => false, //
 
-            if (state is MarketLoaded) {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  // physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 4,
-                  itemBuilder: (context, index) {
-                    return _buildProductCard(context);
-                  },
+        child: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Scaffold(
+            // appBar: AppBar(
+            //   title: const Text('الخدمات'),
+            // ),
+            body: Column(
+              // shrinkWrap: true,
+              // physics: NeverScrollableScrollPhysics(),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: CustomAppBar(title: 'الخدمات',
+                  haveBack: false,
+                  ),
                 ),
-              );
-            }
 
-            if (state is MarketError) {
-              return const Text('حدث خطأ');
-            }
+                Expanded(
+                  child: BlocBuilder<MarketCubit, MarketState>(
+                    builder: (context, state) {
+                      if (state is MarketLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-            return const SizedBox();
-          },
-        )
+                      if (state is MarketLoaded) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.all(0),
+                            // physics: const NeverScrollableScrollPhysics(),
+                            itemCount: 4,
+                            itemBuilder: (context, index) {
+                              return _buildProductCard(context);
+                            },
+                          ),
+                        );
+                      }
+
+                      if (state is MarketError) {
+                        return const Text('حدث خطأ');
+                      }
+
+                      return const SizedBox();
+                    },
+                  ),
+                ),
+              ],
+            )
+          ),
+        ),
       ),
     );
   }
