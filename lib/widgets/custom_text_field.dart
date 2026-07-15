@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
-  final String label;
+  final String? label;
   final String hint;
   final bool isDropdown;
   final int maxLines;
@@ -9,7 +9,7 @@ class CustomTextField extends StatelessWidget {
 
   const CustomTextField({
     super.key,
-    required this.label,
+     this.label,
     required this.hint,
     this.isDropdown = false,
     this.maxLines = 1,
@@ -23,6 +23,7 @@ class CustomTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        label != null?
         RichText(
           text: TextSpan(
             text: label,
@@ -40,7 +41,7 @@ class CustomTextField extends StatelessWidget {
                 ),
             ],
           ),
-        ),
+        ):Container(),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(

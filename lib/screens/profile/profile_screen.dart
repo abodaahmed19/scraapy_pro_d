@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scraapy_pro/screens/profile/acount_info/presentation/screens/personal_account_screen.dart';
 import '../../widgets/responsive_layout.dart';
 import '../address/add_address_screen.dart';
 import '../checkout/checkout_screen.dart';
@@ -70,7 +71,7 @@ class ProfileScreen extends StatelessWidget {
                       _buildProfileMenuCard(
                         context,
                         [
-                          _buildProfileMenuItem(context, Icons.person_outline, 'معلومات الحساب'),
+                          _buildProfileMenuItem(context, Icons.person_outline, 'معلومات الحساب', destination: const PersonalAccountScreen()),
                           _buildProfileMenuItem(context, Icons.list_alt, 'قوائمي'),
                           _buildProfileMenuItem(context, Icons.location_on_outlined, 'إضافة عنوان (جديد)', destination: const AddAddressScreen()),
                           _buildProfileMenuItem(context, Icons.payment_outlined, 'الدفع (جديد)', destination: const CheckoutScreen()),
