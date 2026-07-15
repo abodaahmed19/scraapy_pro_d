@@ -9,11 +9,15 @@ import 'package:scraapy_pro/screens/favorites/presentation/cubit/favorite_cubit.
 import 'package:scraapy_pro/screens/home/data/service_data_source.dart';
 import 'package:scraapy_pro/screens/home/data/service_repositiry.dart';
 import 'package:scraapy_pro/screens/home/domain/service_use_case/service_use_case.dart';
-import 'package:scraapy_pro/screens/home/presentation/cubit/service_cubit.dart';
 import 'package:scraapy_pro/screens/market/data/data_source/market_data_source.dart';
 import 'package:scraapy_pro/screens/market/data/repositories/market_repository.dart';
 import 'package:scraapy_pro/screens/market/domain/use_cases/market_use_case.dart';
 import 'package:scraapy_pro/screens/market/presentation/cubit/market_cubit.dart';
+import 'package:scraapy_pro/screens/services/data/data_source/services_data_source.dart';
+import 'package:scraapy_pro/screens/services/data/repositories/services_repository.dart';
+import 'package:scraapy_pro/screens/services/domain/use_cases/services_use_case.dart';
+
+import '../../screens/services/presentation/cubit/services_cubit.dart';
 
 
 
@@ -86,21 +90,21 @@ void setup() {
 
 
   ///HOME///
-  getIt.registerLazySingleton<ServiceRemoteDataSource>(
-        () => ServiceRemoteDataSourceImpl(getIt()),
-  );
-  // Repository
-  getIt.registerLazySingleton<ServiceRepository>(
-        () => ServiceRepositoryImpl(getIt()),
-  );
-  // UseCase
-  getIt.registerLazySingleton(
-        () => GetServiceUseCase(getIt()),
-  );
-  // Cubit
-  getIt.registerFactory(
-        () => ServicesCubit(getIt()),
-  );
+  // getIt.registerLazySingleton<ServiceRemoteDataSource>(
+  //       () => ServiceRemoteDataSourceImpl(getIt()),
+  // );
+  // // Repository
+  // getIt.registerLazySingleton<ServiceRepository>(
+  //       () => ServiceRepositoryImpl(getIt()),
+  // );
+  // // UseCase
+  // getIt.registerLazySingleton(
+  //       () => GetServiceUseCase(getIt()),
+  // );
+  // // Cubit
+  // getIt.registerFactory(
+  //       () => ServicesCubit(getIt()),
+  // );
 
   ///MARKET///
   getIt.registerLazySingleton<MarketRemoteDataSource>(
@@ -119,6 +123,22 @@ void setup() {
         () => MarketCubit(getIt()),
   );
 
+  ///Services///
+  getIt.registerLazySingleton<ServicesRemoteDataSource>(
+        () => ServicesRemoteDataSourceImpl(getIt()),
+  );
+  // Repository
+  getIt.registerLazySingleton<ServicesRepository>(
+        () => ServicesRepositoryImpl(getIt()),
+  );
+  // UseCase
+  getIt.registerLazySingleton(
+        () => GetServicesUseCase(getIt()),
+  );
+  // Cubit
+  getIt.registerFactory(
+        () => ServicesCubit(getIt()),
+  );
   ///Favorite///
   getIt.registerLazySingleton<FavoriteRemoteDataSource>(
         () => FavoriteRemoteDataSourceImpl(getIt()),

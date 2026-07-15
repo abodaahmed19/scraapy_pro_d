@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scraapy_pro/core/di/injection.dart';
-import 'package:scraapy_pro/screens/home/presentation/cubit/service_cubit.dart';
-import 'package:scraapy_pro/screens/home/presentation/cubit/service_state.dart';
+import 'package:scraapy_pro/const/app_colors.dart';
+import 'package:scraapy_pro/screens/home/presentation/cubit/home_cubit.dart';
+import 'package:scraapy_pro/screens/home/presentation/cubit/home_state.dart';
+import 'package:scraapy_pro/screens/retals/presentation/screens/retals_screen.dart';
+import 'package:scraapy_pro/screens/services/presentation/screens/services_screen.dart';
+import 'package:scraapy_pro/screens/stock_market/presentation/screens/stock_market_screen.dart';
 import '../../../../widgets/responsive_layout.dart';
 import '../../../notifications/notifications_screen.dart';
 import '../../../favorites/presentation/screens/favorites_screen.dart';
@@ -25,38 +28,41 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    getIt<ServicesCubit>()..getServices('service');
-
-    controller.addListener(() {
-      if (controller.position.pixels >=
-          controller.position.maxScrollExtent - 200) {
-        context.read<ServicesCubit>().loadMore(typeSelect);
-      }
-    });
   }
+
 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: ResponsiveLayout(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader(context),
-                const SizedBox(height: 24),
-                _buildHeroBanner(context),
-                const SizedBox(height: 24),
-                _buildServicesRow(context),
-                const SizedBox(height: 32),
-                _buildBourseSection(context),
-                const SizedBox(height: 32),
-                _buildFeaturedServicesSection(context),
-              ],
-            ),
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        body: BlocProvider(
+          create: (context) => HomeCubit()..changeTab('service'),
+          child: Builder(
+            builder: (context) {
+              return SafeArea(
+                child: ResponsiveLayout(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildHeader(context),
+                        const SizedBox(height: 24),
+                        _buildHeroBanner(context),
+                        const SizedBox(height: 24),
+                        _buildServicesRow(context),
+                        const SizedBox(height: 32),
+                        _buildBourseSection(context),
+                        const SizedBox(height: 32),
+                        _buildFeaturedServicesSection(context),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
           ),
         ),
       ),
@@ -138,6 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.all(24.0),
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
+
         image: const DecorationImage(
           image: NetworkImage('https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'),
           fit: BoxFit.cover,
@@ -179,9 +186,21 @@ class _HomeScreenState extends State<HomeScreen> {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          _buildServiceCard(context, 'الخدمات', true),
-          _buildServiceCard(context, 'إيجار', true),
-          _buildServiceCard(context, 'البورصة', true),
+          _buildServiceCard(context, 'الخدمات', true,
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const ServicesScreen()));
+              }
+          ),
+          _buildServiceCard(context, 'إيجار', true,
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const RetalsScreen()));
+              }
+          ),
+          _buildServiceCard(context, 'البورصة', true,
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) =>  StockMarketScreen()));
+              }
+          ),
           _buildServiceCard(context, 'المانيفيست', true),
           _buildServiceCard(context, 'أذونات الاستيراد والتصدير', true),
           _buildServiceCard(context, 'طلبات الفحص والهدم', true, onTap: () {
@@ -199,7 +218,16 @@ class _HomeScreenState extends State<HomeScreen> {
         margin: const EdgeInsets.only(left: 12),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF189491) : Colors.white,
+          gradient: LinearGradient(
+            colors: [
+              AppColors.primary,
+              AppColors.terquaz,
+              // end color
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+          // color: isSelected ? const Color(0xFF189491) : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: isSelected ? null : Border.all(color: Colors.grey.withValues(alpha: 0.2)),
           boxShadow: isSelected ? [BoxShadow(color: const Color(0xFF189491).withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 4))] : [],
@@ -224,7 +252,11 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             const Text('اسعار البورصة', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) =>  StockMarketScreen()));
+
+
+              },
               child: Text('عرض الكل', style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 14)),
             ),
           ],
@@ -289,104 +321,95 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(child: InkWell(
                 onTap: (){
-                  context.read<ServicesCubit>().getServices('service');
+                  context.read<HomeCubit>().changeTab('service');
                 },
-                child: _buildTabButton(context, ' الخدمات', true))),
+                child: _buildTabButton(context, ' الخدمات','service' ))),
             const SizedBox(width: 8),
             Expanded(child: InkWell(
                 onTap: (){
-                  context.read<ServicesCubit>().getServices('service');
+                  context.read<HomeCubit>().changeTab('products');
                 },
-                child: _buildTabButton(context, 'المنتجات', false))),
+                child: _buildTabButton(context, 'المنتجات','products' ))),
             const SizedBox(width: 8),
             Expanded(child: InkWell(
                 onTap: (){
-                  context.read<ServicesCubit>().getServices('rental');
+                context.read<HomeCubit>().changeTab('rental');
                 },
-                child: _buildTabButton(context, 'تأجير المعدات', false))),
+                child: _buildTabButton(context, 'تأجير المعدات','rental' ))),
           ],
         ),
         const SizedBox(height: 20),
-        GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 16,
-          crossAxisSpacing: 16,
-          childAspectRatio: 0.85,
-          children: [
-            _buildFeaturedItem(context, 'سكراب الحديد', 'تداول وبيع وشراء سكراب الحديد بمختلف أنواعه'),
-            _buildFeaturedItem(context, 'سكراب الحديد', 'تداول وبيع وشراء سكراب الحديد بمختلف أنواعه'),
-          ],
-        ),
+        // GridView.count(
+        //   crossAxisCount: 2,
+        //   shrinkWrap: true,
+        //   physics: const NeverScrollableScrollPhysics(),
+        //   mainAxisSpacing: 16,
+        //   crossAxisSpacing: 16,
+        //   childAspectRatio: 0.85,
+        //   children: [
+        //     _buildFeaturedItem(context, 'سكراب الحديد', 'تداول وبيع وشراء سكراب الحديد بمختلف أنواعه'),
+        //     _buildFeaturedItem(context, 'سكراب الحديد', 'تداول وبيع وشراء سكراب الحديد بمختلف أنواعه'),
+        //   ],
+        // ),
 
+        BlocBuilder<HomeCubit, HomeState>(
+          builder: (context,state) {
+            return GridView.builder(
+              controller: controller,
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 0.85,
+              ),
+              itemCount: state.data.length,
+              itemBuilder: (context, index) {
+                return _buildFeaturedItem(
 
-        ///////////
-        BlocBuilder<ServicesCubit, ServiceState>(
-            builder: (context,state){
-              if(state.status == ServicesStatus.loading){
-                return  const Center(child: CircularProgressIndicator());
-              }
-              if (state.status == ServicesStatus.error) {
-                return Center(child: Text(state.error ?? 'Error'));
-              }
-              final items = state.items;
+                  context,
+                  state.data[index]['title'] ?? '',
+                  state.data[index]['description'] ?? '',
 
-              return GridView.builder(
-                controller: controller,
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(16),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: 0.85,
-                ),
-                itemCount: items.length +
-                    (state.status == ServicesStatus.loadingMore ? 1 : 0),
-                itemBuilder: (context, index) {
-                  /// 🔥 loader item (آخر عنصر)
-                  if (index >= items.length) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-
-                  final item = items[index];
-
-                  return _buildFeaturedItem(
-                    context,
-                    item.name ?? '',
-                    item.city ?? '',
-
-                  );
-                },
-              );
-
-
-            }
+                );
+              },
+            );
+          }
         )
+        ///////////
         ///////////
       ],
     );
   }
 
-  Widget _buildTabButton(BuildContext context, String title, bool isSelected) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      decoration: BoxDecoration(
-        color: isSelected ? Theme.of(context).primaryColor : Colors.grey.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        title,
-        style: TextStyle(
-          color: isSelected ? Colors.white : Theme.of(context).primaryColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 13,
-        ),
-      ),
+
+
+  Widget _buildTabButton(BuildContext context, String title,String selectedTile) {
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        final isSelected = state.selectedTab == selectedTile;
+        print(isSelected);
+        print(isSelected);
+        print(isSelected);
+
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: isSelected ? Theme.of(context).primaryColor : Colors.grey.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            title,
+            style: TextStyle(
+              color: isSelected ? Colors.white : Theme.of(context).primaryColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+            ),
+          ),
+        );
+      },
     );
   }
 
