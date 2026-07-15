@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/screens/home/presentation/cubit/home_cubit.dart';
 import 'package:scraapy_pro/screens/home/presentation/cubit/home_state.dart';
-import 'package:scraapy_pro/screens/retals/presentation/screens/retals_screen.dart';
+import 'package:scraapy_pro/screens/inspection_req/inspection_screen.dart';
+import 'package:scraapy_pro/screens/manifest/presentation/manifest_screen.dart';
+import 'package:scraapy_pro/screens/rentals/presentation/screens/retals_screen.dart';
 import 'package:scraapy_pro/screens/services/presentation/screens/services_screen.dart';
 import 'package:scraapy_pro/screens/stock_market/presentation/screens/stock_market_screen.dart';
 import '../../../../widgets/responsive_layout.dart';
@@ -34,35 +36,39 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        body: BlocProvider(
-          create: (context) => HomeCubit()..changeTab('service'),
-          child: Builder(
-            builder: (context) {
-              return SafeArea(
-                child: ResponsiveLayout(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildHeader(context),
-                        const SizedBox(height: 24),
-                        _buildHeroBanner(context),
-                        const SizedBox(height: 24),
-                        _buildServicesRow(context),
-                        const SizedBox(height: 32),
-                        _buildBourseSection(context),
-                        const SizedBox(height: 32),
-                        _buildFeaturedServicesSection(context),
-                      ],
+    return WillPopScope(
+      onWillPop: () async => false, //
+
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(
+          body: BlocProvider(
+            create: (context) => HomeCubit()..changeTab('service'),
+            child: Builder(
+              builder: (context) {
+                return SafeArea(
+                  child: ResponsiveLayout(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildHeader(context),
+                          const SizedBox(height: 24),
+                          _buildHeroBanner(context),
+                          const SizedBox(height: 24),
+                          _buildServicesRow(context),
+                          const SizedBox(height: 32),
+                          _buildBourseSection(context),
+                          const SizedBox(height: 32),
+                          _buildFeaturedServicesSection(context),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            }
+                );
+              }
+            ),
           ),
         ),
       ),
@@ -193,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           _buildServiceCard(context, 'إيجار', true,
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const RetalsScreen()));
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const RentalsScreen()));
               }
           ),
           _buildServiceCard(context, 'البورصة', true,
@@ -201,10 +207,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(context, MaterialPageRoute(builder: (_) =>  StockMarketScreen()));
               }
           ),
-          _buildServiceCard(context, 'المانيفيست', true),
+          _buildServiceCard(context, 'المانيفيست', true,onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const ManifestScreen()));
+
+          }),
           _buildServiceCard(context, 'أذونات الاستيراد والتصدير', true),
           _buildServiceCard(context, 'طلبات الفحص والهدم', true, onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const InspectionRequestScreen()));
+            // Navigator.push(context, MaterialPageRoute(builder: (_) => const InspectionRequestScreen()));
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const InspectionReqScreen()));
           }),
         ],
       ),

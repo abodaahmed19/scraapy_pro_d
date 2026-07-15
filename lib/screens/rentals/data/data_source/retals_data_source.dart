@@ -1,15 +1,15 @@
 import 'package:dio/dio.dart';
-import 'package:scraapy_pro/screens/retals/domain/entities/retals_item_entity.dart';
+import 'package:scraapy_pro/screens/rentals/domain/entities/retals_item_entity.dart';
 
 
-abstract class RetalsRemoteDataSource {
-  Future<List<RetalsItemEntity>> getRetals();
+abstract class RentalsRemoteDataSource {
+  Future<List<RentalsItemEntity>> getRetals();
 }
 
-class RetalsRemoteDataSourceImpl implements RetalsRemoteDataSource {
+class RentalsRemoteDataSourceImpl implements RentalsRemoteDataSource {
   final Dio dio;
 
-  RetalsRemoteDataSourceImpl(this.dio);
+  RentalsRemoteDataSourceImpl(this.dio);
 
   // @override
   // Future<List<ServiceEntity>> getServices() async {
@@ -21,7 +21,7 @@ class RetalsRemoteDataSourceImpl implements RetalsRemoteDataSource {
   // }
 
   @override
-  Future<List<RetalsItemEntity>> getRetals() async {
+  Future<List<RentalsItemEntity>> getRetals() async {
     await Future.delayed(const Duration(seconds: 1)); // simulate loading
 
     final mockResponse = [
@@ -42,8 +42,8 @@ class RetalsRemoteDataSourceImpl implements RetalsRemoteDataSource {
       },
     ];
 
-    return List<RetalsItemEntity>.from(
-      mockResponse.map((e) => RetalsItemEntity.fromJson(e)),
+    return List<RentalsItemEntity>.from(
+      mockResponse.map((e) => RentalsItemEntity.fromJson(e)),
     );
   }
 

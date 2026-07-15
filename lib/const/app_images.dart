@@ -22,5 +22,11 @@ class AppImages {
   static const String  splash = "$imagePath/splash.png";
   static const String  first_onboard = "$imagePath/first_onboarding.png";
   static const String  second_onboard = "$imagePath/sec_onboarding.png";
+  static const String  check1 = "$imagePath/check1.png";
+  static const String  check2 = "$imagePath/check2.png";
+  static const String  check3 = "$imagePath/check3.png";
+  static const String  m1 = "$imagePath/m1.svg";
+  static const String  m2 = "$imagePath/m2.svg";
+
 
 }

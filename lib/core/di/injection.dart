@@ -6,13 +6,16 @@ import 'package:scraapy_pro/screens/favorites/data/favorite_data_source/favorite
 import 'package:scraapy_pro/screens/favorites/data/repositories/favorite_repository.dart';
 import 'package:scraapy_pro/screens/favorites/domain/use_cases/favorite_use_case.dart';
 import 'package:scraapy_pro/screens/favorites/presentation/cubit/favorite_cubit.dart';
-import 'package:scraapy_pro/screens/home/data/service_data_source.dart';
-import 'package:scraapy_pro/screens/home/data/service_repositiry.dart';
-import 'package:scraapy_pro/screens/home/domain/service_use_case/service_use_case.dart';
+
 import 'package:scraapy_pro/screens/market/data/data_source/market_data_source.dart';
 import 'package:scraapy_pro/screens/market/data/repositories/market_repository.dart';
 import 'package:scraapy_pro/screens/market/domain/use_cases/market_use_case.dart';
 import 'package:scraapy_pro/screens/market/presentation/cubit/market_cubit.dart';
+import 'package:scraapy_pro/screens/rentals/data/data_source/retals_data_source.dart';
+import 'package:scraapy_pro/screens/rentals/data/repositories/retals_repository.dart';
+import 'package:scraapy_pro/screens/rentals/domain/use_cases/retals_use_case.dart';
+import 'package:scraapy_pro/screens/rentals/presentation/cubit/Retals_cubit.dart';
+
 import 'package:scraapy_pro/screens/services/data/data_source/services_data_source.dart';
 import 'package:scraapy_pro/screens/services/data/repositories/services_repository.dart';
 import 'package:scraapy_pro/screens/services/domain/use_cases/services_use_case.dart';
@@ -139,6 +142,24 @@ void setup() {
   getIt.registerFactory(
         () => ServicesCubit(getIt()),
   );
+
+  ///Rental///
+  getIt.registerLazySingleton<RentalsRemoteDataSource>(
+        () => RentalsRemoteDataSourceImpl(getIt()),
+  );
+  // Repository
+  getIt.registerLazySingleton<RentalsRepository>(
+        () => RentalsRepositoryImpl(getIt()),
+  );
+  // UseCase
+  getIt.registerLazySingleton(
+        () => GetRentalsUseCase(getIt()),
+  );
+  // Cubit
+  getIt.registerFactory(
+        () => RentalsCubit(getIt()),
+  );
+
   ///Favorite///
   getIt.registerLazySingleton<FavoriteRemoteDataSource>(
         () => FavoriteRemoteDataSourceImpl(getIt()),

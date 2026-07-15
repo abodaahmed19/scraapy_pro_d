@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scraapy_pro/const/app_colors.dart';
 
 class CustomAppBar extends StatelessWidget {
   final String title;
@@ -28,8 +29,8 @@ class CustomAppBar extends StatelessWidget {
               child: GestureDetector(
                 onTap: onBack ?? () => Navigator.pop(context),
                 child: Container(
-                  width: 38,
-                  height: 38,
+                  width: 36,
+                  height: 36,
                   decoration: BoxDecoration(
                     color:Color(0xFFE5E5E5),// you can change color
                     borderRadius: BorderRadius.circular(8), // rounded edges
@@ -48,6 +49,7 @@ class CustomAppBar extends StatelessWidget {
                 title,
                 style: const TextStyle(
                   fontSize: 18,
+                  color: AppColors.primary,
                   fontWeight: FontWeight.bold,
                 ),
               ),

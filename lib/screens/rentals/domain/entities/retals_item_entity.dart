@@ -1,4 +1,4 @@
-class RetalsItemEntity {
+class RentalsItemEntity {
   final int id;
   final String? name;
   final String? nameAr;
@@ -8,7 +8,7 @@ class RetalsItemEntity {
   final DateTime? created;
   final int? category;
 
-  RetalsItemEntity({
+  RentalsItemEntity({
     required this.id,
     required this.name,
      this.nameAr,
@@ -19,8 +19,8 @@ class RetalsItemEntity {
      this.category,
   });
 
-  factory RetalsItemEntity.fromJson(Map<String, dynamic> json) {
-    return RetalsItemEntity(
+  factory RentalsItemEntity.fromJson(Map<String, dynamic> json) {
+    return RentalsItemEntity(
       id: json['id'],
       name: json['name'],
       // nameAr: json['name_ar'],

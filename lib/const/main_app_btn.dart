@@ -28,8 +28,8 @@ class MainAppBtn extends StatelessWidget {
                 AppColors.terquaz,
                 // end color
               ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           borderRadius: BorderRadius.all(Radius.circular(8))
         ),

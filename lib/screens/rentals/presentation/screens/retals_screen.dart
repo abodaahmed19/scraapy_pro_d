@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
-import 'package:scraapy_pro/screens/market/presentation/cubit/market_cubit.dart';
-import 'package:scraapy_pro/screens/retals/presentation/cubit/Retals_cubit.dart';
-import 'package:scraapy_pro/screens/retals/presentation/cubit/Retals_state.dart';
+import 'package:scraapy_pro/screens/rentals/presentation/cubit/Retals_cubit.dart';
+import 'package:scraapy_pro/screens/rentals/presentation/cubit/Retals_state.dart';
 
-class RetalsScreen extends StatelessWidget {
-  const RetalsScreen({super.key});
+class RentalsScreen extends StatelessWidget {
+  const RentalsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_)=> getIt<MarketCubit>()..getMarket(),
+      create: (_)=> getIt<RentalsCubit>()..getRentals(),
       child: WillPopScope(
         onWillPop: () async => false, //
 
@@ -25,18 +24,18 @@ class RetalsScreen extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: CustomAppBar(title: 'الخدمات',
+                  child: CustomAppBar(title: 'إيجار',
                   ),
                 ),
 
                 Expanded(
-                  child: BlocBuilder<RetalsCubit, RetalsState>(
+                  child: BlocBuilder<RentalsCubit, RentalsState>(
                     builder: (context, state) {
-                      if (state is RetalsLoading) {
+                      if (state is RentalsLoading) {
                         return const Center(child: CircularProgressIndicator());
                       }
 
-                      if (state is RetalsLoaded) {
+                      if (state is RentalsLoaded) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: ListView.builder(
@@ -51,7 +50,7 @@ class RetalsScreen extends StatelessWidget {
                         );
                       }
 
-                      if (state is RetalsError) {
+                      if (state is RentalsError) {
                         return const Text('حدث خطأ');
                       }
 
