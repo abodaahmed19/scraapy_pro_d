@@ -7,11 +7,13 @@ class MainAppBtn extends StatelessWidget {
   final TextStyle? titleStyle;
   final Color? btnColor;
   final double? width;
+  final bool? haveGradient;
   final EdgeInsetsGeometry? padding;
+  final BoxBorder? border;
   final void Function()? onTap;
 
   const MainAppBtn({super.key, required this.title,
-     this.titleStyle,  this.btnColor, this.padding, this.width, this.onTap});
+     this.titleStyle,  this.btnColor, this.padding, this.width, this.onTap, this.haveGradient = true, this.border});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class MainAppBtn extends StatelessWidget {
         width: width,
         decoration: BoxDecoration(
           color:btnColor?? AppColors.primary,
-            gradient: LinearGradient(
+            gradient: haveGradient == true ?LinearGradient(
               colors: [
                 AppColors.primary,
                 AppColors.terquaz,
@@ -30,8 +32,9 @@ class MainAppBtn extends StatelessWidget {
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-            ),
-          borderRadius: BorderRadius.all(Radius.circular(8))
+            ):null,
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          border: border
         ),
         child: Padding(
           padding: padding??EdgeInsets.all(0),

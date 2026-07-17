@@ -27,6 +27,12 @@ class AppImages {
   static const String  check3 = "$imagePath/check3.png";
   static const String  m1 = "$imagePath/m1.svg";
   static const String  m2 = "$imagePath/m2.svg";
+  static const String  email = "$imagePath/email_icon.svg";
+  static const String  phone = "$imagePath/phone_icon.svg";
+  static const String  pin = "$imagePath/pin_icon.svg";
+  static const String  legalInfo = "$imagePath/legal_info.svg";
+  static const String  settingsIcon = "$imagePath/settings_icon.svg";
+  static const String  upload = "$imagePath/upload.svg";
 
 
 }

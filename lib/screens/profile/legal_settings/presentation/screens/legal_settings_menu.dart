@@ -7,27 +7,22 @@ import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/screens/branches_screen.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/screens/edit_personal_account.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/screens/wallet_screen.dart';
+import 'package:scraapy_pro/screens/profile/legal_settings/presentation/screens/legal_info_screen.dart';
 
-class AccountInfoScreen extends StatelessWidget {
-   AccountInfoScreen({super.key});
+class LegalSettingsMenu extends StatelessWidget {
+  LegalSettingsMenu({super.key});
 
   var menuItem = [
     {
-      "title":"الفروع",
-      "icon":"${AppImages.branches}",
-      "page":BranchesScreen()
-
-    },
-    {
-      "title":"العناوين المحفوظة",
-      "icon":"${AppImages.addresses}",
+      "title":"الإعدادات",
+      "icon":"${AppImages.settingsIcon}",
       "page":EditPersonalAccountScreen()
 
     },
     {
-      "title":"المحفظة",
-      "icon":"${AppImages.wallet}",
-      "page":WalletScreen()
+      "title":"المعلومات القانونية",
+      "icon":"${AppImages.legalInfo}",
+      "page":LegalInfoScreen()
 
     },
 
@@ -45,7 +40,7 @@ class AccountInfoScreen extends StatelessWidget {
           child: ListView(
             padding: EdgeInsets.all(0),
             children: [
-              CustomAppBar(title: 'معلومات الحساب',),
+              CustomAppBar(title: 'الإعدادات والقانونية',),
               // PersonalInfoWidget(),
 
               ListView.builder(

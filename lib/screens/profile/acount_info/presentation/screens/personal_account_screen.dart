@@ -6,6 +6,7 @@ import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/screens/account_info_screen.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/screens/edit_personal_account.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/widgets/baqa_widget.dart';
+import 'package:scraapy_pro/screens/profile/legal_settings/presentation/screens/legal_settings_menu.dart';
 
 class PersonalAccountScreen extends StatelessWidget {
   const PersonalAccountScreen({super.key});
@@ -19,6 +20,7 @@ class PersonalAccountScreen extends StatelessWidget {
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: ListView(
+            padding: EdgeInsets.all(0),
             children: [
               CustomAppBar(title: 'الحساب الشخصى',),
               PersonalInfoWidget(),
@@ -176,7 +178,7 @@ class AccountMenu extends StatelessWidget {
     {
       "title":"الإعدادات والقانونية",
       "icon":"${AppImages.menus}",
-      "page":AccountInfoScreen()
+      "page":LegalSettingsMenu()
 
     },
     {
@@ -185,24 +187,8 @@ class AccountMenu extends StatelessWidget {
       "page":AccountInfoScreen()
 
     },
-    {
-      "title":"الفحص والهدم",
-      "icon":"${AppImages.menus}",
-      "page":AccountInfoScreen()
 
-    },
-    {
-      "title":"الإعدادات والقانونية",
-      "icon":"${AppImages.menus}",
-      "page":AccountInfoScreen()
 
-    },
-    {
-      "title":"الإشتراكات",
-      "icon":"${AppImages.menus}",
-      "page":AccountInfoScreen()
-
-    },
   ];
 
   @override
