@@ -7,6 +7,8 @@ import 'package:scraapy_pro/const/main_app_btn.dart';
 import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/screens/inspection/inspection_request_screen.dart';
+import 'package:scraapy_pro/screens/manifest/presentation/danger_mainfest_form.dart';
+import 'package:scraapy_pro/screens/manifest/presentation/non_danger_mainfest_form.dart';
 import 'package:scraapy_pro/screens/rentals/presentation/cubit/Retals_cubit.dart';
 
 class ManifestScreen extends StatelessWidget {
@@ -32,10 +34,20 @@ class ManifestScreen extends StatelessWidget {
                       CustomAppBar(title: 'المانيفيست',
                       ),
 
-                      itemBlock(context, 'مانيفيست نقل الننفايات الخطرة', 'مواد ضارة تتطلب إجراءات خاصة لضمان نقلها والتخلص منها بشكل آمن.',
-                          AppImages.m1),
+                      itemBlock(context,
+
+                          'مانيفيست نقل الننفايات الخطرة', 'مواد ضارة تتطلب إجراءات خاصة لضمان نقلها والتخلص منها بشكل آمن.',
+                          AppImages.m1,(){
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const DangerMainfestForm()));
+
+                          }),
                       SizedBox(height: 16,),
-                      itemBlock(context, 'مانيفيست نقل النفايات غير الخطرة', 'مخلفات آمنة يمكن التعامل معها بطرق تقليدية دون مخاطر كبيرة.',AppImages.m2),
+                      itemBlock(context, 'مانيفيست نقل النفايات غير الخطرة', 'مخلفات آمنة يمكن التعامل معها بطرق تقليدية دون مخاطر كبيرة.',AppImages.m2,
+                              (){
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const NonDangerMainfestForm()));
+
+                          }
+                      ),
 
 
                     ],
@@ -48,7 +60,7 @@ class ManifestScreen extends StatelessWidget {
     );
   }
 
-  Widget itemBlock(BuildContext context,String title,String description,String img){
+  Widget itemBlock(BuildContext context,String title,String description,String img, Function()? onTap){
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
@@ -84,10 +96,7 @@ class ManifestScreen extends StatelessWidget {
             SizedBox(height: 10,),
             Text(description,style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16),),
             SizedBox(height: 16,),
-            MainAppBtn(title: 'إصدار المانيفيست',onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const InspectionRequestScreen()));
-
-            },)
+            MainAppBtn(title: 'إصدار المانيفيست',onTap: onTap,)
           ],
         ),
       ),

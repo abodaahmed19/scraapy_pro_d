@@ -15,7 +15,7 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24.0,top: 40),
+      padding: const EdgeInsets.only(bottom: 35.0,top: 50),
       child: Container(
         height: 60,
         // gray background
@@ -29,8 +29,8 @@ class CustomAppBar extends StatelessWidget {
               child: GestureDetector(
                 onTap: onBack ?? () => Navigator.pop(context),
                 child: Container(
-                  width: 36,
-                  height: 36,
+                  width: 34,
+                  height: 34,
                   decoration: BoxDecoration(
                     color:Color(0xFFE5E5E5),// you can change color
                     borderRadius: BorderRadius.circular(8), // rounded edges

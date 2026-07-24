@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scraapy_pro/screens/home/presentation/screens/home_screen.dart';
+import 'package:scraapy_pro/screens/profile/acount_info/presentation/screens/personal_account_screen.dart';
 import '../../cubit/app_cubit.dart';
 import '../../cubit/app_state.dart';
 import '../market/presentation/screens/market_screen.dart';
@@ -16,7 +17,8 @@ class MainLayout extends StatelessWidget {
     MarketScreen(),
     QuotesScreen(),
     ContractsScreen(),
-    ProfileScreen(),
+    // ProfileScreen(),
+    PersonalAccountScreen(),
   ];
 
   @override
