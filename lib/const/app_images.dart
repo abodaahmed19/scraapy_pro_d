@@ -33,6 +33,11 @@ class AppImages {
   static const String  legalInfo = "$imagePath/legal_info.svg";
   static const String  settingsIcon = "$imagePath/settings_icon.svg";
   static const String  upload = "$imagePath/upload.svg";
+  static const String  pdf = "$imagePath/pdf.svg";
+  static const String  download = "$imagePath/download.svg";
+  static const String  rii = "$imagePath/rii.png";
+  static const String  sellingProduct = "$imagePath/selling_product.svg";
+  static const String  rentalMenu = "$imagePath/rental_menu.svg";
 
 
 }

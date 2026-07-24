@@ -18,12 +18,12 @@ class AccountInfoScreen extends StatelessWidget {
       "page":BranchesScreen()
 
     },
-    {
-      "title":"العناوين المحفوظة",
-      "icon":"${AppImages.addresses}",
-      "page":EditPersonalAccountScreen()
-
-    },
+    // {
+    //   "title":"العناوين المحفوظة",
+    //   "icon":"${AppImages.addresses}",
+    //   "page":EditPersonalAccountScreen()
+    //
+    // },
     {
       "title":"المحفظة",
       "icon":"${AppImages.wallet}",
