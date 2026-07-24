@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import '../../widgets/responsive_layout.dart';
 
 class CheckoutScreen extends StatelessWidget {
@@ -8,51 +9,56 @@ class CheckoutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('الدفع'),
-        centerTitle: true,
-      ),
-      body: ResponsiveLayout(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildSectionHeader('تفاصيل الشحن', isDark),
-              _buildShippingDetailsCard(context),
-              const SizedBox(height: 16),
-              
-              _buildSectionHeader('العناوين المحفوظة', isDark),
-              _buildSavedAddressesCard(context),
-              const SizedBox(height: 16),
-              
-              _buildSectionHeader('سلة التسوق', isDark),
-              _buildShoppingCartCard(context),
-              const SizedBox(height: 16),
-              
-              _buildSectionHeader('طريقة الدفع', isDark),
-              _buildPaymentMethodCard(context),
-              const SizedBox(height: 16),
-              
-              _buildSectionHeader('التفاصيل المالية', isDark),
-              _buildFinancialDetailsCard(context),
-              const SizedBox(height: 24),
-              
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: const Color(0xFF189491), // Specific Teal color from Figma
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        // appBar: AppBar(
+        //   title: const Text('الدفع'),
+        //   centerTitle: true,
+        // ),
+        body: ResponsiveLayout(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                CustomAppBar(title: 'الدفع'),
+                _buildSectionHeader('تفاصيل الشحن', isDark),
+                _buildShippingDetailsCard(context),
+                const SizedBox(height: 16),
+
+                _buildSectionHeader('العناوين المحفوظة', isDark),
+                _buildSavedAddressesCard(context),
+                const SizedBox(height: 16),
+
+                _buildSectionHeader('سلة التسوق', isDark),
+                _buildShoppingCartCard(context),
+                const SizedBox(height: 16),
+
+                _buildSectionHeader('طريقة الدفع', isDark),
+                _buildPaymentMethodCard(context),
+                const SizedBox(height: 16),
+
+                _buildSectionHeader('التفاصيل المالية', isDark),
+                _buildFinancialDetailsCard(context),
+                const SizedBox(height: 24),
+
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: const Color(0xFF189491), // Specific Teal color from Figma
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
+                  child: const Text('إتمام الدفع', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
-                child: const Text('إتمام الدفع', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(height: 24),
-            ],
+                const SizedBox(height: 24),
+              ],
+            ),
           ),
         ),
       ),
