@@ -3,57 +3,79 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/app_images.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
+import 'package:scraapy_pro/screens/checkout/checkout_screen.dart';
+import 'package:scraapy_pro/screens/favorites/presentation/screens/favorites_screen.dart';
+import 'package:scraapy_pro/screens/inspection/inspection_request_screen.dart';
+import 'package:scraapy_pro/screens/notifications/notifications_screen.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/screens/account_info_screen.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/screens/edit_personal_account.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/widgets/baqa_widget.dart';
 import 'package:scraapy_pro/screens/profile/legal_settings/presentation/screens/legal_settings_menu.dart';
+import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/my_menu_tap_screen.dart';
+import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/operations/operations_menu.dart';
+
+import '../../../../address/add_address_screen.dart';
 
 class PersonalAccountScreen extends StatelessWidget {
   const PersonalAccountScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: Color(0xFFF9F9F9),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: ListView(
-            padding: EdgeInsets.all(0),
-            children: [
-              CustomAppBar(title: 'الحساب الشخصى',),
-              PersonalInfoWidget(),
-              SizedBox(height: 16,),
-              BaqaWidget(),
-              SizedBox(height: 12,),
-              AccountMenu(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
+    return WillPopScope(
+      onWillPop: () async => false, //
 
-                  Container(
-                      width: 38,
-                      height: 38,
-                      decoration: BoxDecoration(
-                        color:Color(0x14FF0000) ,// you can change color
-                        borderRadius: BorderRadius.circular(8), // rounded edges
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SvgPicture.asset(AppImages.remove,width: 20,height: 20,),
-                      )
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(
+          backgroundColor: Color(0xFFF9F9F9),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              // padding: EdgeInsets.all(0),
+              children: [
+                CustomAppBar(title: 'الحساب الشخصى',haveBack: false,),
+                PersonalInfoWidget(),
+                SizedBox(height: 16,),
+                BaqaWidget(),
+                SizedBox(height: 12,),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+
+                        AccountMenu(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+
+                            Container(
+                                width: 38,
+                                height: 38,
+                                decoration: BoxDecoration(
+                                  color:Color(0x14FF0000) ,// you can change color
+                                  borderRadius: BorderRadius.circular(8), // rounded edges
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SvgPicture.asset(AppImages.remove,width: 20,height: 20,),
+                                )
+                            ),
+                            SizedBox(width: 14,),
+                            Text('حذف الحساب',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16,
+                                color:Color(0xFFF70000) )),
+
+                          ],
+                        ),
+                        SizedBox(height: 24,)
+                      ],
+                    ),
                   ),
-                  SizedBox(width: 14,),
-                  Text('حذف الحساب',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16,
-                      color:Color(0xFFF70000) )),
-
-                ],
-              ),
-              SizedBox(height: 24,)
+                )
 
 
-            ],
+
+              ],
+            ),
           ),
         ),
       ),
@@ -105,7 +127,7 @@ class PersonalInfoWidget extends StatelessWidget {
 
             InkWell(
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const EditPersonalAccountScreen()));
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const EditPersonalAccountScreen(title: 'تعديل الملف الشخصي',)));
 
               },
               child: Container(
@@ -142,27 +164,51 @@ class AccountMenu extends StatelessWidget {
     {
       "title":"قوائمي",
       "icon":"${AppImages.menus}",
-      "page":AccountInfoScreen()
+      "page":MyMenuTapScreen()
+
+    },
+    {
+      "title":"إضافة عنوان (جديد)",
+      "icon":"${AppImages.menus}",
+      "page":AddAddressScreen()
+
+    },
+    {
+      "title":'الدفع (جديد)',
+      "icon":"${AppImages.menus}",
+      "page":CheckoutScreen()
+
+    },
+    {
+      "title":'المفضلة (جديد)',
+      "icon":"${AppImages.menus}",
+      "page":FavoritesScreen()
+
+    },
+    {
+      "title":'الإشعارات (جديد)',
+      "icon":"${AppImages.menus}",
+      "page":NotificationsScreen()
 
     },
     {
       "title":"العمليات",
       "icon":"${AppImages.menus}",
-      "page":AccountInfoScreen()
+      "page":OperationsMenu()
 
     },
-    {
-      "title":"الخدمات اللوجستية",
-      "icon":"${AppImages.menus}",
-      "page":AccountInfoScreen()
-
-    },
-    {
-      "title":"العقود والوثائق",
-      "icon":"${AppImages.menus}",
-      "page":AccountInfoScreen()
-
-    },
+    // {
+    //   "title":"الخدمات اللوجستية",
+    //   "icon":"${AppImages.menus}",
+    //   "page":AccountInfoScreen()
+    //
+    // },
+    // {
+    //   "title":"العقود والوثائق",
+    //   "icon":"${AppImages.menus}",
+    //   "page":AccountInfoScreen()
+    //
+    // },
     {
       "title":"التقارير",
       "icon":"${AppImages.menus}",
@@ -172,21 +218,27 @@ class AccountMenu extends StatelessWidget {
     {
       "title":"الفحص والهدم",
       "icon":"${AppImages.menus}",
-      "page":AccountInfoScreen()
+      "page":InspectionRequestScreen()
 
     },
+    // {
+    //   "title":"الفحص والهدم",
+    //   "icon":"${AppImages.menus}",
+    //   "page":AccountInfoScreen()
+    //
+    // },
     {
       "title":"الإعدادات والقانونية",
       "icon":"${AppImages.menus}",
       "page":LegalSettingsMenu()
 
     },
-    {
-      "title":"الإشتراكات",
-      "icon":"${AppImages.menus}",
-      "page":AccountInfoScreen()
-
-    },
+    // {
+    //   "title":"الإشتراكات",
+    //   "icon":"${AppImages.menus}",
+    //   "page":AccountInfoScreen()
+    //
+    // },
 
 
   ];

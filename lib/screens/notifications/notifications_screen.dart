@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import '../../widgets/responsive_layout.dart';
 
 class NotificationsScreen extends StatelessWidget {
@@ -6,17 +7,19 @@ class NotificationsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('الإشعارات'),
-        centerTitle: true,
-      ),
-      body: ResponsiveLayout(
-        child: SingleChildScrollView(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        // appBar: AppBar(
+        //   title: const Text('الإشعارات'),
+        //   centerTitle: true,
+        // ),
+        body: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              CustomAppBar(title: 'الإشعارات'),
               _buildSectionHeader('اليوم'),
               const SizedBox(height: 8),
               _buildNotificationCard('حاوية فرز نفايات مكتبية 4x', 'Status changed to reviewing'),
