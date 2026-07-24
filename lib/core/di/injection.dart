@@ -21,6 +21,7 @@ import 'package:scraapy_pro/screens/services/data/repositories/services_reposito
 import 'package:scraapy_pro/screens/services/domain/use_cases/services_use_case.dart';
 
 import '../../screens/services/presentation/cubit/services_cubit.dart';
+import 'package:scraapy_pro/screens/profile/acount_info/presentation/cubit/edit_profile_cubit.dart';
 
 
 
@@ -177,6 +178,11 @@ void setup() {
         () => FavoriteCubit(getIt()),
   );
 
+  ///EditProfile///
+  // Cubit
+  getIt.registerFactory(
+        () => EditProfileCubit(),
+  );
 
 
 

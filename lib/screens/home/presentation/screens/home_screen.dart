@@ -5,6 +5,7 @@ import 'package:scraapy_pro/screens/home/presentation/cubit/home_cubit.dart';
 import 'package:scraapy_pro/screens/home/presentation/cubit/home_state.dart';
 import 'package:scraapy_pro/screens/inspection_req/inspection_screen.dart';
 import 'package:scraapy_pro/screens/manifest/presentation/manifest_screen.dart';
+import 'package:scraapy_pro/screens/permisions/presentations/permission/permession_screen.dart';
 import 'package:scraapy_pro/screens/rentals/presentation/screens/retals_screen.dart';
 import 'package:scraapy_pro/screens/services/presentation/screens/services_screen.dart';
 import 'package:scraapy_pro/screens/stock_market/presentation/screens/stock_market_screen.dart';
@@ -211,7 +212,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(context, MaterialPageRoute(builder: (_) => const ManifestScreen()));
 
           }),
-          _buildServiceCard(context, 'أذونات الاستيراد والتصدير', true),
+          _buildServiceCard(context, 'أذونات الاستيراد والتصدير', true,onTap: (){
+          Navigator.push(context, MaterialPageRoute(builder: (_) => const PermessionScreen()));
+
+          }),
           _buildServiceCard(context, 'طلبات الفحص والهدم', true, onTap: () {
             // Navigator.push(context, MaterialPageRoute(builder: (_) => const InspectionRequestScreen()));
             Navigator.push(context, MaterialPageRoute(builder: (_) => const InspectionReqScreen()));
@@ -367,7 +371,7 @@ class _HomeScreenState extends State<HomeScreen> {
             return GridView.builder(
               controller: controller,
               shrinkWrap: true,
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(0),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 mainAxisSpacing: 16,
