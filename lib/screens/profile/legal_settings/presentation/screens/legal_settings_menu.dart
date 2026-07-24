@@ -16,7 +16,7 @@ class LegalSettingsMenu extends StatelessWidget {
     {
       "title":"الإعدادات",
       "icon":"${AppImages.settingsIcon}",
-      "page":EditPersonalAccountScreen()
+      "page":EditPersonalAccountScreen(title:"الإعدادات" ,)
 
     },
     {

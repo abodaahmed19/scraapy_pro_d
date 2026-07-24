@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/main_app_btn.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
+import 'package:scraapy_pro/screens/profile/legal_settings/presentation/screens/docs_show_screen.dart';
+import 'package:scraapy_pro/screens/profile/legal_settings/presentation/screens/legal_data_details_screen.dart';
+import 'package:scraapy_pro/screens/profile/legal_settings/presentation/widgets/add_docs_bottom_sheet.dart';
 import 'package:scraapy_pro/screens/profile/legal_settings/presentation/widgets/add_license_bottom_sheet.dart';
 
 class LegalInfoScreen extends StatelessWidget {
@@ -47,10 +50,14 @@ class LegalInfoScreen extends StatelessWidget {
                           color:Color(0xB2000000) )),
                       SizedBox(height: 20,),
 
-                      // const CustomTextField(
-                      //   hint: 'الوصف(اختياري)',
-                      // ),
-                      MainAppBtn(title: 'إضافة', titleStyle: null,  btnColor: AppColors.primary,haveGradient: false,)
+
+                      MainAppBtn(
+                        onTap: (){
+
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => LegalDataDetailsScreen()));
+
+                        },
+                        title: 'إضافة', titleStyle: null,  btnColor: AppColors.primary,haveGradient: false,)
 
 
                     ],
@@ -106,9 +113,17 @@ class LegalInfoScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           MainAppBtn(
+                            onTap: (){
+                              AddDocsBottomSheet().addDocsBottomSheet(context);
+                            },
                             width: MediaQuery.of(context).size.width * 0.4,
                             title: 'إضافة مستندات', titleStyle: null,btnColor: AppColors.primary,haveGradient: false,),
                           MainAppBtn(
+                            onTap: (){
+
+                              Navigator.push(context, MaterialPageRoute(builder: (_) =>  DocsShowScreen()));
+
+                            },
                             width: MediaQuery.of(context).size.width * 0.4,
                             border: Border.all(color: Color(0xFFD1D5DB),width: 1.5),
                             title: 'عرض مستندات', titleStyle: TextStyle(

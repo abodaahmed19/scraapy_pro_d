@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:scraapy_pro/const/app_colors.dart';
+import 'package:scraapy_pro/const/main_app_btn.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import '../../widgets/responsive_layout.dart';
 import '../../widgets/custom_text_field.dart';
@@ -110,19 +112,35 @@ class _InspectionRequestScreenState extends State<InspectionRequestScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                ElevatedButton(
-                  onPressed: _acceptFee ? () {} : null,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: const Color(0xFF189491), // Specific Teal color from Figma
-                    foregroundColor: Colors.white,
-                    disabledBackgroundColor: Colors.grey,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.primary,
+                        AppColors.terquaz,
+                        // end color
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
                     ),
+                    borderRadius: BorderRadius.circular(12),),
+                  child: ElevatedButton(
+                    onPressed: _acceptFee ? () {} : null,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      // backgroundColor: const Color(0xFF189491), // Specific Teal color from Figma
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.transparent, //
+                      shadowColor: Colors.transparent,
+                      disabledBackgroundColor: Colors.grey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text('إرسال الطلب', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   ),
-                  child: const Text('إرسال الطلب', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
+                // MainAppBtn(title: 'إرسال الطلب',onTap: _acceptFee ? () {} : null,),
                 const SizedBox(height: 24),
               ],
             ),
