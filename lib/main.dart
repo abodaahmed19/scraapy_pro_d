@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scraapy_pro/auth/login_screen.dart';
 import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/screens/splash/splash.dart';
 import 'cubit/app_cubit.dart';
@@ -106,6 +107,7 @@ class ScraapyProApp extends StatelessWidget {
               ),
             ),
             home: const SplashScreen(),
+
           );
         },
       ),
