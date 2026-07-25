@@ -6,6 +6,7 @@ import 'package:scraapy_pro/auth/login_screen.dart';
 import 'package:scraapy_pro/authentication/domain/use_cases/register_use_case.dart';
 import 'package:scraapy_pro/authentication/domain/use_cases/send_verification_code_use_case.dart';
 import 'package:scraapy_pro/authentication/presentation/cubits/register_cubit.dart';
+import 'package:scraapy_pro/authentication/presentation/screens/login_screen.dart';
 import 'package:scraapy_pro/authentication/presentation/widgets/auth_text_field.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/core/di/injection.dart';
@@ -394,7 +395,7 @@ class _RegisterViewV2State extends State<_RegisterViewV2> {
                                     height: 50,
                                     child: OutlinedButton(
                                       onPressed: () => Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute<void>(builder: (_) => const LoginScreen()),
+                                        MaterialPageRoute<void>(builder: (_) => const ScrappyLoginScreen()),
                                       ),
                                       style: OutlinedButton.styleFrom(
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
