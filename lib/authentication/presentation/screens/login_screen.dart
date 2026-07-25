@@ -82,202 +82,206 @@ class _LoginViewState extends State<_LoginView>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(gradient: LinearGradient(
-        colors: [
-          AppColors.primary,
-          AppColors.terquaz,
-        ],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-      )),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: BlocListener<LoginCubit, LoginState>(
-          listener: (context, state) {
-            if (state.status == LoginStatus.error) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.errorMessage.tr()),
-                  backgroundColor: Colors.red,
-                ),
-              );
-              context.read<LoginCubit>().resetError();
-            }
-            if (state.status == LoginStatus.otpSent) {
-              Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => BlocProvider.value(
-                    value: context.read<LoginCubit>(),
-                    child: OtpLoginScreen(
-                      displayPhone: state.sentToPhone,
-                      loginType: state.loginType,
-                      rawIdentifier: state.loginType == LoginType.phone
-                          ? '+966${_phoneController.text.substring(1)}'
-                          : _emailController.text,
-                    ),
+    return WillPopScope(
+      onWillPop: () async => false, //
+
+      child: Container(
+        decoration: BoxDecoration(gradient: LinearGradient(
+          colors: [
+            AppColors.primary,
+            AppColors.terquaz,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        )),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: BlocListener<LoginCubit, LoginState>(
+            listener: (context, state) {
+              if (state.status == LoginStatus.error) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.errorMessage.tr()),
+                    backgroundColor: Colors.red,
                   ),
-                ),
-              );
-            }
-          },
-          child: BlocBuilder<LoginCubit, LoginState>(
-            builder: (context, state) {
-              final cubit = context.read<LoginCubit>();
-              final isLoading = state.status == LoginStatus.loading;
-              final isPhone = state.loginType == LoginType.phone;
-
-              return SlideTransition(
-                position: _formSlide,
-                child: FadeTransition(
-                  opacity: _formFade,
-                  child: Align(
-                alignment: Alignment.topCenter,
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth:
-                          MediaQuery.sizeOf(context).width > 600 ? 600 : double.infinity,
-                    ),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 50),
-                          SvgPicture.asset('assets/images/scraapy.svg', height: 90, width: 90),
-                          const SizedBox(height: 50),
-
-                          // ── Phone / Email toggle ──
-                          Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Row(
-                              children: [
-                                _TabToggle(
-                                  label: 'phone'.tr(),
-                                  selected: isPhone,
-                                  onTap: () => cubit.setLoginType(LoginType.phone),
-                                ),
-                                _TabToggle(
-                                  label: 'email'.tr(),
-                                  selected: !isPhone,
-                                  onTap: () => cubit.setLoginType(LoginType.email),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 30),
-
-                          // ── Input field ──
-                          if (isPhone)
-                            AuthTextField(
-                              controller: _phoneController,
-                              labelKey: 'phoneD'.tr(),
-                              keyboardType: TextInputType.phone,
-                              prefixIcon:
-                                  const Icon(Icons.phone_android, color: AppColors.white),
-                              validator: (v) {
-                                if (v == null || v.isEmpty) return 'mustPhone'.tr();
-                                if (v.length != 10) return 'mustPhone10'.tr();
-                                if (!v.startsWith('05')) return 'mustPhone05'.tr();
-                                return null;
-                              },
-                            )
-                          else
-                            AuthTextField(
-                              controller: _emailController,
-                              labelKey: 'emailD'.tr(),
-                              keyboardType: TextInputType.emailAddress,
-                              prefixIcon:
-                                  const Icon(Icons.email_outlined, color: AppColors.white),
-                              validator: (v) {
-                                if (v == null || v.isEmpty) return 'mustEmail'.tr();
-                                final valid = RegExp(
-                                  r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-                                ).hasMatch(v);
-                                if (!valid) return 'mustValidateEmail'.tr();
-                                return null;
-                              },
-                            ),
-                          const SizedBox(height: 30),
-
-                          // ── Send OTP button ──
-                          SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: OutlinedButton(
-                              onPressed: isLoading ? null : () => _sendOtp(cubit, state),
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                side: const BorderSide(color: AppColors.white),
-                              ),
-                              child: isLoading
-                                  ? const CircularProgressIndicator()
-                                  : Text(
-                                      'login'.tr(),
-                                      style: const TextStyle(
-                                          fontSize: 16, color: AppColors.white),
-                                    ),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          _dividerOr(),
-                          const SizedBox(height: 20),
-
-                          // ── Register button ──
-                          SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: OutlinedButton(
-                              onPressed: () {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute<void>(
-                                      builder: (_) => const RegisterScreen()),
-                                );
-                              },
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                side: const BorderSide(color: AppColors.white),
-                              ),
-                              child: Text(
-                                'register'.tr(),
-                                style:
-                                    const TextStyle(color: AppColors.white, fontSize: 16),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-
-                          // ── Guest button ──
-                          SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: OutlinedButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                side: const BorderSide(color: AppColors.white),
-                              ),
-                              child: Text(
-                                'guestLogin'.tr(),
-                                style:
-                                    const TextStyle(color: AppColors.white, fontSize: 16),
-                              ),
-                            ),
-                          ),
-                        ],
+                );
+                context.read<LoginCubit>().resetError();
+              }
+              if (state.status == LoginStatus.otpSent) {
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => BlocProvider.value(
+                      value: context.read<LoginCubit>(),
+                      child: OtpLoginScreen(
+                        displayPhone: state.sentToPhone,
+                        loginType: state.loginType,
+                        rawIdentifier: state.loginType == LoginType.phone
+                            ? '+966${_phoneController.text.substring(1)}'
+                            : _emailController.text,
                       ),
                     ),
                   ),
-                ),
-              )));
+                );
+              }
             },
+            child: BlocBuilder<LoginCubit, LoginState>(
+              builder: (context, state) {
+                final cubit = context.read<LoginCubit>();
+                final isLoading = state.status == LoginStatus.loading;
+                final isPhone = state.loginType == LoginType.phone;
+
+                return SlideTransition(
+                  position: _formSlide,
+                  child: FadeTransition(
+                    opacity: _formFade,
+                    child: Align(
+                  alignment: Alignment.topCenter,
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth:
+                            MediaQuery.sizeOf(context).width > 600 ? 600 : double.infinity,
+                      ),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 50),
+                            SvgPicture.asset('assets/images/scraapy.svg', height: 90, width: 90),
+                            const SizedBox(height: 50),
+
+                            // ── Phone / Email toggle ──
+                            Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                children: [
+                                  _TabToggle(
+                                    label: 'phone'.tr(),
+                                    selected: isPhone,
+                                    onTap: () => cubit.setLoginType(LoginType.phone),
+                                  ),
+                                  _TabToggle(
+                                    label: 'email'.tr(),
+                                    selected: !isPhone,
+                                    onTap: () => cubit.setLoginType(LoginType.email),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 30),
+
+                            // ── Input field ──
+                            if (isPhone)
+                              AuthTextField(
+                                controller: _phoneController,
+                                labelKey: 'phoneD'.tr(),
+                                keyboardType: TextInputType.phone,
+                                prefixIcon:
+                                    const Icon(Icons.phone_android, color: AppColors.white),
+                                validator: (v) {
+                                  if (v == null || v.isEmpty) return 'mustPhone'.tr();
+                                  if (v.length != 10) return 'mustPhone10'.tr();
+                                  if (!v.startsWith('05')) return 'mustPhone05'.tr();
+                                  return null;
+                                },
+                              )
+                            else
+                              AuthTextField(
+                                controller: _emailController,
+                                labelKey: 'emailD'.tr(),
+                                keyboardType: TextInputType.emailAddress,
+                                prefixIcon:
+                                    const Icon(Icons.email_outlined, color: AppColors.white),
+                                validator: (v) {
+                                  if (v == null || v.isEmpty) return 'mustEmail'.tr();
+                                  final valid = RegExp(
+                                    r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                                  ).hasMatch(v);
+                                  if (!valid) return 'mustValidateEmail'.tr();
+                                  return null;
+                                },
+                              ),
+                            const SizedBox(height: 30),
+
+                            // ── Send OTP button ──
+                            SizedBox(
+                              width: double.infinity,
+                              height: 50,
+                              child: OutlinedButton(
+                                onPressed: isLoading ? null : () => _sendOtp(cubit, state),
+                                style: OutlinedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  side: const BorderSide(color: AppColors.white),
+                                ),
+                                child: isLoading
+                                    ? const CircularProgressIndicator()
+                                    : Text(
+                                        'login'.tr(),
+                                        style: const TextStyle(
+                                            fontSize: 16, color: AppColors.white),
+                                      ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            _dividerOr(),
+                            const SizedBox(height: 20),
+
+                            // ── Register button ──
+                            SizedBox(
+                              width: double.infinity,
+                              height: 50,
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute<void>(
+                                        builder: (_) => const RegisterScreen()),
+                                  );
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  side: const BorderSide(color: AppColors.white),
+                                ),
+                                child: Text(
+                                  'register'.tr(),
+                                  style:
+                                      const TextStyle(color: AppColors.white, fontSize: 16),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+
+                            // ── Guest button ──
+                            SizedBox(
+                              width: double.infinity,
+                              height: 50,
+                              child: OutlinedButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                style: OutlinedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  side: const BorderSide(color: AppColors.white),
+                                ),
+                                child: Text(
+                                  'guestLogin'.tr(),
+                                  style:
+                                      const TextStyle(color: AppColors.white, fontSize: 16),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                )));
+              },
+            ),
           ),
         ),
       ),
