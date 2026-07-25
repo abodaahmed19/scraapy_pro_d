@@ -148,8 +148,8 @@ class _LoginViewState extends State<_LoginView>
                         child: Column(
                           children: [
                             const SizedBox(height: 50),
-                            SvgPicture.asset('assets/images/scraapy.svg', height: 90, width: 90),
-                            const SizedBox(height: 50),
+                            Image.asset('assets/images/splash.png', height: 200, width: 200),
+                            const SizedBox(height: 10),
 
                             // ── Phone / Email toggle ──
                             Container(
@@ -219,7 +219,7 @@ class _LoginViewState extends State<_LoginView>
                                   side: const BorderSide(color: AppColors.white),
                                 ),
                                 child: isLoading
-                                    ? const CircularProgressIndicator()
+                                    ? const CircularProgressIndicator(color: AppColors.white,strokeWidth: 1.2,)
                                     : Text(
                                         'login'.tr(),
                                         style: const TextStyle(

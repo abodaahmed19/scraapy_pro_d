@@ -99,6 +99,14 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
       },
       child: Container(
         // decoration: BoxDecoration(gradient: AppColors.scrappyGradient),
+        decoration: BoxDecoration(gradient: LinearGradient(
+          colors: [
+            AppColors.primary,
+            AppColors.terquaz,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        )),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
@@ -169,7 +177,8 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
                             side: const BorderSide(color: AppColors.white),
                           ),
                           child: isVerifying
-                              ? Image.asset('assets/icons/loading.gif', width: 40, height: 40)
+                              // ? Image.asset('assets/icons/loading.gif', width: 40, height: 40)
+                              ? CircularProgressIndicator(color: AppColors.white,strokeWidth: 1.2,)
                               : Text('verify', style: const TextStyle(color: AppColors.white, fontSize: 16)),
                               // : Text('verify'.tr(), style: const TextStyle(color: AppColors.white, fontSize: 16)),
                         ),
