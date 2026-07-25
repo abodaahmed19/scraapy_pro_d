@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scraapy_pro/auth/login_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/screens/splash/splash.dart';
 import 'cubit/app_cubit.dart';
 import 'cubit/theme_cubit.dart';
-import 'screens/splash_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   setup();
-  runApp(const ScraapyProApp());
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('en'), Locale('ar')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      startLocale: const Locale('ar'),
+      child: const ScraapyProApp(),
+    ),
+  );
 }
 
 class ScraapyProApp extends StatelessWidget {
@@ -26,8 +34,11 @@ class ScraapyProApp extends StatelessWidget {
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {
           return MaterialApp(
-            title: 'Scraapy Pro',
+            title: 'appTitle'.tr(),
             debugShowCheckedModeBanner: false,
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
             themeMode: themeMode,
             theme: ThemeData(
               brightness: Brightness.light,
@@ -107,7 +118,6 @@ class ScraapyProApp extends StatelessWidget {
               ),
             ),
             home: const SplashScreen(),
-
           );
         },
       ),

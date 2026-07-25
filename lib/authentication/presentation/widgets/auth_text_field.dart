@@ -99,30 +99,39 @@ class OtpInputRowState extends State<OtpInputRow> {
     if (code.length == 6) widget.onCompleted(code);
   }
 
-  void _onKeyEvent(KeyEvent event, int index) {
-    if (event is KeyDownEvent &&
-        event.logicalKey == LogicalKeyboardKey.backspace &&
-        _controllers[index].text.isEmpty &&
-        index > 0) {
-      _focusNodes[index - 1].requestFocus();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(6, (i) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: SizedBox(
-              width: 42,
-              child: KeyboardListener(
-                focusNode: FocusNode(),
-                onKeyEvent: (e) => _onKeyEvent(e, i),
-                child: TextFormField(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxWidth = constraints.maxWidth.isFinite
+            ? constraints.maxWidth
+            : MediaQuery.of(context).size.width;
+        const spacing = 8.0;
+        final availableWidth = maxWidth - spacing * 5;
+        final boxSize = (availableWidth / 6).clamp(40.0, 60.0);
+
+        return Directionality(
+          textDirection: TextDirection.ltr,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(6, (i) {
+              return Padding(
+                padding: EdgeInsets.only(left: i == 0 ? 0 : spacing),
+                child: SizedBox(
+                  width: boxSize,
+                  height: boxSize * 1.2,
+                  child: Focus(
+                    onKeyEvent: (node, event) {
+                      if (event is KeyDownEvent &&
+                          event.logicalKey == LogicalKeyboardKey.backspace &&
+                          _controllers[i].text.isEmpty &&
+                          i > 0) {
+                        _focusNodes[i - 1].requestFocus();
+                        return KeyEventResult.handled;
+                      }
+                      return KeyEventResult.ignored;
+                    },
+                    child: TextFormField(
                   controller: _controllers[i],
                   focusNode: _focusNodes[i],
                   keyboardType: TextInputType.number,
@@ -154,5 +163,7 @@ class OtpInputRowState extends State<OtpInputRow> {
         }),
       ),
     );
-  }
+  },
+);
+}
 }

@@ -1,4 +1,4 @@
-// import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,7 +6,7 @@ import 'package:scraapy_pro/authentication/domain/use_cases/send_otp_use_case.da
 import 'package:scraapy_pro/authentication/domain/use_cases/verify_otp_use_case.dart';
 import 'package:scraapy_pro/authentication/presentation/cubits/login_cubit.dart';
 import 'package:scraapy_pro/authentication/presentation/screens/otp_login_screen.dart';
-import 'package:scraapy_pro/authentication/presentation/screens/register_screen.dart';
+import 'package:scraapy_pro/authentication/presentation/screens/register_screen_v2.dart';
 import 'package:scraapy_pro/authentication/presentation/widgets/auth_text_field.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/core/di/injection.dart';
@@ -38,7 +38,6 @@ class _LoginViewState extends State<_LoginView>
   final _formKey = GlobalKey<FormState>();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
-  // late final NotchBottomBarController _notchController;
   late final AnimationController _animController;
   late final Animation<double> _formFade;
   late final Animation<Offset> _formSlide;
@@ -46,7 +45,6 @@ class _LoginViewState extends State<_LoginView>
   @override
   void initState() {
     super.initState();
-    // _notchController = NotchBottomBarController(index: -2);
     _animController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 600),
@@ -69,7 +67,6 @@ class _LoginViewState extends State<_LoginView>
   void dispose() {
     _phoneController.dispose();
     _emailController.dispose();
-    // _notchController.dispose();
     _animController.dispose();
     super.dispose();
   }
@@ -83,55 +80,6 @@ class _LoginViewState extends State<_LoginView>
     cubit.sendOtp(identifier: identifier);
   }
 
-  // void _selectTab(BuildContext context, int index) {
-  //   // Pop back to shell and select the tapped tab
-  //   Navigator.of(context).pop();
-  //   context.read<MainShellCubit>().selectTab(index);
-  // }
-
-  // Widget _buildNotchBar(BuildContext context) {
-  //   final size = MediaQuery.sizeOf(context);
-  //   final isSmall = size.width < 500;
-  //   final locale = context.locale.languageCode;
-  //
-  //   return AnimatedNotchBottomBar(
-  //     key: ValueKey('login_notch_$locale'),
-  //     notchBottomBarController: _notchController,
-  //     color: AppColors.primary,
-  //     notchColor: AppColors.terquaz,
-  //     shadowElevation: 5,
-  //     kBottomRadius: isSmall ? 20.0 : 28.0,
-  //     kIconSize: isSmall ? 20.0 : 24.0,
-  //     bottomBarWidth: size.width < 600 ? size.width : 500,
-  //     durationInMilliSeconds: 150,
-  //     removeMargins: false,
-  //     itemLabelStyle: const TextStyle(color: AppColors.white, fontSize: 11),
-  //     onTap: (index) => _selectTab(context, index),
-  //     bottomBarItems: [
-  //       BottomBarItem(
-  //         inActiveItem: const Icon(Icons.engineering, color: AppColors.white),
-  //         activeItem: const Icon(Icons.engineering_outlined, color: AppColors.white),
-  //         itemLabel: 'serviceRequest'.tr(),
-  //       ),
-  //       BottomBarItem(
-  //         inActiveItem: const Icon(Icons.home_work, color: AppColors.white),
-  //         activeItem: const Icon(Icons.home_work_outlined, color: AppColors.white),
-  //         itemLabel: 'rental'.tr(),
-  //       ),
-  //       BottomBarItem(
-  //         inActiveItem: const Icon(Icons.handyman, color: AppColors.white),
-  //         activeItem: const Icon(Icons.handyman_outlined, color: AppColors.white),
-  //         itemLabel: 'service'.tr(),
-  //       ),
-  //       BottomBarItem(
-  //         inActiveItem: const Icon(Icons.shopping_bag, color: AppColors.white),
-  //         activeItem: const Icon(Icons.shopping_bag_outlined, color: AppColors.white),
-  //         itemLabel: 'marketplace'.tr(),
-  //       ),
-  //     ],
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -139,23 +87,18 @@ class _LoginViewState extends State<_LoginView>
         colors: [
           AppColors.primary,
           AppColors.terquaz,
-          // end color
         ],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
       )),
-      // decoration: BoxDecoration(color: AppColors.primary),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-
-        // bottomNavigationBar: _buildNotchBar(context),
         body: BlocListener<LoginCubit, LoginState>(
           listener: (context, state) {
             if (state.status == LoginStatus.error) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(state.errorMessage),
-                  // content: Text(state.errorMessage.tr()),
+                  content: Text(state.errorMessage.tr()),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -214,14 +157,12 @@ class _LoginViewState extends State<_LoginView>
                             child: Row(
                               children: [
                                 _TabToggle(
-                                  // label: 'phone'.tr(),
-                                  label: 'phone',
+                                  label: 'phone'.tr(),
                                   selected: isPhone,
                                   onTap: () => cubit.setLoginType(LoginType.phone),
                                 ),
                                 _TabToggle(
-                                  // label: 'email'.tr(),
-                                  label: 'email',
+                                  label: 'email'.tr(),
                                   selected: !isPhone,
                                   onTap: () => cubit.setLoginType(LoginType.email),
                                 ),
@@ -234,37 +175,30 @@ class _LoginViewState extends State<_LoginView>
                           if (isPhone)
                             AuthTextField(
                               controller: _phoneController,
-                              // labelKey: 'phone'.tr(),
-                              labelKey: 'phone',
+                              labelKey: 'phoneD'.tr(),
                               keyboardType: TextInputType.phone,
                               prefixIcon:
                                   const Icon(Icons.phone_android, color: AppColors.white),
                               validator: (v) {
-                                // if (v == null || v.isEmpty) return 'mustPhone'.tr();
-                                // if (v.length != 10) return 'mustPhone10'.tr();
-                                // if (!v.startsWith('05')) return 'mustPhone05'.tr();
-                                if (v == null || v.isEmpty) return 'mustPhone';
-                                if (v.length != 10) return 'mustPhone10';
-                                if (!v.startsWith('05')) return 'mustPhone05';
+                                if (v == null || v.isEmpty) return 'mustPhone'.tr();
+                                if (v.length != 10) return 'mustPhone10'.tr();
+                                if (!v.startsWith('05')) return 'mustPhone05'.tr();
                                 return null;
                               },
                             )
                           else
                             AuthTextField(
                               controller: _emailController,
-                              labelKey: 'email',
-                              // labelKey: 'email'.tr(),
+                              labelKey: 'emailD'.tr(),
                               keyboardType: TextInputType.emailAddress,
                               prefixIcon:
                                   const Icon(Icons.email_outlined, color: AppColors.white),
                               validator: (v) {
-                                if (v == null || v.isEmpty) return 'mustEmail';
-                                // if (v == null || v.isEmpty) return 'mustEmail'.tr();
+                                if (v == null || v.isEmpty) return 'mustEmail'.tr();
                                 final valid = RegExp(
                                   r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
                                 ).hasMatch(v);
-                                if (!valid) return 'mustValidateEmail';
-                                // if (!valid) return 'mustValidateEmail'.tr();
+                                if (!valid) return 'mustValidateEmail'.tr();
                                 return null;
                               },
                             ),
@@ -282,16 +216,9 @@ class _LoginViewState extends State<_LoginView>
                                 side: const BorderSide(color: AppColors.white),
                               ),
                               child: isLoading
-                                  ?
-                              // Image.asset(
-                              //         'assets/icons/loading.gif',
-                              //         width: 110,
-                              //         height: 110,
-                              //       )
-                              CircularProgressIndicator()
+                                  ? const CircularProgressIndicator()
                                   : Text(
-                                      'login',
-                                      // 'login'.tr(),
+                                      'login'.tr(),
                                       style: const TextStyle(
                                           fontSize: 16, color: AppColors.white),
                                     ),
@@ -307,7 +234,6 @@ class _LoginViewState extends State<_LoginView>
                             height: 50,
                             child: OutlinedButton(
                               onPressed: () {
-                                print('objectttttt');
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute<void>(
                                       builder: (_) => const RegisterScreen()),
@@ -319,8 +245,7 @@ class _LoginViewState extends State<_LoginView>
                                 side: const BorderSide(color: AppColors.white),
                               ),
                               child: Text(
-                                'register',
-                                // 'register'.tr(),
+                                'register'.tr(),
                                 style:
                                     const TextStyle(color: AppColors.white, fontSize: 16),
                               ),
@@ -340,8 +265,7 @@ class _LoginViewState extends State<_LoginView>
                                 side: const BorderSide(color: AppColors.white),
                               ),
                               child: Text(
-                                'guestLogin',
-                                // 'guestLogin'.tr(),
+                                'guestLogin'.tr(),
                                 style:
                                     const TextStyle(color: AppColors.white, fontSize: 16),
                               ),
@@ -367,8 +291,7 @@ class _LoginViewState extends State<_LoginView>
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Text(
-              'or',
-              // 'or'.tr(),
+              'or'.tr(),
               style: const TextStyle(color: AppColors.white)),
         ),
         const Expanded(child: Divider(color: AppColors.white)),

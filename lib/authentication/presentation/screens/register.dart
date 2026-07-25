@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,8 +10,8 @@ import 'package:scraapy_pro/authentication/presentation/widgets/auth_text_field.
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/core/di/injection.dart';
 
-class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({super.key});
+class Register extends StatelessWidget {
+  const Register({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +39,12 @@ class _RegisterViewState extends State<_RegisterView> {
   final _emailCtrl = TextEditingController();
   final _phoneCtrl = TextEditingController();
   final _inviteCtrl = TextEditingController();
+  // late final NotchBottomBarController _notchController;
 
   @override
   void initState() {
     super.initState();
+    // _notchController = NotchBottomBarController(index: -2);
   }
 
   @override
@@ -52,15 +53,17 @@ class _RegisterViewState extends State<_RegisterView> {
     _emailCtrl.dispose();
     _phoneCtrl.dispose();
     _inviteCtrl.dispose();
+    // _notchController.dispose();
     super.dispose();
   }
+
 
   String get _e164Phone => '+966${_phoneCtrl.text.substring(1)}';
 
   void _requestVerification(RegisterCubit cubit) {
     if (_phoneCtrl.text.length != 10 || !_phoneCtrl.text.startsWith('05')) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('mustPhoneFirst'.tr())),
+        SnackBar(content: Text('mustPhoneFirst')),
       );
       return;
     }
@@ -93,6 +96,7 @@ class _RegisterViewState extends State<_RegisterView> {
       barrierDismissible: false,
       builder: (dialogCtx) => StatefulBuilder(
         builder: (_, setDialogState) {
+          // start timer on first build
           if (timer == null) startTimer(setDialogState);
 
           return BlocProvider.value(
@@ -100,16 +104,18 @@ class _RegisterViewState extends State<_RegisterView> {
             child: AlertDialog(
               backgroundColor: AppColors.primary,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-              title: Text('checkPhone'.tr(),
+              title: Text('checkPhone',
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: AppColors.white)),
               content: SingleChildScrollView(
                 child: SizedBox(
                   width: double.maxFinite,
+
                   child: Column(
+
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('verificationSentPhone'.tr(),
+                      Text('verificationSentPhone',
                           style: const TextStyle(color: AppColors.white)),
                       Text(_phoneCtrl.text,
                           style: const TextStyle(
@@ -119,17 +125,17 @@ class _RegisterViewState extends State<_RegisterView> {
                       const SizedBox(height: 12),
                       canResend
                           ? TextButton(
-                              onPressed: () {
-                                startTimer(setDialogState);
-                                cubit.sendVerificationCode(_e164Phone);
-                              },
-                              child: Text('resendCode'.tr(),
-                                  style: const TextStyle(color: AppColors.white)),
-                            )
+                        onPressed: () {
+                          startTimer(setDialogState);
+                          cubit.sendVerificationCode(_e164Phone);
+                        },
+                        child: Text('resendCode',
+                            style: const TextStyle(color: AppColors.white)),
+                      )
                           : Text(
-                              'resendAvailableInAll'.tr(args: [countdown.toString()]),
-                              style: const TextStyle(color: AppColors.grey),
-                            ),
+                        'resendAvailableInAll',
+                        style: const TextStyle(color: AppColors.grey),
+                      ),
                     ],
                   ),
                 ),
@@ -137,7 +143,7 @@ class _RegisterViewState extends State<_RegisterView> {
               actions: [
                 TextButton(
                   onPressed: () { timer?.cancel(); Navigator.of(dialogCtx).pop(); },
-                  child: Text('cancel'.tr(), style: const TextStyle(color: AppColors.white)),
+                  child: Text('cancel', style: const TextStyle(color: AppColors.white)),
                 ),
                 OutlinedButton(
                   onPressed: () async {
@@ -152,7 +158,7 @@ class _RegisterViewState extends State<_RegisterView> {
                       } else if (s.status == RegisterStatus.error) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(s.errorMessage.tr()),
+                            content: Text(s.errorMessage),
                             backgroundColor: Colors.red,
                           ),
                         );
@@ -164,7 +170,7 @@ class _RegisterViewState extends State<_RegisterView> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     side: const BorderSide(color: AppColors.white),
                   ),
-                  child: Text('verify'.tr(),
+                  child: Text('verify',
                       style: const TextStyle(color: AppColors.white)),
                 ),
               ],
@@ -178,7 +184,7 @@ class _RegisterViewState extends State<_RegisterView> {
   Future<void> _submit(RegisterCubit cubit, RegisterState state) async {
     if (!state.isPhoneVerified) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('mustVerifyPhone'.tr()), backgroundColor: Colors.red),
+        SnackBar(content: Text('mustVerifyPhone'), backgroundColor: Colors.red),
       );
       return;
     }
@@ -194,10 +200,11 @@ class _RegisterViewState extends State<_RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(gradient: LinearGradient(
+      decoration: BoxDecoration(gradient: LinearGradient(
         colors: [
           AppColors.primary,
           AppColors.terquaz,
+          // end color
         ],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
@@ -209,7 +216,7 @@ class _RegisterViewState extends State<_RegisterView> {
             if (state.status == RegisterStatus.error) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(state.errorMessage.tr()),
+                  content: Text(state.errorMessage),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -217,11 +224,11 @@ class _RegisterViewState extends State<_RegisterView> {
             }
             if (state.status == RegisterStatus.success) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('doneCreateAccount'.tr())),
+                SnackBar(content: Text('doneCreateAccount')),
               );
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute<void>(builder: (_) => const LoginScreen()),
-                (_) => false,
+                    (_) => false,
               );
             }
           },
@@ -248,32 +255,35 @@ class _RegisterViewState extends State<_RegisterView> {
                           ),
                           const SizedBox(height: 24),
 
-                          Text('fullName'.tr(), style: const TextStyle(fontSize: 14, color: AppColors.white)),
+                          // Full name
+                          Text('fullName', style: const TextStyle(fontSize: 14, color: AppColors.white)),
                           const SizedBox(height: 8),
                           AuthTextField(
                             controller: _nameCtrl,
-                            labelKey: 'fullNameD'.tr(),
-                            validator: (v) => (v == null || v.isEmpty) ? 'mustFullName'.tr() : null,
+                            labelKey: 'fullNameD',
+                            validator: (v) => (v == null || v.isEmpty) ? 'mustFullName' : null,
                           ),
                           const SizedBox(height: 16),
 
-                          Text('email'.tr(), style: const TextStyle(fontSize: 14, color: AppColors.white)),
+                          // Email
+                          Text('email', style: const TextStyle(fontSize: 14, color: AppColors.white)),
                           const SizedBox(height: 8),
                           AuthTextField(
                             controller: _emailCtrl,
-                            labelKey: 'emailD'.tr(),
+                            labelKey: 'emailD',
                             keyboardType: TextInputType.emailAddress,
                             validator: (v) {
-                              if (v == null || v.isEmpty) return 'mustEmail'.tr();
+                              if (v == null || v.isEmpty) return 'mustEmail';
                               final ok = RegExp(
                                 r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
                               ).hasMatch(v);
-                              return ok ? null : 'mustValidateEmail'.tr();
+                              return ok ? null : 'mustValidateEmail';
                             },
                           ),
                           const SizedBox(height: 16),
 
-                          Text('phone'.tr(), style: const TextStyle(fontSize: 14, color: AppColors.white)),
+                          // Phone + verify button
+                          Text('phone', style: const TextStyle(fontSize: 14, color: AppColors.white)),
                           const SizedBox(height: 8),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -281,12 +291,12 @@ class _RegisterViewState extends State<_RegisterView> {
                               Expanded(
                                 child: AuthTextField(
                                   controller: _phoneCtrl,
-                                  labelKey: 'phoneD'.tr(),
+                                  labelKey: 'phoneD',
                                   keyboardType: TextInputType.phone,
                                   validator: (v) {
-                                    if (v == null || v.isEmpty) return 'mustPhone'.tr();
-                                    if (v.length != 10) return 'mustPhone10'.tr();
-                                    if (!v.startsWith('05')) return 'mustPhone05'.tr();
+                                    if (v == null || v.isEmpty) return 'mustPhone';
+                                    if (v.length != 10) return 'mustPhone10';
+                                    if (!v.startsWith('05')) return 'mustPhone05';
                                     return null;
                                   },
                                 ),
@@ -300,7 +310,7 @@ class _RegisterViewState extends State<_RegisterView> {
                                   side: const BorderSide(color: AppColors.white),
                                 ),
                                 child: Text(
-                                  state.isPhoneVerified ? '✓' : 'verify'.tr(),
+                                  state.isPhoneVerified ? '✓' : 'verify',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
@@ -313,19 +323,21 @@ class _RegisterViewState extends State<_RegisterView> {
                           if (state.isPhoneVerified)
                             Padding(
                               padding: const EdgeInsets.only(top: 6, right: 8, left: 8),
-                              child: Text('phoneVerifiedSuccessfully'.tr(),
+                              child: Text('phoneVerifiedSuccessfully',
                                   style: const TextStyle(color: Colors.greenAccent, fontSize: 12, fontWeight: FontWeight.bold)),
                             ),
                           const SizedBox(height: 16),
 
-                          Text('invitationCodeO'.tr(), style: const TextStyle(fontSize: 14, color: AppColors.white)),
+                          // Invite code (optional)
+                          Text('invitationCodeO', style: const TextStyle(fontSize: 14, color: AppColors.white)),
                           const SizedBox(height: 8),
                           AuthTextField(
                             controller: _inviteCtrl,
-                            labelKey: 'invitationCodeOD'.tr(),
+                            labelKey: 'invitationCodeOD',
                           ),
                           const SizedBox(height: 32),
 
+                          // Submit
                           SizedBox(
                             height: 50,
                             child: OutlinedButton(
@@ -336,8 +348,8 @@ class _RegisterViewState extends State<_RegisterView> {
                               ),
                               child: isSubmitting
                                   ? Image.asset('assets/icons/loading.gif', width: 40, height: 40)
-                                  : Text('createAccount'.tr(),
-                                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.white)),
+                                  : Text('createAccount',
+                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.white)),
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -346,7 +358,7 @@ class _RegisterViewState extends State<_RegisterView> {
                             const Expanded(child: Divider(color: AppColors.white)),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('or'.tr(), style: const TextStyle(color: AppColors.white)),
+                              child: Text('or', style: const TextStyle(color: AppColors.white)),
                             ),
                             const Expanded(child: Divider(color: AppColors.white)),
                           ]),
@@ -362,7 +374,7 @@ class _RegisterViewState extends State<_RegisterView> {
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                 side: const BorderSide(color: AppColors.white),
                               ),
-                              child: Text('login'.tr(), style: const TextStyle(color: AppColors.white, fontSize: 16)),
+                              child: Text('login', style: const TextStyle(color: AppColors.white, fontSize: 16)),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -374,7 +386,7 @@ class _RegisterViewState extends State<_RegisterView> {
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                 side: const BorderSide(color: AppColors.white),
                               ),
-                              child: Text('guestLogin'.tr(), style: const TextStyle(color: AppColors.white, fontSize: 16)),
+                              child: Text('guestLogin', style: const TextStyle(color: AppColors.white, fontSize: 16)),
                             ),
                           ),
                         ],
