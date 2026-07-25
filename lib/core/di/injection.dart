@@ -1,6 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:scraapy_pro/authentication/data/data_sources/auth_data_source.dart';
+import 'package:scraapy_pro/authentication/data/data_sources/auth_data_source_impl.dart';
+import 'package:scraapy_pro/authentication/data/repositories/auth_repository_impl.dart';
+import 'package:scraapy_pro/authentication/domain/repositories/i_auth_repository.dart';
+import 'package:scraapy_pro/authentication/domain/use_cases/register_use_case.dart';
+import 'package:scraapy_pro/authentication/domain/use_cases/send_otp_use_case.dart';
+import 'package:scraapy_pro/authentication/domain/use_cases/send_verification_code_use_case.dart';
+import 'package:scraapy_pro/authentication/domain/use_cases/verify_otp_use_case.dart';
+import 'package:scraapy_pro/core/config/res/constants_manager.dart';
+
 import 'package:scraapy_pro/core/di/auth_service.dart';
 import 'package:scraapy_pro/screens/favorites/data/favorite_data_source/favorite_data_source.dart';
 import 'package:scraapy_pro/screens/favorites/data/repositories/favorite_repository.dart';
@@ -184,6 +195,33 @@ void setup() {
         () => EditProfileCubit(),
   );
 
+  ///Auth///
+  // ── DataSource ────────────────────────────────────────────────────────────
+  getIt.registerLazySingleton<AuthDataSource>(
+        () => AuthDataSourceImpl(),
+  );
+
+  // ── Repository ────────────────────────────────────────────────────────────
+  getIt.registerLazySingleton<IAuthRepository>(
+        () => AuthRepositoryImpl(dataSource: sl<AuthDataSource>()),
+  );
+
+  // ── Use Cases ─────────────────────────────────────────────────────────────
+  getIt.registerLazySingleton<SendOtpUseCase>(
+        () => SendOtpUseCase(repository: sl<IAuthRepository>()),
+  );
+  getIt.registerLazySingleton<VerifyOtpUseCase>(
+        () => VerifyOtpUseCase(repository: sl<IAuthRepository>()),
+  );
+  getIt.registerLazySingleton<SendVerificationCodeUseCase>(
+        () => SendVerificationCodeUseCase(repository: sl<IAuthRepository>()),
+  );
+  getIt.registerLazySingleton<VerifyVerificationCodeUseCase>(
+        () => VerifyVerificationCodeUseCase(repository: sl<IAuthRepository>()),
+  );
+  getIt.registerLazySingleton<RegisterUseCase>(
+        () => RegisterUseCase(repository: sl<IAuthRepository>()),
+  );
 
 
 
