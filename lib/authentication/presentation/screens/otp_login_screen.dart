@@ -9,6 +9,7 @@ import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/core/shared/cubits/user_cubit/user_cubit.dart';
 import 'package:scraapy_pro/screens/home/presentation/screens/home_screen.dart';
+import 'package:scraapy_pro/screens/main/main_layout.dart';
 
 class OtpLoginScreen extends StatefulWidget {
   const OtpLoginScreen({
@@ -90,7 +91,7 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
               // ? const NotAllowedScreen()
               // : const MainShellScreen();
         ? const LoginScreen()
-            : const HomeScreen();
+            : const MainLayout();
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute<void>(builder: (_) => dest),
             (_) => false,

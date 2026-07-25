@@ -33,6 +33,9 @@ import 'package:scraapy_pro/screens/services/domain/use_cases/services_use_case.
 
 import '../../screens/services/presentation/cubit/services_cubit.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/cubit/edit_profile_cubit.dart';
+import 'package:scraapy_pro/core/shared/cubits/user_cubit/user_cubit.dart';
+import 'package:scraapy_pro/core/network/network_service.dart';
+import 'package:scraapy_pro/core/network/network_service_impl.dart';
 
 
 
@@ -223,6 +226,14 @@ void setup() {
         () => RegisterUseCase(repository: sl<IAuthRepository>()),
   );
 
+  ///Network///
+  getIt.registerLazySingleton<NetworkService>(
+        () => NetworkServiceImpl(getIt<Dio>()),
+  );
 
+  ///User///
+  getIt.registerLazySingleton<UserCubit>(
+        () => UserCubit(),
+  );
 
 }

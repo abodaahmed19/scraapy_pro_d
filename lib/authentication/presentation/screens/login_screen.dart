@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scraapy_pro/authentication/domain/use_cases/send_otp_use_case.dart';
 import 'package:scraapy_pro/authentication/domain/use_cases/verify_otp_use_case.dart';
 import 'package:scraapy_pro/authentication/presentation/cubits/login_cubit.dart';

@@ -89,10 +89,13 @@ class UserCubit extends Cubit<UserState> with UserUtils {
     final invite = await SecureStorage.read(SessionStorageKeys.inviteCode) ?? '';
     final expiry = await SecureStorage.read(SessionStorageKeys.expiry) ?? '';
 
-    // Prefer the full UserModel JSON saved by setUserLoggedIn (CacheStorage).
-    // final dynamic rawUser = CacheStorage.read(_userKey, isDecoded: true);
-    final rawJson = await SecureStorage.read(SessionStorageKeys.email);
-    final dynamic rawUser = rawJson != null ? jsonDecode(rawJson) : null;
+    dynamic rawUser;
+    try {
+      final rawJson = await SecureStorage.read(SessionStorageKeys.email);
+      if (rawJson != null) rawUser = jsonDecode(rawJson);
+    } catch (_) {
+      rawUser = null;
+    }
 
     UserModel user;
     if (rawUser is Map) {
