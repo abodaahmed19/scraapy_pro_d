@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:scraapy_pro/auth/login_screen.dart';
+import 'package:scraapy_pro/authentication/presentation/screens/login_screen.dart';
+// import 'package:scraapy_pro/authentication/presentation/screens/login_screen.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/app_images.dart';
 import 'package:scraapy_pro/screens/splash/first_onboarding_screen.dart';
@@ -24,7 +27,8 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 3), () {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const FirstOnboardingScreen()),
+        // MaterialPageRoute(builder: (context) => const FirstOnboardingScreen()),
+        MaterialPageRoute(builder: (context) => const ScrappyLoginScreen()),
       );
     });
   }
