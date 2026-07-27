@@ -88,6 +88,8 @@ class AuthDataSourceImpl implements AuthDataSource {
     final expiry = body['expiry']?.toString() ?? '';
     final userType = user['user_type']?.toString() ?? '';
 
+    print('token=====>$token');
+
     await Future.wait([
       SecureStorage.write(SessionStorageKeys.token, token),
       SecureStorage.write(SessionStorageKeys.expiry, expiry),

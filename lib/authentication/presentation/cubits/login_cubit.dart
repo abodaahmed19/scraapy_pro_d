@@ -58,6 +58,7 @@ class LoginCubit extends Cubit<LoginState> {
     final result = await verifyOtpUseCase(
       VerifyOtpParams(identifier: identifier, code: code),
     );
+    print('result$result');
     result.when(
       (userType) =>
           emit(state.copyWith(status: LoginStatus.success, userType: userType)),
