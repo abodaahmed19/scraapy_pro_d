@@ -1,24 +1,18 @@
 
 import 'package:scraapy_pro/screens/rentals/data/data_source/retals_data_source.dart';
-import 'package:scraapy_pro/screens/rentals/domain/entities/retals_item_entity.dart';
+import 'package:scraapy_pro/screens/rentals/domain/entities/rentals_entity.dart';
 
 abstract class RentalsRepository {
-
-  Future<List<RentalsItemEntity>> getRetals();
+  Future<RentalsEntity> getRentals();
 }
 
-class RentalsRepositoryImpl implements RentalsRepository{
-
+class RentalsRepositoryImpl implements RentalsRepository {
   final RentalsRemoteDataSource rentalsRemoteDataSource;
 
   RentalsRepositoryImpl(this.rentalsRemoteDataSource);
 
   @override
-  Future<List<RentalsItemEntity>> getRetals() async{
-     return await rentalsRemoteDataSource.getRetals();
+  Future<RentalsEntity> getRentals() async {
+    return await rentalsRemoteDataSource.getRentals();
   }
-
-
-
-
 }

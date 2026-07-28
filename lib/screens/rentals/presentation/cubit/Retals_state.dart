@@ -1,14 +1,12 @@
-
-
-import 'package:scraapy_pro/screens/rentals/domain/entities/retals_item_entity.dart';
+import 'package:scraapy_pro/screens/rentals/domain/entities/rentals_entity.dart';
 
 abstract class RentalsState {}
 
 class RentalsInitial extends RentalsState {}
 class RentalsLoading extends RentalsState {}
 class RentalsLoaded extends RentalsState {
-  final List<RentalsItemEntity> retals;
-  RentalsLoaded(this.retals);
+  final RentalsEntity response;
+  RentalsLoaded(this.response);
 }
 class RentalsError extends RentalsState {
   final String message;

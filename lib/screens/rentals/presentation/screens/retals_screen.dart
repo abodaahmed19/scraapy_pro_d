@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
+import 'package:scraapy_pro/screens/rentals/domain/entities/retals_item_entity.dart';
 import 'package:scraapy_pro/screens/rentals/presentation/cubit/Retals_cubit.dart';
 import 'package:scraapy_pro/screens/rentals/presentation/cubit/Retals_state.dart';
 
@@ -13,21 +14,17 @@ class RentalsScreen extends StatelessWidget {
     return BlocProvider(
       create: (_)=> getIt<RentalsCubit>()..getRentals(),
       child: WillPopScope(
-        onWillPop: () async => false, //
+        onWillPop: () async => false,
 
         child: Directionality(
           textDirection: TextDirection.rtl,
           child: Scaffold(
-
             body: Column(
-
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: CustomAppBar(title: 'إيجار',
-                  ),
+                  child: CustomAppBar(title: 'إيجار'),
                 ),
-
                 Expanded(
                   child: BlocBuilder<RentalsCubit, RentalsState>(
                     builder: (context, state) {
@@ -41,10 +38,9 @@ class RentalsScreen extends StatelessWidget {
                           child: ListView.builder(
                             shrinkWrap: true,
                             padding: EdgeInsets.all(0),
-                            // physics: const NeverScrollableScrollPhysics(),
-                            itemCount: 4,
+                            itemCount: state.response.data.length,
                             itemBuilder: (context, index) {
-                              return _buildProductCard(context);
+                              return _buildProductCard(context, state.response.data[index]);
                             },
                           ),
                         );
@@ -66,7 +62,7 @@ class RentalsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProductCard(BuildContext context) {
+  Widget _buildProductCard(BuildContext context, RentalsItemEntity item) {
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
       decoration: BoxDecoration(
@@ -80,7 +76,6 @@ class RentalsScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           Container(
             height: 180,
             width: double.infinity,
@@ -94,7 +89,6 @@ class RentalsScreen extends StatelessWidget {
             ),
             child: Stack(
               children: [
-
                 Positioned(
                   top: 12,
                   right: 12,
@@ -107,7 +101,6 @@ class RentalsScreen extends StatelessWidget {
                     child: const Icon(Icons.list, color: Colors.white, size: 20),
                   ),
                 ),
-
                 Positioned(
                   top: 20,
                   left: -10,
@@ -134,21 +127,19 @@ class RentalsScreen extends StatelessWidget {
               ],
             ),
           ),
-          
 
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('فك نقل وعفش', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text(item.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     Row(
                       children: [
-                        Text('1500', style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20, fontWeight: FontWeight.bold)),
+                        Text(item.price, style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 14, fontWeight: FontWeight.bold)),
                         const SizedBox(width: 4),
                         Text('ر.س', style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 14, fontWeight: FontWeight.bold)),
                       ],
@@ -156,22 +147,19 @@ class RentalsScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 12),
-                
 
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Text('28 الكمية المتوفرة', style: TextStyle(color: Colors.grey, fontSize: 14)),
-                    const SizedBox(width: 8),
                     Icon(Icons.inventory_2_outlined, color: Colors.grey[600], size: 18),
+                    const SizedBox(width: 8),
+                    Text('${item.quantity}'+' '+'الكمية المتوفرة', style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   ],
                 ),
                 const SizedBox(height: 20),
-                
 
                 Row(
                   children: [
-
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.grey.withValues(alpha: 0.1),

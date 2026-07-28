@@ -12,10 +12,10 @@ class RentalsCubit extends Cubit<RentalsState> {
     emit(RentalsLoading());
 
     try {
-      final data = await getRentalsUseCase();
-      print(data.first);
+      final response = await getRentalsUseCase();
+      print(response.data.first);
 
-      emit(RentalsLoaded(data));
+      emit(RentalsLoaded(response));
     } catch (e) {
       print(e);
       emit(RentalsError(e.toString()));
