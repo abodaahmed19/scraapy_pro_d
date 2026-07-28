@@ -13,6 +13,8 @@ import 'package:scraapy_pro/authentication/domain/use_cases/verify_otp_use_case.
 import 'package:scraapy_pro/core/config/res/constants_manager.dart';
 
 import 'package:scraapy_pro/core/di/auth_service.dart';
+import 'package:scraapy_pro/core/helpers/cache_service.dart';
+import 'package:scraapy_pro/core/storage/session_storage_keys.dart';
 import 'package:scraapy_pro/screens/favorites/data/favorite_data_source/favorite_data_source.dart';
 import 'package:scraapy_pro/screens/favorites/data/repositories/favorite_repository.dart';
 import 'package:scraapy_pro/screens/favorites/domain/use_cases/favorite_use_case.dart';
@@ -32,6 +34,11 @@ import 'package:scraapy_pro/screens/services/data/repositories/services_reposito
 import 'package:scraapy_pro/screens/services/domain/use_cases/services_use_case.dart';
 
 import '../../screens/services/presentation/cubit/services_cubit.dart';
+import 'package:scraapy_pro/screens/profile/acount_info/data/data_sources/branches_data_source.dart';
+import 'package:scraapy_pro/screens/profile/acount_info/data/repositories/branches_repository_impl.dart';
+import 'package:scraapy_pro/screens/profile/acount_info/domain/repositories/i_branches_repository.dart';
+import 'package:scraapy_pro/screens/profile/acount_info/domain/use_cases/get_branches_use_case.dart';
+import 'package:scraapy_pro/screens/profile/acount_info/presentation/cubit/branches_cubit.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/cubit/edit_profile_cubit.dart';
 import 'package:scraapy_pro/core/shared/cubits/user_cubit/user_cubit.dart';
 import 'package:scraapy_pro/core/network/network_service.dart';
@@ -45,6 +52,11 @@ void setupDio() {
 
   getIt.registerLazySingleton(() => const FlutterSecureStorage());
 
+  getIt.registerLazySingleton<SecureStorage>(
+        () => SecureStorage(getIt<FlutterSecureStorage>()),
+  );
+
+
   getIt.registerLazySingleton<AuthService>(
         () => AuthService(getIt()),
   );
@@ -53,7 +65,7 @@ void setupDio() {
   getIt.registerLazySingleton<Dio>(() {
     final dio = Dio(
       BaseOptions(
-        baseUrl: 'https://your-api.com/api/',
+        baseUrl: '${ConstantManager.baseUrl}',
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         headers: {
@@ -63,19 +75,22 @@ void setupDio() {
       ),
     );
 
+    print("🟢 REGISTERED DIO HASH: ${dio.hashCode}");
+
     /// 🔐 Auth Interceptor
     dio.interceptors.add(
+
       InterceptorsWrapper(
-        onRequest: (options, handler) async{
-          // final token = getIt<AuthService>().token;
-          final token = await getIt<AuthService>().getToken();
+        onRequest: (options, handler) async {
 
-          if (token != null) {
-            // options.headers['Authorization'] = 'Bearer $token';
-            //TEST//
-            options.headers['Authorization'] = 'Token f56a6bba85c52c8669e93560ed56d878de66cc64ccedbd900e53cf29a20df0cb';
+          print("🚀 Interceptor Called");
 
+          final storage = getIt<SecureStorage>();
 
+          final token = await storage.read(SessionStorageKeys.token);
+
+          if (token != null && token.isNotEmpty) {
+            options.headers['Authorization'] = 'token $token';
           }
 
           return handler.next(options);
@@ -93,6 +108,8 @@ void setupDio() {
 
     return dio;
   });
+
+
 }
 
 void setup() {
@@ -190,6 +207,20 @@ void setup() {
   // Cubit
   getIt.registerFactory(
         () => FavoriteCubit(getIt()),
+  );
+
+  ///Branches///
+  getIt.registerLazySingleton<BranchesDataSource>(
+    () => BranchesDataSourceImp(),
+  );
+  getIt.registerLazySingleton<IBranchesRepository>(
+    () => BranchesRepositoryImpl(getIt<BranchesDataSource>()),
+  );
+  getIt.registerLazySingleton(
+    () => GetBranchesUseCase(getIt<IBranchesRepository>()),
+  );
+  getIt.registerFactory(
+    () => BranchesCubit(getIt<GetBranchesUseCase>()),
   );
 
   ///EditProfile///

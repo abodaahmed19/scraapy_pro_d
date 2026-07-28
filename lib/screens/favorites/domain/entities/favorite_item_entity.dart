@@ -1,58 +1,93 @@
 class FavoriteItemModel {
   final int? id;
   final String? name;
-  final String? hsCode;
-  final String? traderName;
-  final List<String>? images;
+  final List<ItemImageModel>? images;
   final DateTime? createdAt;
   final double? price;
+  final int? quantity;
+  final String? city;
+  final bool? isFavorite;
+  final bool? isInRequest;
 
   FavoriteItemModel({
     this.id,
     this.name,
-    this.hsCode,
-    this.traderName,
     this.images,
     this.createdAt,
     this.price,
+    this.quantity,
+    this.city,
+    this.isFavorite,
+    this.isInRequest,
   });
 
-  /// fromJson
   factory FavoriteItemModel.fromJson(Map<String, dynamic> json) {
     return FavoriteItemModel(
-      id: json['id'] as int?,
-      name: json['name'] as String?,
-      hsCode: json['hs_code'] as String?,
-      traderName: json['trader_name'] as String?,
+      id: json['id'],
+      name: json['name'],
       images: json['images'] != null
-          ? List<String>.from(json['images'])
-          : null,
+          ? (json['images'] as List)
+          .map((e) => ItemImageModel.fromJson(e))
+          .toList()
+          : [],
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'])
           : null,
       price: json['price'] != null
           ? double.tryParse(json['price'].toString())
           : null,
+      quantity: json['quantity'],
+      city: json['city'],
+      isFavorite: json['is_favorite'],
+      isInRequest: json['is_in_request'],
     );
   }
 
-  /// toJson
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
-      'hs_code': hsCode,
-      'trader_name': traderName,
-      'images': images,
+      'images': images?.map((e) => e.toJson()).toList(),
       'created_at': createdAt?.toIso8601String(),
       'price': price,
+      'quantity': quantity,
+      'city': city,
+      'is_favorite': isFavorite,
+      'is_in_request': isInRequest,
     };
   }
 
-  /// List parser
   static List<FavoriteItemModel> listFromJson(List<dynamic> jsonList) {
     return jsonList
         .map((e) => FavoriteItemModel.fromJson(e))
         .toList();
+  }
+}
+
+class ItemImageModel {
+  final int? id;
+  final String? image;
+  final bool? isThumbnail;
+
+  ItemImageModel({
+    this.id,
+    this.image,
+    this.isThumbnail,
+  });
+
+  factory ItemImageModel.fromJson(Map<String, dynamic> json) {
+    return ItemImageModel(
+      id: json['id'],
+      image: json['image'],
+      isThumbnail: json['is_thumbnail'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'image': image,
+      'is_thumbnail': isThumbnail,
+    };
   }
 }

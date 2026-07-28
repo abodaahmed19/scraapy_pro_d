@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scraapy_pro/core/di/injection.dart';
+import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/screens/favorites/domain/entities/favorite_item_entity.dart';
 import 'package:scraapy_pro/screens/favorites/presentation/cubit/favorite_cubit.dart';
 import 'package:scraapy_pro/screens/favorites/presentation/cubit/favorite_state.dart';
@@ -14,41 +15,52 @@ class FavoritesScreen extends StatelessWidget {
     return BlocProvider(
       create: (_)=> getIt<FavoriteCubit>()..getFavorites(),
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('المفضلة'),
-          centerTitle: true,
-        ),
+        // appBar: AppBar(
+        //   title: const Text('المفضلة'),
+        //   centerTitle: true,
+        // ),
         body: ResponsiveLayout(
           child:
 
-          BlocBuilder<FavoriteCubit, FavoriteState>(
-            builder: (context, state) {
-              if (state is FavoriteLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              if (state is FavoriteLoaded) {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child:
-
-                  ListView.builder(
-                    padding: const EdgeInsets.all(16.0),
-                    itemCount: state.favorites.length,
-                    itemBuilder: (context, index) {
-                      return _buildFavoriteCard(context,state.favorites[index]);
-                    },
-                  ),
-
-                );
-              }
-
-              if (state is FavoriteError) {
-                return const Text('حدث خطأ');
-              }
-
-              return const SizedBox();
-            },
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: CustomAppBar(title: 'المفضلة', ),
+              ),
+              Expanded(
+                child: BlocBuilder<FavoriteCubit, FavoriteState>(
+                  builder: (context, state) {
+                    if (state is FavoriteLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                
+                    if (state is FavoriteLoaded) {
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child:
+                
+                        ListView.builder(
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.all(0),
+                          itemCount: state.favorites.length,
+                          itemBuilder: (context, index) {
+                            return _buildFavoriteCard(context,state.favorites[index]);
+                          },
+                        ),
+                
+                      );
+                    }
+                
+                    if (state is FavoriteError) {
+                      return const Text('حدث خطأ');
+                    }
+                
+                    return const SizedBox();
+                  },
+                ),
+              ),
+            ],
           )
 
 
