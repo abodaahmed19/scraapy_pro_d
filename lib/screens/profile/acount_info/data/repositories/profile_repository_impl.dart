@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:multiple_result/multiple_result.dart';
+import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/core/error/failure.dart';
 import 'package:scraapy_pro/core/helpers/cache_service.dart';
 import 'package:scraapy_pro/core/shared/models/user_model.dart';
@@ -30,17 +31,17 @@ class ProfileRepositoryImpl implements IProfileRepository {
       final contactNumber = jsonData['contact_number']?.toString() ?? '';
       final image = jsonData['image']?.toString() ?? '';
       final inviteCode = jsonData['invite_code']?.toString() ?? '';
-      final token = await SecureStorage.read(SessionStorageKeys.token) ?? '';
-      final expiry = await SecureStorage.read(SessionStorageKeys.expiry) ?? '';
+      final token = await getIt<SecureStorage>().read(SessionStorageKeys.token) ?? '';
+      final expiry = await getIt<SecureStorage>().read(SessionStorageKeys.expiry) ?? '';
 
       await Future.wait([
-        SecureStorage.write(SessionStorageKeys.name, name),
-        SecureStorage.write(SessionStorageKeys.userType, userTypeStr),
-        SecureStorage.write(SessionStorageKeys.id, id),
-        SecureStorage.write(SessionStorageKeys.email, email),
-        SecureStorage.write(SessionStorageKeys.contactNumber, contactNumber),
-        SecureStorage.write(SessionStorageKeys.image, image),
-        SecureStorage.write(SessionStorageKeys.inviteCode, inviteCode),
+        getIt<SecureStorage>().write(SessionStorageKeys.name, name),
+        getIt<SecureStorage>().write(SessionStorageKeys.userType, userTypeStr),
+        getIt<SecureStorage>().write(SessionStorageKeys.id, id),
+        getIt<SecureStorage>().write(SessionStorageKeys.email, email),
+        getIt<SecureStorage>().write(SessionStorageKeys.contactNumber, contactNumber),
+        getIt<SecureStorage>().write(SessionStorageKeys.image, image),
+        getIt<SecureStorage>().write(SessionStorageKeys.inviteCode, inviteCode),
       ]);
 
       final user = UserModel(
@@ -57,7 +58,7 @@ class ProfileRepositoryImpl implements IProfileRepository {
         sessionExpiry: expiry,
       );
 
-      await SecureStorage.write(
+      await getIt<SecureStorage>().write(
         SessionStorageKeys.email,
         jsonEncode(user.toJson()),
       );
@@ -70,7 +71,7 @@ class ProfileRepositoryImpl implements IProfileRepository {
 
   Future<UserModel?> _tryReadCachedUser() async {
     try {
-      final raw = await SecureStorage.read(SessionStorageKeys.email);
+      final raw = await getIt<SecureStorage>().read(SessionStorageKeys.email);
       if (raw == null || raw.isEmpty) return null;
       final decoded = jsonDecode(raw);
       if (decoded is! Map) return null;

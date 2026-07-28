@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:scraapy_pro/core/config/res/constants_manager.dart';
+import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/core/helpers/cache_service.dart';
 import 'package:scraapy_pro/core/storage/session_storage_keys.dart';
 
@@ -15,7 +16,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
   @override
   Future<Map<String, dynamic>> fetchMe() async {
-    final token = await SecureStorage.read(SessionStorageKeys.token);
+    final token = await getIt<SecureStorage>().read(SessionStorageKeys.token);
     if (token == null || token.isEmpty) {
       throw Exception('unauthorized');
     }

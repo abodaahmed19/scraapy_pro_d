@@ -62,6 +62,7 @@ class LoginCubit extends Cubit<LoginState> {
     result.when(
       (userType) =>
           emit(state.copyWith(status: LoginStatus.success, userType: userType)),
+
       (failure) => emit(
         state.copyWith(
           status: LoginStatus.error,

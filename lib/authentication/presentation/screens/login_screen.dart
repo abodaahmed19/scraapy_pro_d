@@ -9,6 +9,7 @@ import 'package:scraapy_pro/authentication/presentation/screens/register_screen_
 import 'package:scraapy_pro/authentication/presentation/widgets/auth_text_field.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/core/di/injection.dart';
+import 'package:scraapy_pro/screens/main/main_layout.dart';
 
 class ScrappyLoginScreen extends StatelessWidget {
   const ScrappyLoginScreen({super.key});
@@ -256,23 +257,27 @@ class _LoginViewState extends State<_LoginView>
                             const SizedBox(height: 5),
 
                             // ── Guest button ──
-                            SizedBox(
-                              width: double.infinity,
-                              height: 50,
-                              child: OutlinedButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                style: OutlinedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  side: const BorderSide(color: AppColors.white),
-                                ),
-                                child: Text(
-                                  'guestLogin'.tr(),
-                                  style:
-                                      const TextStyle(color: AppColors.white, fontSize: 16),
-                                ),
-                              ),
-                            ),
+                            // SizedBox(
+                            //   width: double.infinity,
+                            //   height: 50,
+                            //   child: OutlinedButton(
+                            //     // onPressed: () => Navigator.of(context).pop(),
+                            //     onPressed: () {
+                            //       Navigator.push(context, MaterialPageRoute(builder: (_) =>  MainLayout() ));
+                            //
+                            //     },
+                            //     style: OutlinedButton.styleFrom(
+                            //       shape: RoundedRectangleBorder(
+                            //           borderRadius: BorderRadius.circular(10)),
+                            //       side: const BorderSide(color: AppColors.white),
+                            //     ),
+                            //     child: Text(
+                            //       'guestLogin'.tr(),
+                            //       style:
+                            //           const TextStyle(color: AppColors.white, fontSize: 16),
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),

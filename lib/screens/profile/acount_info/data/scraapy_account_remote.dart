@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:scraapy_pro/core/config/res/constants_manager.dart';
+import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/core/helpers/cache_service.dart';
 import 'package:scraapy_pro/core/shared/models/user_model.dart';
 import 'package:scraapy_pro/core/storage/session_storage_keys.dart';
@@ -11,7 +12,7 @@ import 'package:scraapy_pro/core/storage/session_storage_keys.dart';
 abstract final class ScraapyAccountRemote {
   static Uri _u(String path) => Uri.parse('${ConstantManager.baseUrl2}$path');
 
-  static Future<String?> _token() => SecureStorage.read(SessionStorageKeys.token);
+  static Future<String?> _token() => getIt<SecureStorage>().read(SessionStorageKeys.token);
 
   static Future<Map<String, dynamic>> fetchMeAndRefreshCache() async {
     final token = await _token();
@@ -27,7 +28,7 @@ abstract final class ScraapyAccountRemote {
       throw Exception('user_load_failed');
     }
     final jsonData = json.decode(res.body) as Map<String, dynamic>;
-    final expiry = await SecureStorage.read(SessionStorageKeys.expiry) ?? '';
+    final expiry = await getIt<SecureStorage>().read(SessionStorageKeys.expiry) ?? '';
     final name = jsonData['name']?.toString() ?? '';
     final userType = jsonData['user_type']?.toString() ?? '';
     final id = jsonData['id']?.toString() ?? '';
@@ -37,15 +38,15 @@ abstract final class ScraapyAccountRemote {
     final inviteCode = jsonData['invite_code']?.toString() ?? '';
 
     await Future.wait([
-      SecureStorage.write(SessionStorageKeys.expiry, expiry),
-      SecureStorage.write(SessionStorageKeys.token, token),
-      SecureStorage.write(SessionStorageKeys.name, name),
-      SecureStorage.write(SessionStorageKeys.userType, userType),
-      SecureStorage.write(SessionStorageKeys.id, id),
-      SecureStorage.write(SessionStorageKeys.email, email),
-      SecureStorage.write(SessionStorageKeys.contactNumber, contactNumber),
-      SecureStorage.write(SessionStorageKeys.image, image),
-      SecureStorage.write(SessionStorageKeys.inviteCode, inviteCode),
+      getIt<SecureStorage>().write(SessionStorageKeys.expiry, expiry),
+      getIt<SecureStorage>().write(SessionStorageKeys.token, token),
+      getIt<SecureStorage>().write(SessionStorageKeys.name, name),
+      getIt<SecureStorage>().write(SessionStorageKeys.userType, userType),
+      getIt<SecureStorage>().write(SessionStorageKeys.id, id),
+      getIt<SecureStorage>().write(SessionStorageKeys.email, email),
+      getIt<SecureStorage>().write(SessionStorageKeys.contactNumber, contactNumber),
+      getIt<SecureStorage>().write(SessionStorageKeys.image, image),
+      getIt<SecureStorage>().write(SessionStorageKeys.inviteCode, inviteCode),
     ]);
 
     final user = UserModel(
@@ -61,7 +62,7 @@ abstract final class ScraapyAccountRemote {
       inviteCode: inviteCode,
       sessionExpiry: expiry,
     );
-    await SecureStorage.write(
+    await getIt<SecureStorage>().write(
       SessionStorageKeys.email,
       jsonEncode(user.toJson()),
     );
@@ -148,7 +149,7 @@ abstract final class ScraapyAccountRemote {
 
   static Future<List<Map<String, dynamic>>> fetchMyTickets() async {
     final token = await _token();
-    final contact = await SecureStorage.read(SessionStorageKeys.contactNumber);
+    final contact = await getIt<SecureStorage>().read(SessionStorageKeys.contactNumber);
     if (token == null) throw Exception('unauthorized');
     final res = await http.get(
       _u('document/contact/'),
@@ -353,7 +354,7 @@ abstract final class ScraapyAccountRemote {
     if (response.statusCode != 200) return false;
     final data = json.decode(response.body) as Map<String, dynamic>;
     final img = data['image']?.toString() ?? '';
-    await SecureStorage.write(SessionStorageKeys.image, img);
+    await getIt<SecureStorage>().write(SessionStorageKeys.image, img);
     return true;
   }
 
@@ -372,7 +373,7 @@ abstract final class ScraapyAccountRemote {
     if (response.statusCode != 200) return false;
     final data = json.decode(response.body) as Map<String, dynamic>;
     final img = data['image']?.toString() ?? '';
-    await SecureStorage.write(SessionStorageKeys.image, img);
+    await getIt<SecureStorage>().write(SessionStorageKeys.image, img);
     return true;
   }
 }

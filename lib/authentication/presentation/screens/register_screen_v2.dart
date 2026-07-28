@@ -171,13 +171,13 @@ class _RegisterViewV2State extends State<_RegisterViewV2> {
   }
 
   Future<void> _submit(RegisterCubit cubit, RegisterState state) async {
-    if (!state.isPhoneVerified) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('mustVerifyPhone'.tr()), backgroundColor: Colors.red),
-      );
-      return;
-    }
-    if (!_formKey.currentState!.validate()) return;
+    // if (!state.isPhoneVerified) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text('mustVerifyPhone'.tr()), backgroundColor: Colors.red),
+    //   );
+    //   return;
+    // }
+    // if (!_formKey.currentState!.validate()) return;
     await cubit.register(
       name: _nameCtrl.text,
       email: _emailCtrl.text,
@@ -406,18 +406,18 @@ class _RegisterViewV2State extends State<_RegisterViewV2> {
                                     ),
                                   ),
                                   const SizedBox(height: 5),
-                                  SizedBox(
-                                    height: 50,
-                                    child: OutlinedButton(
-                                      onPressed: () => Navigator.of(context).pop(),
-                                      style: OutlinedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                        side: BorderSide(color: AppColors.white.withValues(alpha: 0.4)),
-                                      ),
-                                      child: Text('guestLogin'.tr(),
-                                          style: const TextStyle(color: AppColors.white, fontSize: 16)),
-                                    ),
-                                  ),
+                                  // SizedBox(
+                                  //   height: 50,
+                                  //   child: OutlinedButton(
+                                  //     onPressed: () => Navigator.of(context).pop(),
+                                  //     style: OutlinedButton.styleFrom(
+                                  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                  //       side: BorderSide(color: AppColors.white.withValues(alpha: 0.4)),
+                                  //     ),
+                                  //     child: Text('guestLogin'.tr(),
+                                  //         style: const TextStyle(color: AppColors.white, fontSize: 16)),
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),

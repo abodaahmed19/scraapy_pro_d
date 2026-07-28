@@ -52,7 +52,8 @@ class PersonalAccountScreen extends StatelessWidget {
                   PersonalInfoWidget(),
                   SizedBox(height: 16),
                   BaqaWidget(),
-                  SizedBox(height: 12),
+                  SizedBox(height: 16),
+
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
@@ -366,6 +367,7 @@ class AccountMenu extends StatelessWidget {
     return ListView.builder(
       itemCount: menuItem.length,
       shrinkWrap: true,
+      padding: EdgeInsets.all(0),
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return Padding(
