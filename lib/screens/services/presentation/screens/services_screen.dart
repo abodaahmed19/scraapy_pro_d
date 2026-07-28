@@ -4,6 +4,7 @@ import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/screens/market/presentation/cubit/market_cubit.dart';
 import 'package:scraapy_pro/screens/market/presentation/cubit/market_state.dart';
+import 'package:scraapy_pro/screens/services/domain/entities/services_item_entity.dart';
 import 'package:scraapy_pro/screens/services/presentation/cubit/services_cubit.dart';
 import 'package:scraapy_pro/screens/services/presentation/cubit/services_state.dart';
 
@@ -46,7 +47,7 @@ class ServicesScreen extends StatelessWidget {
                             // physics: const NeverScrollableScrollPhysics(),
                             itemCount: 4,
                             itemBuilder: (context, index) {
-                              return _buildProductCard(context);
+                              return _buildProductCard(context,state.response.data[index]);
                             },
                           ),
                         );
@@ -68,7 +69,7 @@ class ServicesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProductCard(BuildContext context) {
+  Widget _buildProductCard(BuildContext context,ServicesItemEntity serviceItem) {
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
       decoration: BoxDecoration(
@@ -147,10 +148,10 @@ class ServicesScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('فك نقل وعفش', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                     Text(serviceItem.name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     Row(
                       children: [
-                        Text('1500', style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20, fontWeight: FontWeight.bold)),
+                        Text(serviceItem.price, style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 14, fontWeight: FontWeight.bold)),
                         const SizedBox(width: 4),
                         Text('ر.س', style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 14, fontWeight: FontWeight.bold)),
                       ],
@@ -161,11 +162,11 @@ class ServicesScreen extends StatelessWidget {
                 
 
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Text('28 الكمية المتوفرة', style: TextStyle(color: Colors.grey, fontSize: 14)),
-                    const SizedBox(width: 8),
                     Icon(Icons.inventory_2_outlined, color: Colors.grey[600], size: 18),
+                    const SizedBox(width: 8),
+                     Text('${serviceItem.quantity}'+' '+'الكمية المتوفرة', style: TextStyle(color: Colors.grey, fontSize: 14)),
                   ],
                 ),
                 const SizedBox(height: 20),

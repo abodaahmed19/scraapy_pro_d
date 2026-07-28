@@ -35,8 +35,8 @@ class UserCubit extends Cubit<UserState> with UserUtils {
   Future<void> logout() async {
     await Future.wait([
       // CacheStorage.delete(_userKey),
-      SecureStorage.delete(_userKey),
-      SecureStorage.delete(_tokenKey),
+      getIt<SecureStorage>().delete(_userKey),
+      getIt<SecureStorage>().delete(_tokenKey),
     ]);
     _clearUser();
   }
@@ -53,19 +53,19 @@ class UserCubit extends Cubit<UserState> with UserUtils {
 
   /// Refresh drawer/profile fields from secure storage (e.g. after `fetchMe`).
   Future<void> syncUserFromSecureStorage() async {
-    final token = await SecureStorage.read(_tokenKey);
+    final token = await getIt<SecureStorage>().read(_tokenKey);
     if (token == null || token.isEmpty || state.userStatus == UserStatus.loggedOut) {
       return;
     }
     final base = UserModel.rebuiltFromUnsafe(state.userModel);
-    final name = await SecureStorage.read(SessionStorageKeys.name) ?? '';
-    final id = await SecureStorage.read(SessionStorageKeys.id) ?? '';
-    final email = await SecureStorage.read(SessionStorageKeys.email) ?? '';
+    final name = await getIt<SecureStorage>().read(SessionStorageKeys.name) ?? '';
+    final id = await getIt<SecureStorage>().read(SessionStorageKeys.id) ?? '';
+    final email = await getIt<SecureStorage>().read(SessionStorageKeys.email) ?? '';
     final phone =
-        await SecureStorage.read(SessionStorageKeys.contactNumber) ?? '';
-    final image = await SecureStorage.read(SessionStorageKeys.image) ?? '';
-    final invite = await SecureStorage.read(SessionStorageKeys.inviteCode) ?? '';
-    final expiry = await SecureStorage.read(SessionStorageKeys.expiry) ?? '';
+        await getIt<SecureStorage>().read(SessionStorageKeys.contactNumber) ?? '';
+    final image = await getIt<SecureStorage>().read(SessionStorageKeys.image) ?? '';
+    final invite = await getIt<SecureStorage>().read(SessionStorageKeys.inviteCode) ?? '';
+    final expiry = await getIt<SecureStorage>().read(SessionStorageKeys.expiry) ?? '';
 
     final merged = base.copyWith(
       fullName: name.isNotEmpty ? name : base.fullName,
@@ -82,16 +82,16 @@ class UserCubit extends Cubit<UserState> with UserUtils {
   }
 
   Future<bool> init() async {
-    final token = await SecureStorage.read(_tokenKey);
+    final token = await getIt<SecureStorage>().read(_tokenKey);
     if (token == null || token.isEmpty) return false;
 
-    final image = await SecureStorage.read(SessionStorageKeys.image) ?? '';
-    final invite = await SecureStorage.read(SessionStorageKeys.inviteCode) ?? '';
-    final expiry = await SecureStorage.read(SessionStorageKeys.expiry) ?? '';
+    final image = await getIt<SecureStorage>().read(SessionStorageKeys.image) ?? '';
+    final invite = await getIt<SecureStorage>().read(SessionStorageKeys.inviteCode) ?? '';
+    final expiry = await getIt<SecureStorage>().read(SessionStorageKeys.expiry) ?? '';
 
     dynamic rawUser;
     try {
-      final rawJson = await SecureStorage.read(SessionStorageKeys.email);
+      final rawJson = await getIt<SecureStorage>().read(SessionStorageKeys.email);
       if (rawJson != null) rawUser = jsonDecode(rawJson);
     } catch (_) {
       rawUser = null;
@@ -112,11 +112,11 @@ class UserCubit extends Cubit<UserState> with UserUtils {
     } else {
       // Fallback: reconstruct from the individual fields that
       // AuthDataSourceImpl.verifyOtp saves to SecureStorage.
-      final name = await SecureStorage.read(SessionStorageKeys.name) ?? '';
-      final id = await SecureStorage.read(SessionStorageKeys.id) ?? '';
-      final email = await SecureStorage.read(SessionStorageKeys.email) ?? '';
+      final name = await getIt<SecureStorage>().read(SessionStorageKeys.name) ?? '';
+      final id = await getIt<SecureStorage>().read(SessionStorageKeys.id) ?? '';
+      final email = await getIt<SecureStorage>().read(SessionStorageKeys.email) ?? '';
       final phone =
-          await SecureStorage.read(SessionStorageKeys.contactNumber) ?? '';
+          await getIt<SecureStorage>().read(SessionStorageKeys.contactNumber) ?? '';
       user = UserModel(
         id: id,
         fullName: name,

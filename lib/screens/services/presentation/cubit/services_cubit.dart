@@ -13,10 +13,10 @@ class ServicesCubit extends Cubit<ServicesState> {
     emit(ServicesLoading());
 
     try {
-      final data = await getServicesUseCase();
-      print(data.first);
+      final response = await getServicesUseCase();
+      print(response.data.first);
 
-      emit(ServicesLoaded(data));
+      emit(ServicesLoaded(response));
     } catch (e) {
       print(e);
       emit(ServicesError(e.toString()));

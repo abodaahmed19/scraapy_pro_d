@@ -10,7 +10,7 @@ mixin UserUtils {
     // );
 
 
-    SecureStorage.write(SessionStorageKeys.email, jsonEncode(user.toJson()));
+    getIt<SecureStorage>().write(SessionStorageKeys.email, jsonEncode(user.toJson()));
 
 
 
@@ -18,6 +18,6 @@ mixin UserUtils {
   }
 
   Future<void> _saveToken(String token) async {
-    await SecureStorage.write(_tokenKey, token);
+    await getIt<SecureStorage>().write(_tokenKey, token);
   }
 }

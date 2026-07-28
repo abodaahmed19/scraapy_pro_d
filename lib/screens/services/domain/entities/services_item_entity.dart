@@ -1,34 +1,51 @@
 class ServicesItemEntity {
   final int id;
-  final String? name;
-  final String? nameAr;
-  final String? image;
-  final String? priceDollar;
-  final String? priceRiyal;
-  final DateTime? created;
-  final int? category;
+  final List<ServicesItemImageEntity> images;
+  final String name;
+  final String price;
+  final int quantity;
+  final String city;
+  final bool isFavorite;
 
   ServicesItemEntity({
     required this.id,
+    required this.images,
     required this.name,
-     this.nameAr,
-     this.image,
-     this.priceDollar,
-     this.priceRiyal,
-     this.created,
-     this.category,
+    required this.price,
+    required this.quantity,
+    required this.city,
+    required this.isFavorite,
   });
 
   factory ServicesItemEntity.fromJson(Map<String, dynamic> json) {
     return ServicesItemEntity(
       id: json['id'],
-      name: json['name'],
-      // nameAr: json['name_ar'],
-      // image: json['image'],
-      // priceDollar: json['price_dollar'],
-      // priceRiyal: json['price_riyal'],
-      // created: DateTime.parse(json['created']),
-      // category: json['category'],
+      images: (json['images'] as List).map((e) => ServicesItemImageEntity.fromJson(e)).toList(),
+      name: json['name'] ?? '',
+      price: json['price']?.toString() ?? '0',
+      quantity: json['quantity'] ?? 0,
+      city: json['city'] ?? '',
+      isFavorite: json['is_favorite'] ?? false,
+    );
+  }
+}
+
+class ServicesItemImageEntity {
+  final int id;
+  final String image;
+  final bool isThumbnail;
+
+  ServicesItemImageEntity({
+    required this.id,
+    required this.image,
+    required this.isThumbnail,
+  });
+
+  factory ServicesItemImageEntity.fromJson(Map<String, dynamic> json) {
+    return ServicesItemImageEntity(
+      id: json['id'],
+      image: json['image'] ?? '',
+      isThumbnail: json['is_thumbnail'] ?? false,
     );
   }
 }
