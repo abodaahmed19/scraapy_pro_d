@@ -13,10 +13,10 @@ class MarketCubit extends Cubit<MarketState> {
     emit(MarketLoading());
 
     try {
-      final data = await getMarketsUseCase();
-      print(data.first);
+      final response = await getMarketsUseCase();
+      print(response.data.first);
 
-      emit(MarketLoaded(data));
+      emit(MarketLoaded(response));
     } catch (e) {
       print(e);
       emit(MarketError(e.toString()));
