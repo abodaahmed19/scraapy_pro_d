@@ -14,7 +14,7 @@ class ConstantManager {
   static const String projectName = "Scraapy";
   static const int splashTimer = 4;
   /// Primary REST API (used by [DioService]).
-  static const String baseUrl = "https://api.scraapy.sa/api/";
+  static const String baseUrl = "https://vmi2584358.contaboserver.net/api";
   static const String baseUrl2 = "https://scraapy.net/api/";
 
   /// Public site (legal / marketing). Replace if your team uses another URL.

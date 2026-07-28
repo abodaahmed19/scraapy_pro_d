@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:scraapy_pro/authentication/data/data_sources/auth_data_source.dart';
 import 'package:scraapy_pro/authentication/domain/entities/auth_entity.dart';
+import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/core/helpers/cache_service.dart';
 import 'package:scraapy_pro/core/storage/session_storage_keys.dart';
 
@@ -91,18 +92,18 @@ class AuthDataSourceImpl implements AuthDataSource {
     print('token=====>$token');
 
     await Future.wait([
-      SecureStorage.write(SessionStorageKeys.token, token),
-      SecureStorage.write(SessionStorageKeys.expiry, expiry),
-      SecureStorage.write(SessionStorageKeys.name, user['name']?.toString() ?? ''),
-      SecureStorage.write(SessionStorageKeys.userType, userType),
-      SecureStorage.write(SessionStorageKeys.id, user['id']?.toString() ?? ''),
-      SecureStorage.write(SessionStorageKeys.email, user['email']?.toString() ?? ''),
-      SecureStorage.write(
+      getIt<SecureStorage>().write(SessionStorageKeys.token, token),
+      getIt<SecureStorage>().write(SessionStorageKeys.expiry, expiry),
+      getIt<SecureStorage>().write(SessionStorageKeys.name, user['name']?.toString() ?? ''),
+      getIt<SecureStorage>().write(SessionStorageKeys.userType, userType),
+      getIt<SecureStorage>().write(SessionStorageKeys.id, user['id']?.toString() ?? ''),
+      getIt<SecureStorage>().write(SessionStorageKeys.email, user['email']?.toString() ?? ''),
+      getIt<SecureStorage>().write(
         SessionStorageKeys.contactNumber,
         user['contact_number']?.toString() ?? '',
       ),
-      SecureStorage.write(SessionStorageKeys.image, user['image']?.toString() ?? ''),
-      SecureStorage.write(
+      getIt<SecureStorage>().write(SessionStorageKeys.image, user['image']?.toString() ?? ''),
+      getIt<SecureStorage>().write(
         SessionStorageKeys.inviteCode,
         user['invite_code']?.toString() ?? '',
       ),

@@ -75,6 +75,7 @@ class AuthRepositoryImpl implements IAuthRepository {
         accountType: accountType,
         inviteCode: inviteCode,
       );
+      print('code$code');
       return Success(code);
     } catch (e) {
       return Error(ServerFailure(e.toString()));
