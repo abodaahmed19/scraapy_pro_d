@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
-import 'package:scraapy_pro/screens/home/presentation/screens/home_screen.dart';
-import 'package:scraapy_pro/screens/main/main_layout.dart';
+import 'package:scraapy_pro/screens/market/domain/entities/market_item_entity.dart';
 import 'package:scraapy_pro/screens/market/presentation/cubit/market_cubit.dart';
 import 'package:scraapy_pro/screens/market/presentation/cubit/market_state.dart';
-import '../../../../widgets/responsive_layout.dart';
 
 class MarketScreen extends StatelessWidget {
   const MarketScreen({super.key});
@@ -16,23 +14,16 @@ class MarketScreen extends StatelessWidget {
     return BlocProvider(
       create: (_)=> getIt<MarketCubit>()..getMarket(),
       child: WillPopScope(
-        onWillPop: () async => false, //
+        onWillPop: () async => false,
 
         child: Directionality(
           textDirection: TextDirection.rtl,
           child: Scaffold(
-            // appBar: AppBar(
-            //   title: const Text('الخدمات'),
-            // ),
             body: Column(
-              // shrinkWrap: true,
-              // physics: NeverScrollableScrollPhysics(),
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: CustomAppBar(title: 'الخدمات',
-                  haveBack: false,
-                  ),
+                  child: CustomAppBar(title: 'السوق', haveBack: false),
                 ),
 
                 Expanded(
@@ -48,10 +39,9 @@ class MarketScreen extends StatelessWidget {
                           child: ListView.builder(
                             shrinkWrap: true,
                             padding: EdgeInsets.all(0),
-                            // physics: const NeverScrollableScrollPhysics(),
-                            itemCount: 4,
+                            itemCount: state.response.data.length,
                             itemBuilder: (context, index) {
-                              return _buildProductCard(context);
+                              return _buildProductCard(context, state.response.data[index]);
                             },
                           ),
                         );
@@ -73,7 +63,7 @@ class MarketScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProductCard(BuildContext context) {
+  Widget _buildProductCard(BuildContext context, MarketItemEntity item) {
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
       decoration: BoxDecoration(
@@ -152,10 +142,10 @@ class MarketScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('فك نقل وعفش', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text(item.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     Row(
                       children: [
-                        Text('1500', style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20, fontWeight: FontWeight.bold)),
+                        Text(item.price, style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 14, fontWeight: FontWeight.bold)),
                         const SizedBox(width: 4),
                         Text('ر.س', style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 14, fontWeight: FontWeight.bold)),
                       ],
@@ -166,11 +156,11 @@ class MarketScreen extends StatelessWidget {
                 
 
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Text('28 الكمية المتوفرة', style: TextStyle(color: Colors.grey, fontSize: 14)),
-                    const SizedBox(width: 8),
                     Icon(Icons.inventory_2_outlined, color: Colors.grey[600], size: 18),
+                    const SizedBox(width: 8),
+                    Text('${item.quantity}'+' '+'الكمية المتوفرة', style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   ],
                 ),
                 const SizedBox(height: 20),
