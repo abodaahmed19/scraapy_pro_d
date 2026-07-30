@@ -6,7 +6,7 @@ import '../../cubit/app_cubit.dart';
 import '../../cubit/app_state.dart';
 import '../market/presentation/screens/market_screen.dart';
 import '../quotes/quotes_screen.dart';
-import '../contracts/contracts_screen.dart';
+import '../contracts/presentation/screens/contracts_screen.dart';
 import '../profile/profile_screen.dart';
 
 class MainLayout extends StatelessWidget {

@@ -4,8 +4,8 @@ import 'package:scraapy_pro/const/main_app_btn.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/widgets/custom_text_field.dart';
 
-class ImportDangerWaste extends StatelessWidget {
-  const ImportDangerWaste({super.key});
+class ImportNonDangerWast extends StatelessWidget {
+  const ImportNonDangerWast({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class ImportDangerWaste extends StatelessWidget {
                   // Section Header
 
                   CustomAppBar(title: 'الأذونات'),
-                  Text('استيراد النفايات الخطرة',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16,color: AppColors.primary),),
+                  Text('استيراد النفايات غير الخطرة',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16,color: AppColors.primary),),
                   SizedBox(height: 16,),
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.end,
@@ -117,25 +117,19 @@ class ImportDangerWaste extends StatelessWidget {
 
                   // 2. Commercial Register (رقم السجل التجاري)
                   const CustomTextField(
-                    label: 'الموافقات الدولية (نازل)',
-                    hint: 'ارفع الموافقات المطلوبة',
+                    label: 'صور النفايا',
+                    hint: 'ارفع صور الفايا',
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
 
                   ),
 
                   const CustomTextField(
-                    label: 'تقرير مخاطر الموارد',
-                    hint: 'ارفع تقرير مخاطر الموارد',
+                    label: 'احتياج السوق المحلي',
+                    hint: 'اشرح ضرورة اسيراد هذا النوع لسد فجوة في السوق المحلي',
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
 
                   ),
-                  const CustomTextField(
-                    label: 'التقرير المخبري',
-                    hint: 'ارفع تقرير مخبر معتمد (خلال اخر 3 اشهر)',
-                    suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
-
-                  ),
-                  Text('تعهد الاستخدام الصناعي*',style: TextStyle(
+                  Text('تعهد التدوير*',style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color:  Colors.black87,
@@ -160,7 +154,7 @@ class ImportDangerWaste extends StatelessWidget {
                             width: MediaQuery.of(context).size.width *0.7,
                             child: Text(
                                 textAlign: TextAlign.start,
-                                'أقر باستخدام المواد المستوردة في العملية الصناعية بنسبة 100% دون تحويلها إلى نفايات',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 10,
+                                'أتعهد بتدوير 100% من كميات النفايات المستوردة وعدم ردم أي كمية منها',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 10,
                                 color:Colors.black )),
                           ),
 
@@ -190,34 +184,22 @@ class ImportDangerWaste extends StatelessWidget {
                   const SizedBox(height: 12),
 
                   const CustomTextField(
-                    label: 'وصف الرحلة اللوجستية',
-                    hint: 'اكتب وصف تفصيلي لعمليات التخزين والشحن',
-                  ),
-                  const SizedBox(height: 16),
-
-                  // 2. طريقة الجمع والنقل
-                  const CustomTextField(
-                    label: 'طريقة الجمع والنقل',
-                    hint: 'حدد آلية التعامل الفني مع النفايات الخطرة',
-                  ),
-                  const SizedBox(height: 16),
-
-                  // 3. بيانات الناقل
-                  const CustomTextField(
                     label: 'بيانات الناقل',
                     hint: 'ادخل رقم رخصة الناقل',
                   ),
-                  const SizedBox(height: 16),
-
-                  // 4. منشأة التخزين المؤقت (في حالة وجود تخزين)
                   const CustomTextField(
                     label: 'منشأة التخزين المؤقت (في حالة وجود تخزين)',
                     hint: 'ادخل بيانات منشأة تخزين مؤقتة مرخصة من قبل المركز',
                   ),
+                  const CustomTextField(
+                    label: 'مرافق التدوير',
+                    hint: 'وضع توافر المرافق الجاهزة لمعالجة كميات النفايات المستوردة',
+                  ),
+
+
+
 
                   ///////////////////////////////////////////////////////////////////
-                  SizedBox(height: 16,),
-
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -226,7 +208,7 @@ class ImportDangerWaste extends StatelessWidget {
                       const SizedBox(width: 8),
 
                       const Text(
-                        'خطة الطوارئ والإلتزامات',
+                        'المرافقات والملاحظات القانونية',
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
@@ -235,21 +217,9 @@ class ImportDangerWaste extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-
-                  const CustomTextField(
-                    label: 'خطة الاستجابة للطوارئ',
-                    hint: 'ارفع ملف خطة الاستجابة لحالات الطوارئ أثناء الجمع والنقل',
-                    suffixIcon: Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
-                  ),
                   const SizedBox(height: 16),
 
-                  // 2. إثبات احتياج السوق (Text Field)
-                  const CustomTextField(
-                    label: 'إثبات احتياج السوق',
-                    hint: 'حدد آلية التعامل الفني مع النفايات الخطرة',
-                  ),
-                  Text('اقرار مطابقة الفئة*',style: TextStyle(
+                  Text('اقرار المتطلبات الإضافية*',style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color:  Colors.black87,
@@ -274,7 +244,7 @@ class ImportDangerWaste extends StatelessWidget {
                             width: MediaQuery.of(context).size.width *0.7,
                             child: Text(
                                 textAlign: TextAlign.start,
-                                'ْاقر بأن نوع النفايات مطابق للفئة المسموح للمركبة بنقلها',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 10,
+                                'أقر بعلمي بأن للمركز الحق في تعديل المتطلبات أو طلب بيانات إضافية في أي وقت دون إشعار مسبق',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 10,
                                 color:Colors.black )),
                           ),
 
@@ -283,40 +253,7 @@ class ImportDangerWaste extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 16,),
-                  Text('إقرار التعديلات *',style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color:  Colors.black87,
-                    fontFamily: 'Cairo',
-                  ),),
-                  SizedBox(height: 16,),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFF4F4F4),
-                      border: Border.all(color: Color(0x33000000)),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 20),
-                      child: Row(
 
-                        children: [
-                          Checkbox(value: false, onChanged: (val){}),
-                          SizedBox(width: 6,),
-                          Container(
-                            width: MediaQuery.of(context).size.width *0.7,
-                            child: Text(
-                                textAlign: TextAlign.start,
-                                'أوافق على حق المركز في تعديل المتطلبات أو طلب بيانات إضافية في أي وقت دون إشعار مسبق',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 10,
-                                color:Colors.black )),
-                          ),
-
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16,),
 
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.end,

@@ -6,6 +6,7 @@ class CustomTextField extends StatelessWidget {
   final bool isDropdown;
   final int maxLines;
   final bool isRequired;
+  final Widget? suffixIcon;
 
   const CustomTextField({
     super.key,
@@ -13,7 +14,7 @@ class CustomTextField extends StatelessWidget {
     required this.hint,
     this.isDropdown = false,
     this.maxLines = 1,
-    this.isRequired = false,
+    this.isRequired = false, this.suffixIcon,
   });
 
   @override
@@ -65,7 +66,7 @@ class CustomTextField extends StatelessWidget {
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               suffixIcon: isDropdown
                   ? const Icon(Icons.keyboard_arrow_down)
-                  : null,
+                  : suffixIcon,
             ),
           ),
         ),
