@@ -4,6 +4,8 @@ import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/app_images.dart';
 import 'package:scraapy_pro/const/main_app_btn.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
+import 'package:scraapy_pro/screens/permisions/presentations/permission/Import_hazardous_waste.dart';
+import 'package:scraapy_pro/screens/permisions/presentations/permission/import_non_danger_wast.dart';
 
 
 class PermessionScreen extends StatelessWidget {
@@ -29,7 +31,15 @@ class PermessionScreen extends StatelessWidget {
                     showAvatar: true,
                     btnLeft: 'استيراد النفايات غير الخطرة',
                     btnRight: 'استيراد النفايات الخطرة',
-                    onTapLeft: (){},onTapRight: (){}
+                    onTapLeft: (){
+
+
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => const ImportNonDangerWast()));
+
+                    },onTapRight: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const ImportDangerWaste()));
+
+                  }
                   ),
                   const SizedBox(height: 20),
 
@@ -39,7 +49,17 @@ class PermessionScreen extends StatelessWidget {
                     showAvatar: false,
                     btnLeft: 'تصدير النفايات غير الخطرة',
                     btnRight: 'تصدير النفايات الخطرة',
-                    onTapRight: (){}, onTapLeft: (){}),
+                      onTapLeft: (){
+
+
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const ImportNonDangerWast()));
+
+                      },onTapRight: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const ImportDangerWaste()));
+
+                  }
+
+                  ),
 
 
                 ],
