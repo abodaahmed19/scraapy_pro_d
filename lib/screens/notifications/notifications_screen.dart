@@ -62,14 +62,27 @@ class NotificationsScreen extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Icon(Icons.close, size: 20, color: Colors.grey),
-            const Spacer(),
+            // const Icon(Icons.close, size: 20, color: Colors.grey),
+            // const Spacer(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                Row(
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF189491),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    SizedBox(width: 8,),
+                    Text(
+                      title,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                  ],
                 ),
                 Text(
                   subtitle,
@@ -77,15 +90,18 @@ class NotificationsScreen extends StatelessWidget {
                 ),
               ],
             ),
+            const Spacer(),
+            const Icon(Icons.close, size: 20, color: Colors.grey),
+
             const SizedBox(width: 12),
-            Container(
-              width: 8,
-              height: 8,
-              decoration: const BoxDecoration(
-                color: Color(0xFF189491),
-                shape: BoxShape.circle,
-              ),
-            ),
+            // Container(
+            //   width: 8,
+            //   height: 8,
+            //   decoration: const BoxDecoration(
+            //     color: Color(0xFF189491),
+            //     shape: BoxShape.circle,
+            //   ),
+            // ),
           ],
         ),
       ),
