@@ -86,6 +86,7 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
         if (state.status == LoginStatus.success) {
           // Set the token on the Dio client immediately for this session.
           await getIt<UserCubit>().init();
+
           if (!context.mounted) return;
           final dest = state.userType == 'individual'
               // ? const NotAllowedScreen()

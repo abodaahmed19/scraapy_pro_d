@@ -6,6 +6,10 @@ import 'package:scraapy_pro/authentication/presentation/screens/login_screen.dar
 // import 'package:scraapy_pro/authentication/presentation/screens/login_screen.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/app_images.dart';
+import 'package:scraapy_pro/core/di/injection.dart';
+import 'package:scraapy_pro/core/helpers/cache_service.dart';
+import 'package:scraapy_pro/core/storage/session_storage_keys.dart';
+import 'package:scraapy_pro/screens/main/main_layout.dart';
 import 'package:scraapy_pro/screens/splash/first_onboarding_screen.dart';
 import 'package:scraapy_pro/screens/splash/sec_onboarding.dart' ;
 import 'package:scraapy_pro/screens/splash/sec_onboarding.dart' ;
@@ -24,12 +28,25 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Timer(const Duration(seconds: 3), () {
-      Navigator.push(
-        context,
-        // MaterialPageRoute(builder: (context) => const FirstOnboardingScreen()),
-        MaterialPageRoute(builder: (context) => const ScrappyLoginScreen()),
-      );
+    Timer(const Duration(seconds: 3), () async{
+
+      final storage = getIt<SecureStorage>();
+      final token = await storage.read(SessionStorageKeys.token);
+
+      if(token != null){
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MainLayout()),
+        );
+      }else{
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ScrappyLoginScreen()),
+        );
+      }
+
+
+
     });
   }
 

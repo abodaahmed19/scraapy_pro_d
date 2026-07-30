@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:scraapy_pro/authentication/presentation/screens/login_screen.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/app_images.dart';
+import 'package:scraapy_pro/core/di/injection.dart';
+import 'package:scraapy_pro/core/helpers/cache_service.dart';
+import 'package:scraapy_pro/core/storage/session_storage_keys.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/screens/checkout/checkout_screen.dart';
@@ -61,9 +65,17 @@ class PersonalAccountScreen extends StatelessWidget {
                           AccountMenu(),
                           InkWell(
                             onTap: () {
-                              context
-                                  .read<ProfileCubit>()
-                                  .fetchMeAndRefreshCache();
+                              //TODO:logout
+                              final storage = getIt<SecureStorage>();
+
+                              storage.delete(SessionStorageKeys.token);
+
+
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(builder: (context) => ScrappyLoginScreen()),
+                                    (route) => false,
+                              );
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
