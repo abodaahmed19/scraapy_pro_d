@@ -5,6 +5,8 @@ import 'package:scraapy_pro/const/app_images.dart';
 import 'package:scraapy_pro/const/main_app_btn.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/screens/permisions/presentations/permission/Import_hazardous_waste.dart';
+import 'package:scraapy_pro/screens/permisions/presentations/permission/export_danger_wast.dart';
+import 'package:scraapy_pro/screens/permisions/presentations/permission/export_non_danger_wast.dart';
 import 'package:scraapy_pro/screens/permisions/presentations/permission/import_non_danger_wast.dart';
 
 
@@ -52,10 +54,10 @@ class PermessionScreen extends StatelessWidget {
                       onTapLeft: (){
 
 
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => const ImportNonDangerWast()));
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const ExportNonDangerWast()));
 
                       },onTapRight: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => const ImportDangerWaste()));
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const ExportDangerWast()));
 
                   }
 

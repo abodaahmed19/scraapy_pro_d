@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
+import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/operations/product_page.dart';
 
 
 
@@ -495,7 +496,10 @@ class ProductDetailsCard extends StatelessWidget {
                 ],
               ),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const ProductPage()));
+
+                },
                 child: Row(
                   children: const [
                     Text(
@@ -507,7 +511,7 @@ class ProductDetailsCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 4),
-                    Icon(Icons.arrow_back_ios, size: 12, color: Colors.teal),
+                    Icon(Icons.arrow_forward_ios_outlined, size: 12, color: Colors.teal),
                   ],
                 ),
               ),

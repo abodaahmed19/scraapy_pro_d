@@ -7,6 +7,7 @@ import 'package:scraapy_pro/const/app_images.dart';
 import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/core/helpers/cache_service.dart';
 import 'package:scraapy_pro/core/storage/session_storage_keys.dart';
+import 'package:scraapy_pro/screens/profile/acount_info/presentation/widgets/logout.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/screens/checkout/checkout_screen.dart';
@@ -66,16 +67,15 @@ class PersonalAccountScreen extends StatelessWidget {
                           InkWell(
                             onTap: () {
                               //TODO:logout
-                              final storage = getIt<SecureStorage>();
-
-                              storage.delete(SessionStorageKeys.token);
-
-
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (context) => ScrappyLoginScreen()),
-                                    (route) => false,
+                              // final storage = getIt<SecureStorage>();
+                              //
+                              // storage.delete(SessionStorageKeys.token);
+                              showDialog(
+                                context: context,
+                                builder: (context) => DeleteAccountDialog().logout(context)
                               );
+
+
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
