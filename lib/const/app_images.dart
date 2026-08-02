@@ -38,6 +38,8 @@ class AppImages {
   static const String  rii = "$imagePath/rii.png";
   static const String  sellingProduct = "$imagePath/selling_product.svg";
   static const String  rentalMenu = "$imagePath/rental_menu.svg";
+  static const String  quantity = "$imagePath/quantity.svg";
+  static const String  ship = "$imagePath/ship.svg";
 
 
 }
