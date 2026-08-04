@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:scraapy_pro/const/app_colors.dart';
+import 'package:scraapy_pro/const/app_images.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
-import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/operations/product_page.dart';
+import 'package:scraapy_pro/screens/profile/operations/product_page.dart';
 
 
 
@@ -68,7 +71,7 @@ class OrderStatusBarCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                    color: AppColors.primary
                 ),
               ),
             ],
@@ -269,7 +272,7 @@ class RecipientDetailsCard extends StatelessWidget {
         children: [
           // Section Header
           Row(
-            children: const [
+            children:  [
               CircleAvatar(radius: 4, backgroundColor: Colors.teal),
               SizedBox(width: 8),
               Text(
@@ -277,7 +280,7 @@ class RecipientDetailsCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black
+                  color: AppColors.primary
                 ),
               ),
             ],
@@ -377,7 +380,7 @@ class RecipientDetailsCard extends StatelessWidget {
                     left: 8,
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1E3A8A),
+                        backgroundColor: AppColors.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -421,7 +424,7 @@ class DetailItem extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: const Color(0xFFF3F4F6),
+            color: AppColors.light_primary,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, size: 20, color: const Color(0xFF6B7280)),
@@ -431,10 +434,14 @@ class DetailItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Text(
+              //   title,
+              //   style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF)),
+              // ),
               Text(
                 title,
-                style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF)),
-              ),
+                style:  TextStyle(fontSize: 12, color:AppColors.primary)),
+
               const SizedBox(height: 2),
               Text(
                 value,
@@ -490,7 +497,7 @@ class ProductDetailsCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                        color: AppColors.primary
                     ),
                   ),
                 ],
@@ -524,14 +531,14 @@ class ProductDetailsCard extends StatelessWidget {
             children: const [
               Expanded(
                 child: ProductDetailItem(
-                  icon: Icons.inventory_2_outlined,
+                  icon:AppImages.amount,
                   title: '28 الكمية المتوفرة',
                 ),
               ),
               SizedBox(width: 12),
               Expanded(
                 child: ProductDetailItem(
-                  icon: Icons.scale_outlined,
+                  icon: AppImages.pc,
                   title: '100.0 لكل Pc',
                 ),
               ),
@@ -539,17 +546,17 @@ class ProductDetailsCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Row(
-            children: const [
+            children:  [
               Expanded(
                 child: ProductDetailItem(
-                  icon: Icons.monetization_on_outlined,
+                  icon: AppImages.lb,
                   title: '500 إجمالي Pc',
                 ),
               ),
               SizedBox(width: 12),
               Expanded(
                 child: ProductDetailItem(
-                  icon: Icons.calendar_today_outlined,
+                  icon: AppImages.calendar,
                   title: '20/4/2020 تاريخ',
                 ),
               ),
@@ -573,14 +580,14 @@ class ProductDetailsCard extends StatelessWidget {
             children: const [
               Expanded(
                 child: ProductDetailItem(
-                  icon: Icons.inventory_2_outlined,
+                  icon: AppImages.amount,
                   title: '28كج الكمية المتاحة',
                 ),
               ),
               SizedBox(width: 12),
               Expanded(
                 child: ProductDetailItem(
-                  icon: Icons.inventory_2_outlined,
+                  icon: AppImages.amount,
                   title: '2كج هذا الطلب',
                   valueColor: Colors.redAccent,
                 ),
@@ -592,7 +599,7 @@ class ProductDetailsCard extends StatelessWidget {
             children: [
               const Expanded(
                 child: ProductDetailItem(
-                  icon: Icons.inventory_2_outlined,
+                  icon: AppImages.amount,
                   title: '28كج الكمية المتبقية',
                 ),
               ),
@@ -607,7 +614,7 @@ class ProductDetailsCard extends StatelessWidget {
 }
 
 class ProductDetailItem extends StatelessWidget {
-  final IconData icon;
+  final String icon;
   final String title;
   final Color? valueColor;
 
@@ -622,20 +629,20 @@ class ProductDetailItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF9FAFB),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFFF3F4F6)),
-      ),
+      // decoration: BoxDecoration(
+      //   color: const Color(0xFFF9FAFB),
+      //   borderRadius: BorderRadius.circular(10),
+      //   border: Border.all(color: const Color(0xFFF3F4F6)),
+      // ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.light_primary,
               borderRadius: BorderRadius.circular(6),
             ),
-            child: Icon(icon, size: 18, color: const Color(0xFF6B7280)),
+            child: SvgPicture.asset(icon, ),
           ),
           const SizedBox(width: 8),
           Expanded(
@@ -687,7 +694,7 @@ class FinancialDetailsCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                    color: AppColors.primary
                 ),
               ),
             ],

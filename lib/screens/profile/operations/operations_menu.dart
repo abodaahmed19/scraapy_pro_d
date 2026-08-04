@@ -5,13 +5,12 @@ import 'package:scraapy_pro/const/app_images.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/screens/wallet_screen.dart';
 import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/delay-menus/delay_menus.dart';
-import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/operations/buying/buying_menu.dart';
-import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/operations/selling/selling_menu.dart';
-import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/operations/selling_pay_list_screen.dart';
 import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/services_menus/order_show_product.dart';
 import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/selling_products.dart';
 import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/services_menus/add_services_menus_screen.dart';
 import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/services_menus/services_menu.dart';
+import 'package:scraapy_pro/screens/profile/operations/buying/buying_menu.dart';
+import 'package:scraapy_pro/screens/profile/operations/selling/selling_menu.dart';
 
 class OperationsMenu extends StatelessWidget {
   OperationsMenu({super.key});
@@ -27,6 +26,7 @@ class OperationsMenu extends StatelessWidget {
       "title":"الشراء",
       "icon":"${AppImages.rentalMenu}",
       "page":BuyingMenu()
+
 
     },
 
