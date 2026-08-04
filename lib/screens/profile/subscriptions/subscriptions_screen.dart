@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
+import 'package:scraapy_pro/const/app_images.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/widgets/custom_text_field.dart';
 
@@ -87,17 +89,19 @@ class SubscriptionsScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: CustomAppBar(title: 'الإشتراكات'),
               ),
-              SizedBox(
-                height: 550,
-                child: ListView.builder(
-                  padding: EdgeInsets.all(0),
-                  scrollDirection: Axis.horizontal,
+              // SizedBox(height: 100,),
 
+              SizedBox(
+                height: 600,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  clipBehavior: Clip.none,
+                  padding: EdgeInsets.zero,
                   itemCount: 4,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.only(right: 12),
-                      child: _BasicPlanCard(),
+                      child: BasicPlanCard(context,index),
                     );
                   },
                 ),
@@ -159,7 +163,8 @@ class SubscriptionsScreen extends StatelessWidget {
                         ],),
                   );
                 }),
-              )
+              ),
+              SizedBox(height: 30,)
 
 
             ],
@@ -172,172 +177,226 @@ class SubscriptionsScreen extends StatelessWidget {
 
 // ── Basic Plan Card ──────────────────────────────────────────────────────────
 
-class _BasicPlanCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final includedFeatures = [
-      '01شهر + 15 يوم إضافي',
-      'إصدار مانيفيست',
-      'شهادات (تدوير/إتلاف/إستلام)',
-    ];
+Widget BasicPlanCard(BuildContext context,int index) {
+  final includedFeatures = [
+    '01شهر + 15 يوم إضافي',
+    'إصدار مانيفيست',
+    'شهادات (تدوير/إتلاف/إستلام)',
+  ];
 
-    final excludedFeatures = [
-      'لوحة تحكم متقدمة ومؤشرات أداء',
-      'مدير حساب مخصص',
-      'علامة شريك معتمد',
-      'تحليل المنافسين (منقدم)',
-    ];
+  final excludedFeatures = [
+    'لوحة تحكم متقدمة ومؤشرات أداء',
+    'مدير حساب مخصص',
+    'علامة شريك معتمد',
+    'تحليل المنافسين (منقدم)',
+  ];
 
-    return SizedBox(
-      width: 350,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.07),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Header
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Icon(Icons.rocket_launch_outlined,
-                      color: Color(0xFF244075), size: 28),
+  return Stack(
+    clipBehavior: Clip.none,
+    // alignment: Alignment.topCenter,
+    children: [
+      SizedBox(
+        width: 350,
+        height: 600,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              index == 1?
+              BoxShadow(
+                color: const Color(0xFF1ABC9C).withOpacity(0.15),
+                blurRadius: 20,
+                offset: const Offset(0, 6),
+              ):
+              BoxShadow(
+                color: Colors.black.withOpacity(0.07),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
 
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: const Color(0x14244075),
-                      borderRadius: BorderRadius.circular(8),
-                      // border: Border.all(color: const Color(0xFFBFDBFE)),
+
+            ],
+            ////////////////
+            border:index == 1? Border.all(color: const Color(0xFF1ABC9C), width: 1.5):null,
+
+
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 0.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Header
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      index == 1? SvgPicture.asset(AppImages.mostOrdered):
+                       Icon(Icons.rocket_launch_outlined,
+                          color: Color(0xFF244075), size: 28),
+
+                      Container(
+                        padding:  EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: index ==1? Color(0x33189491)
+                              :Color(0x14244075),
+                          borderRadius: BorderRadius.circular(8),
+                          // border: Border.all(color: const Color(0xFFBFDBFE)),
+                        ),
+                        child:  Text(
+                          index == 1? 'للشركات المتوسطة':
+
+                          'للمبتدئين',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color:index == 1? Color(0xFF189491): Color(0xFF244075),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'الأساسية',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'للشركات الجديدة في مرحلة التجربة والانطلاق',
+                        style: TextStyle(fontSize: 13, color: Colors.grey),
+                        textAlign: TextAlign.right,
+                      ),
+                      const SizedBox(height: 12),
+                      RichText(
+                        text: const TextSpan(
+                          style: TextStyle(fontFamily: 'Cairo'),
+                          children: [
+                            TextSpan(
+                              text: '1،200',
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF244075),
+                              ),
+                            ),
+                            TextSpan(
+                              text: '  ريال/سنويا',
+                              style: TextStyle(fontSize: 13, color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+                const Divider(height: 1, color: Color(0xFFF0F0F0)),
+                const SizedBox(height: 16),
+
+                // Included features
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: includedFeatures
+                        .map((f) => _FeatureRow(label: f, included: true))
+                        .toList(),
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                // Excluded features
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: excludedFeatures
+                        .map((f) => _FeatureRow(label: f, included: false))
+                        .toList(),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // CTA button
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: index == 1?Color(0xFF179993) : Color(0xFF1B4F72),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 0,
                     ),
                     child: const Text(
-                      'للمبتدئين',
+                      'اختر الباقة',
                       style: TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF244075),
-                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Text(
-                    'الأساسية',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  const Text(
-                    'للشركات الجديدة في مرحلة التجربة والانطلاق',
-                    style: TextStyle(fontSize: 13, color: Colors.grey),
-                    textAlign: TextAlign.right,
-                  ),
-                  const SizedBox(height: 12),
-                  RichText(
-                    text: const TextSpan(
-                      style: TextStyle(fontFamily: 'Cairo'),
-                      children: [
-                        TextSpan(
-                          text: '1،200',
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF244075),
-                          ),
-                        ),
-                        TextSpan(
-                          text: '  ريال/سنويا',
-                          style: TextStyle(fontSize: 13, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 16),
-            const Divider(height: 1, color: Color(0xFFF0F0F0)),
-            const SizedBox(height: 16),
-
-            // Included features
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: includedFeatures
-                    .map((f) => _FeatureRow(label: f, included: true))
-                    .toList(),
-              ),
-            ),
-
-            const SizedBox(height: 8),
-
-            // Excluded features
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: excludedFeatures
-                    .map((f) => _FeatureRow(label: f, included: false))
-                    .toList(),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // CTA button
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1B4F72),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  elevation: 0,
                 ),
-                child: const Text(
-                  'اختر الباقة',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+
+
+              ],
             ),
-
-
-          ],
+          ),
         ),
       ),
-    );
-  }
+      index == 1?
+      Positioned(
+        top: -15,
+        left: 0,
+        right: 0,
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1ABC9C),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF1ABC9C).withOpacity(0.4),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child:  Text(
+              'الأكثر طلباً',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ),
+      ):SizedBox(),
+    ],
+  );
 }
 
 // ── Advanced Plan Card ───────────────────────────────────────────────────────

@@ -7,6 +7,7 @@ import 'package:scraapy_pro/const/main_app_btn.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/screens/edit_personal_account.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/screens/transactions_screen.dart';
+import 'package:scraapy_pro/screens/profile/legal_settings/presentation/widgets/add_docs_bottom_sheet.dart';
 import 'package:scraapy_pro/widgets/custom_text_field.dart';
 
 class LegalDataDetailsScreen extends StatelessWidget {
@@ -19,7 +20,6 @@ class LegalDataDetailsScreen extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         // backgroundColor: Color(0xFFF9F9F9),
-        backgroundColor: AppColors.white,
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
@@ -33,9 +33,12 @@ class LegalDataDetailsScreen extends StatelessWidget {
 
                     Container(
                       width: MediaQuery.of(context).size.width,
+
                       decoration: BoxDecoration(
                         border: Border.all(color: Color(0x33000000)),
                         borderRadius: BorderRadius.circular(8),
+                        color: AppColors.white,
+
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 20),
@@ -57,7 +60,12 @@ class LegalDataDetailsScreen extends StatelessWidget {
                               hint: 'الموقع',
                               label: 'الموقع',
                             ),
-                            MainAppBtn(title: 'تعديل', titleStyle: null,  btnColor: AppColors.primary,haveGradient: false,),
+                            MainAppBtn(title: 'تعديل',
+                              onTap: (){
+                                AddDocsBottomSheet().addDocsBottomSheet(context);
+
+                              },
+                              titleStyle: null,  btnColor: AppColors.primary,haveGradient: false,),
                             SizedBox(height: 20,),
                             const CustomTextField(
                               hint: 'رقم الهاتف الرسمي',
@@ -80,6 +88,8 @@ class LegalDataDetailsScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         border: Border.all(color: Color(0x33000000)),
                         borderRadius: BorderRadius.circular(8),
+                        color: AppColors.white,
+
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 20),
@@ -123,6 +133,8 @@ class LegalDataDetailsScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         border: Border.all(color: Color(0x33000000)),
                         borderRadius: BorderRadius.circular(8),
+                        color: AppColors.white,
+
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 20),
@@ -161,6 +173,8 @@ class LegalDataDetailsScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         border: Border.all(color: Color(0x33000000)),
                         borderRadius: BorderRadius.circular(8),
+                        color: AppColors.white,
+
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 20),
@@ -215,6 +229,8 @@ class LegalDataDetailsScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         border: Border.all(color: Color(0x33000000)),
                         borderRadius: BorderRadius.circular(8),
+                        color: AppColors.white,
+
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 20),
@@ -263,7 +279,9 @@ class LegalDataDetailsScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 24,),
+                    SizedBox(height: 30,),
+                    MainAppBtn(title: 'إضافة'),
+                    SizedBox(height: 20,),
 
                   ],
                 ),

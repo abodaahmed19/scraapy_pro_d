@@ -40,6 +40,7 @@ class AppImages {
   static const String  rentalMenu = "$imagePath/rental_menu.svg";
   static const String  quantity = "$imagePath/quantity.svg";
   static const String  ship = "$imagePath/ship.svg";
+  static const String  mostOrdered = "$imagePath/most_ordered.svg";
 
 
 }

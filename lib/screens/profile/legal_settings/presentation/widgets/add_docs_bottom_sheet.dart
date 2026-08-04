@@ -14,81 +14,48 @@ class AddDocsBottomSheet {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        return Directionality(
-          textDirection: TextDirection.rtl,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('إضافة مستند', style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600)),
-                SizedBox(height: 20),
-                CustomTextField(hint: 'ادخل اسم المستند',label: 'اسم المستند',),
-                SizedBox(height: 16),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color(0x33000000)),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+        return FractionallySizedBox(
+          heightFactor: 0.9,
+          child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: SingleChildScrollView(
+                child: Column(
+                
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Icon(Icons.circle,color: AppColors.terquaz,size: 10,),
-                            SizedBox(width: 10,),
-
-                            Text('تحميل المستند',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16,
-                                color:AppColors.primary )),
-                          ],
-                        ),
-                        SizedBox(height: 16,),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFF4F4F4),
-                            border: Border.all(color: Color(0x33000000)),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 20),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(AppImages.upload),
-                                SizedBox(height: 12,),
-                                Text(
-                                    textAlign: TextAlign.center,
-                                    'انقر للتحميل / اسحب الملف.pdf file format (max. 20MB)',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 10,
-                                    color:Color(0x71000000) )),
-
-                              ],
-                            ),
-                          ),
-                        ),
-
-
-
+                        Icon(Icons.circle,color: AppColors.terquaz,size: 10,),
+                        SizedBox(width: 10,),
+                
+                        Text('تفاصيل الشركة',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16,
+                            color:AppColors.primary )),
                       ],
                     ),
-                  ),
+                    SizedBox(height: 20),
+                    CustomTextField(hint: 'ادخل احداثيات الموقع',label: 'إحداثيات الموقع*',),
+                    CustomTextField(hint: 'ادخل العنوان',label: 'العنوان الأول',),
+                    CustomTextField(hint: 'ادخل المدينة',label: 'المدينة',),
+                    CustomTextField(hint: 'ادخل المنطقة',label: 'المنطقة',),
+                    CustomTextField(hint: 'ادخل الرمز',label: 'الرمز البريدي',),
+                    CustomTextField(hint: 'ادخل الدولة',label: 'الدولة',),
+                    CustomTextField(hint: 'ادخل اسم الشخص',label: 'الشخص المسؤول',),
+                    CustomTextField(hint: ' ادخل رقم الإتصال',label: 'رقم الإتصال',),
+                    SizedBox(height: 16),
+
+                    MainAppBtn(title: 'حفظ العنوان', titleStyle: null,haveGradient: false,)
+                
+                
+                  ],
                 ),
-                SizedBox(height: 20),
-
-                MainAppBtn(title: 'إرسال', titleStyle: null,)
-
-
-              ],
+              ),
             ),
           ),
         );
