@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
+import 'package:scraapy_pro/const/app_images.dart';
 import 'package:scraapy_pro/const/main_app_btn.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
-import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/operations/operations_details_screen.dart';
+import 'package:scraapy_pro/screens/profile/operations/operations_details_screen.dart';
 
 
 
@@ -81,8 +83,8 @@ class OrderCard extends StatelessWidget {
                     'طلب #1325',
                     style: TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF0F2C59),
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primary,
                     ),
                   ),
 
@@ -92,16 +94,16 @@ class OrderCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.light_terquaz,
                   borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: const Color(0xFF80CBC4), width: 1.2),
+                  border: Border.all(color: AppColors.terquaz2, width: 1.2),
                 ),
                 child: const Text(
                   'Preparing',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF00897B),
+                    color: AppColors.terquaz,
                   ),
                 ),
               ),
@@ -116,15 +118,15 @@ class OrderCard extends StatelessWidget {
               // Right Column
               Expanded(
                 child: Column(
-                  children: const [
+                  children:  [
                     DetailRowItem(
-                      icon: Icons.inventory_2_outlined,
+                      icon: AppImages.amount,
                       title: 'الكمية المتوفرة',
                       value: '28',
                     ),
                     SizedBox(height: 12),
                     DetailRowItem(
-                      icon: Icons.scale_outlined,
+                      icon: AppImages.lb,
                       title: '100.0 لكل Pc',
                       value: '',
                     ),
@@ -137,13 +139,13 @@ class OrderCard extends StatelessWidget {
                 child: Column(
                   children: const [
                     DetailRowItem(
-                      icon: Icons.monetization_on_outlined,
+                      icon: AppImages.pc,
                       title: '500 إجمالي Pc',
                       value: '',
                     ),
                     SizedBox(height: 12),
                     DetailRowItem(
-                      icon: Icons.calendar_today_outlined,
+                      icon: AppImages.calendar,
                       title: '20/4/2020 تاريخ',
                       value: '',
                     ),
@@ -157,22 +159,21 @@ class OrderCard extends StatelessWidget {
           // Status message at bottom right of details
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: const [
-              Icon(Icons.inventory_2_outlined, size: 18, color: Color(0xFF00897B)),
+            children:  [
+              SvgPicture.asset( AppImages.order),
               SizedBox(width: 8),
               Text(
                 'انت تجهز الطلب',
                 style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF00897B),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.terquaz,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 16),
 
-          // Action Button ("عرض التفاصيل")
           MainAppBtn(title: "عرض التفاصيل",btnColor: AppColors.primary,haveGradient: false,onTap: (){
 
             Navigator.push(context, MaterialPageRoute(builder: (_) =>  OperationsDetailsScreen() ));
@@ -185,7 +186,7 @@ class OrderCard extends StatelessWidget {
 }
 
 class DetailRowItem extends StatelessWidget {
-  final IconData icon;
+  final String icon;
   final String title;
   final String value;
 
@@ -200,7 +201,7 @@ class DetailRowItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 20, color: const Color(0xFF5C6B73)),
+        SvgPicture.asset(icon,),
         const SizedBox(width: 8),
         Expanded(
           child: Text(

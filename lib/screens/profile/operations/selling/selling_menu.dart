@@ -3,13 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/app_images.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
-import 'package:scraapy_pro/screens/profile/acount_info/presentation/screens/wallet_screen.dart';
-import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/delay-menus/delay_menus.dart';
-import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/operations/selling_pay_list_screen.dart';
-import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/services_menus/order_show_product.dart';
-import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/selling_products.dart';
-import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/services_menus/add_services_menus_screen.dart';
-import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/services_menus/services_menu.dart';
+import 'package:scraapy_pro/screens/profile/operations/selling_pay_list_screen.dart';
 
 class SellingMenu extends StatelessWidget {
   SellingMenu({super.key});

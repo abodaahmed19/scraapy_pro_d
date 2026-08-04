@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:scraapy_pro/authentication/presentation/screens/login_screen.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/app_images.dart';
-import 'package:scraapy_pro/core/di/injection.dart';
-import 'package:scraapy_pro/core/helpers/cache_service.dart';
-import 'package:scraapy_pro/core/storage/session_storage_keys.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/widgets/logout.dart';
+import 'package:scraapy_pro/screens/profile/operations/operations_menu.dart';
 import 'package:scraapy_pro/screens/profile/subscriptions/subscriptions_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
@@ -25,8 +22,6 @@ import 'package:scraapy_pro/screens/profile/acount_info/presentation/screens/edi
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/widgets/baqa_widget.dart';
 import 'package:scraapy_pro/screens/profile/legal_settings/presentation/screens/legal_settings_menu.dart';
 import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/my_menu_tap_screen.dart';
-import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/operations/operations_menu.dart';
-
 import '../../../../address/add_address_screen.dart';
 
 class PersonalAccountScreen extends StatelessWidget {
