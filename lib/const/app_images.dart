@@ -41,6 +41,11 @@ class AppImages {
   static const String  quantity = "$imagePath/quantity.svg";
   static const String  ship = "$imagePath/ship.svg";
   static const String  mostOrdered = "$imagePath/most_ordered.svg";
+  static const String  amount = "$imagePath/amount.svg";
+  static const String  calendar = "$imagePath/calendar.svg";
+  static const String  lb = "$imagePath/lb.svg";
+  static const String  order = "$imagePath/order.svg";
+  static const String  pc = "$imagePath/pc.svg";
 
 
 }

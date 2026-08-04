@@ -5,8 +5,11 @@ class AppColors {
   AppColors._();
 
   static const Color primary = Color(0xFF234777);
+  static const Color light_primary = Color(0x14244075);
   static const Color lightBlue = Color(0x14244075);
   static const Color terquaz = Color(0xFF189491);
+  static const Color light_terquaz = Color(0x1A189491);
+  static const Color terquaz2 = Color(0x80189491);
   static const Color white = Color(0xffffffff);
   static const Color grey = Color(0xFFE5E5E5);
   static const Color grey1 = Color(0xFF00000026);
