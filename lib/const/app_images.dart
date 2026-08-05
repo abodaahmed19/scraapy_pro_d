@@ -46,6 +46,8 @@ class AppImages {
   static const String  lb = "$imagePath/lb.svg";
   static const String  order = "$imagePath/order.svg";
   static const String  pc = "$imagePath/pc.svg";
+  static const String  previous_operation = "$imagePath/previous_operation.svg";
+  static const String  pending_operation = "$imagePath/pending_operation.svg";
 
 
 }

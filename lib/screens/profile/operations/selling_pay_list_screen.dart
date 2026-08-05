@@ -4,13 +4,15 @@ import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/app_images.dart';
 import 'package:scraapy_pro/const/main_app_btn.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
+import 'package:scraapy_pro/screens/profile/check/presentation/screens/inspection_demolition_item_details.dart';
 import 'package:scraapy_pro/screens/profile/operations/operations_details_screen.dart';
 
 
 
 class SellingPayListScreen extends StatelessWidget {
   final String title;
-  const SellingPayListScreen({super.key, required this.title});
+  final bool fromInspection;
+  const SellingPayListScreen({super.key, required this.title,  this.fromInspection = false});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class SellingPayListScreen extends StatelessWidget {
                     itemBuilder: (context,index){
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
-                    child: OrderCard(),
+                    child: OrderCard(fromInspection: fromInspection,),
                   );
                 }),
               )
@@ -45,7 +47,8 @@ class SellingPayListScreen extends StatelessWidget {
 }
 
 class OrderCard extends StatelessWidget {
-  const OrderCard({super.key});
+  final bool? fromInspection;
+  const OrderCard({super.key,this.fromInspection});
 
   @override
   Widget build(BuildContext context) {
@@ -175,6 +178,8 @@ class OrderCard extends StatelessWidget {
           const SizedBox(height: 16),
 
           MainAppBtn(title: "عرض التفاصيل",btnColor: AppColors.primary,haveGradient: false,onTap: (){
+            fromInspection == true ?
+            Navigator.push(context, MaterialPageRoute(builder: (_) =>  InspectionDemolitionItemDetails() )):
 
             Navigator.push(context, MaterialPageRoute(builder: (_) =>  OperationsDetailsScreen() ));
 

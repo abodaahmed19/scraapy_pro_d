@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
-import 'package:scraapy_pro/const/app_images.dart';
+import 'package:scraapy_pro/const/main_app_btn.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
-import 'package:scraapy_pro/screens/profile/operations/product_page.dart';
+import 'package:scraapy_pro/screens/profile/check/presentation/screens/inspection_order_details.dart';
+import 'package:scraapy_pro/widgets/custom_text_field.dart';
 
 
 
 
-class OperationsDetailsScreen extends StatelessWidget {
-  const OperationsDetailsScreen({super.key});
+class InspectionDemolitionItemDetails extends StatelessWidget {
+  const InspectionDemolitionItemDetails({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +23,18 @@ class OperationsDetailsScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: const [
-              CustomAppBar(title: 'تفاصيل'),
+              CustomAppBar(title: 'العمليات المعلقة'),
               OrderStatusBarCard(),
               SizedBox(height: 16),
               RecipientDetailsCard(),
               SizedBox(height: 16),
               ProductDetailsCard(),
-              SizedBox(height: 16),
-              FinancialDetailsCard(),
+              SizedBox(height: 20),
+
+              MainAppBtn(title: 'طلب قيد الإنتظام'),
+              SizedBox(height: 30),
+
+
             ],
           ),
         ),
@@ -69,14 +74,14 @@ class OrderStatusBarCard extends StatelessWidget {
               Text(
                 'حالة البيع',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                     color: AppColors.primary
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 30),
 
           // Timeline Steps
           const TimelineStep(
@@ -105,42 +110,9 @@ class OrderStatusBarCard extends StatelessWidget {
             isLast: true,
           ),
 
-          const SizedBox(height: 16),
+          // const SizedBox(height: 16),
 
-          // Info Banner Box
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF4F6F8),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Text(
-              'أنت تقوم بتجهيز الطلب، عندما يتم تجهيز الطلب وجاهز للشحن، اضغط على الزر أدناه. سيتم جدولة شحن الطلب عندما يتم وضع علامة بأنه جاهز.',
-              style: TextStyle(fontSize: 12, color: Color(0xFF606770), height: 1.5),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(height: 16),
 
-          // Action Button
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF8B9BB4),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                elevation: 0,
-              ),
-              onPressed: () {},
-              child: const Text(
-                'تم شحنها',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -167,7 +139,7 @@ class TimelineStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color activeColor = const Color(0xFF26A69A); // Teal
+    Color activeColor = AppColors.terquaz; // Teal
     Color pendingColor = const Color(0xFFB0BEC5); // Grey
 
     Color getColor() {
@@ -225,9 +197,9 @@ class TimelineStep extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: status == TimelineStatus.pending ? Colors.grey : Colors.black
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: status == TimelineStatus.pending ? Colors.grey : Colors.black
                   ),
                 ),
                 if (subtitle != null)
@@ -276,16 +248,16 @@ class RecipientDetailsCard extends StatelessWidget {
               CircleAvatar(radius: 4, backgroundColor: Colors.teal),
               SizedBox(width: 8),
               Text(
-                'بيانات الإستلام',
+                'تفاصيل الطلب',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primary
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 30),
 
           // Detail Rows (Grid/Row layout)
           Row(
@@ -297,21 +269,18 @@ class RecipientDetailsCard extends StatelessWidget {
                   children: const [
                     DetailItem(
                       icon: Icons.person_outline,
-                      title: 'اسم المستلم',
+                      title: 'الإسم',
                       value: 'أحمد محمد علي',
                     ),
                     SizedBox(height: 12),
+
                     DetailItem(
                       icon: Icons.home_outlined,
-                      title: 'المدينة/المنطقة',
-                      value: 'الدمام',
+                      title: 'التوقيت',
+                      value: ' PM 4:25 ',
                     ),
                     SizedBox(height: 12),
-                    DetailItem(
-                      icon: Icons.phone_outlined,
-                      title: 'رقم الجوال',
-                      value: '+9661209856',
-                    ),
+
                   ],
                 ),
               ),
@@ -321,15 +290,15 @@ class RecipientDetailsCard extends StatelessWidget {
                 child: Column(
                   children: const [
                     DetailItem(
-                      icon: Icons.signpost_outlined,
-                      title: 'اسم الشارع',
-                      value: 'احمد علي',
+                      icon: Icons.phone_outlined,
+                      title: 'رقم الجوال',
+                      value: '+9661209856',
                     ),
                     SizedBox(height: 12),
                     DetailItem(
                       icon: Icons.location_city_outlined,
-                      title: 'رقم المبني',
-                      value: '1235',
+                      title: 'الموقع',
+                      value: 'الدمام',
                     ),
                   ],
                 ),
@@ -339,6 +308,120 @@ class RecipientDetailsCard extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Map Mockup Preview Container
+          MainAppBtn(title: 'عرض التفاصيل',
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const InspectionOrderDetails()));
+
+            },
+            haveGradient: false,btnColor: AppColors.primary,),
+
+        ],
+      ),
+    );
+  }
+}
+
+class DetailItem extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String value;
+
+  const DetailItem({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: AppColors.light_primary,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, size: 20, color: const Color(0xFF6B7280)),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Text(
+              //   title,
+              //   style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF)),
+              // ),
+              Text(
+                  title,
+                  style:  TextStyle(fontSize: 12, color:AppColors.primary)),
+
+              const SizedBox(height: 2),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1F2937),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Custom painter to simulate abstract map roads/lines in the background
+
+/// ================= 1. PRODUCT DETAILS CARD =================
+class ProductDetailsCard extends StatelessWidget {
+  const ProductDetailsCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header Row: Product Details Title & Page Link
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: const [
+                  CircleAvatar(radius: 4, backgroundColor: Colors.teal),
+                  SizedBox(width: 8),
+                  Text(
+                    'موقع الهدم',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primary
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 30),
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Container(
@@ -398,215 +481,11 @@ class RecipientDetailsCard extends StatelessWidget {
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class DetailItem extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String value;
-
-  const DetailItem({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: AppColors.light_primary,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, size: 20, color: const Color(0xFF6B7280)),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Text(
-              //   title,
-              //   style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF)),
-              // ),
-              Text(
-                title,
-                style:  TextStyle(fontSize: 12, color:AppColors.primary)),
-
-              const SizedBox(height: 2),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1F2937),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-/// Custom painter to simulate abstract map roads/lines in the background
-
-/// ================= 1. PRODUCT DETAILS CARD =================
-class ProductDetailsCard extends StatelessWidget {
-  const ProductDetailsCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header Row: Product Details Title & Page Link
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: const [
-                  CircleAvatar(radius: 4, backgroundColor: Colors.teal),
-                  SizedBox(width: 8),
-                  Text(
-                    'تفاصيل المنتج',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                        color: AppColors.primary
-                    ),
-                  ),
-                ],
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const ProductPage()));
-
-                },
-                child: Row(
-                  children: const [
-                    Text(
-                      'صفحة المنتج',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.teal,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(width: 4),
-                    Icon(Icons.arrow_forward_ios_outlined, size: 12, color: Colors.teal),
-                  ],
-                ),
-              ),
-            ],
-          ),
           const SizedBox(height: 16),
 
-          // First Grid (Quantity / Price / Date info)
-          Row(
-            children: const [
-              Expanded(
-                child: ProductDetailItem(
-                  icon:AppImages.amount,
-                  title: '28 الكمية المتوفرة',
-                ),
-              ),
-              SizedBox(width: 12),
-              Expanded(
-                child: ProductDetailItem(
-                  icon: AppImages.pc,
-                  title: '100.0 لكل Pc',
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children:  [
-              Expanded(
-                child: ProductDetailItem(
-                  icon: AppImages.lb,
-                  title: '500 إجمالي Pc',
-                ),
-              ),
-              SizedBox(width: 12),
-              Expanded(
-                child: ProductDetailItem(
-                  icon: AppImages.calendar,
-                  title: '20/4/2020 تاريخ',
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
+          CustomTextField(hint: 'ادخل احداثيات الموقع',label: 'إحداثيات الموقع*',)
 
-          // Subheader: Inventory tracking subtitle
-          const Text(
-            '** تتبع المخزون من هذا المنتج',
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
-              color: Colors.teal,
-            ),
-          ),
-          const SizedBox(height: 12),
 
-          // Second Grid (Inventory Tracking rows)
-          Row(
-            children: const [
-              Expanded(
-                child: ProductDetailItem(
-                  icon: AppImages.amount,
-                  title: '28كج الكمية المتاحة',
-                ),
-              ),
-              SizedBox(width: 12),
-              Expanded(
-                child: ProductDetailItem(
-                  icon: AppImages.amount,
-                  title: '2كج هذا الطلب',
-                  valueColor: Colors.redAccent,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              const Expanded(
-                child: ProductDetailItem(
-                  icon: AppImages.amount,
-                  title: '28كج الكمية المتبقية',
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(child: Container()), // Empty space balancer
-            ],
-          ),
         ],
       ),
     );
@@ -692,8 +571,8 @@ class FinancialDetailsCard extends StatelessWidget {
               Text(
                 'التفاصيل المالية',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                     color: AppColors.primary
                 ),
               ),
@@ -741,9 +620,9 @@ class FinancialDetailsCard extends StatelessWidget {
               Text(
                 'SAR 185',
                 style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primary // Dark Navy Blue matching design
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary // Dark Navy Blue matching design
                 ),
               ),
             ],
@@ -780,9 +659,9 @@ class FinancialRow extends StatelessWidget {
         Text(
           value,
           style:  TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: AppColors.primary
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primary
           ),
         ),
       ],

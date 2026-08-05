@@ -91,19 +91,22 @@ class SubscriptionsScreen extends StatelessWidget {
               ),
               // SizedBox(height: 100,),
 
-              SizedBox(
-                height: 600,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  clipBehavior: Clip.none,
-                  padding: EdgeInsets.zero,
-                  itemCount: 4,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: BasicPlanCard(context,index),
-                    );
-                  },
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: 600,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    clipBehavior: Clip.none,
+                    padding: EdgeInsets.zero,
+                    itemCount: 4,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: BasicPlanCard(context,index),
+                      );
+                    },
+                  ),
                 ),
               ),
 

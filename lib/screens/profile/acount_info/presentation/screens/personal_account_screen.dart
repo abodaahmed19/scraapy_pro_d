@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/app_images.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/widgets/logout.dart';
+import 'package:scraapy_pro/screens/profile/check/presentation/screens/inspection_demolition_menu.dart';
 import 'package:scraapy_pro/screens/profile/operations/operations_menu.dart';
 import 'package:scraapy_pro/screens/profile/subscriptions/subscriptions_screen.dart';
 import 'package:shimmer/shimmer.dart';
@@ -348,7 +349,7 @@ class AccountMenu extends StatelessWidget {
     {
       "title": "الفحص والهدم",
       "icon": "${AppImages.menus}",
-      "page": InspectionRequestScreen(),
+      "page": InspectionDemolitionMenu(),
     },
     // {
     //   "title":"الفحص والهدم",
