@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/main_app_btn.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
+import 'package:scraapy_pro/screens/profile/check/presentation/screens/inspection_form.dart';
 import 'package:scraapy_pro/screens/profile/check/presentation/screens/inspection_order_details.dart';
 import 'package:scraapy_pro/widgets/custom_text_field.dart';
 
@@ -22,7 +23,7 @@ class InspectionDemolitionItemDetails extends StatelessWidget {
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            children: const [
+            children:  [
               CustomAppBar(title: 'العمليات المعلقة'),
               OrderStatusBarCard(),
               SizedBox(height: 16),
@@ -31,7 +32,11 @@ class InspectionDemolitionItemDetails extends StatelessWidget {
               ProductDetailsCard(),
               SizedBox(height: 20),
 
-              MainAppBtn(title: 'طلب قيد الإنتظام'),
+              MainAppBtn(title: 'طلب قيد الإنتظام',onTap: (){
+
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const InspectionForm()));
+
+              },),
               SizedBox(height: 30),
 
 

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:scraapy_pro/const/main_app_btn.dart';
-import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
-import 'package:scraapy_pro/screens/address/add_address_screen.dart';
 
-class EmptyBranches extends StatelessWidget {
-  const EmptyBranches({super.key});
+class EmptyScreen extends StatelessWidget {
+  final String title;
+  final String subTitle;
+  final String btnTitle;
+  final Function() func;
+  const EmptyScreen({super.key, required this.title, required this.subTitle, required this.btnTitle, required this.func});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +14,6 @@ class EmptyBranches extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
         children: [
-          CustomAppBar(title: 'قائمة الفروع',),
 
           Padding(
             padding:  EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.25),
@@ -21,22 +22,16 @@ class EmptyBranches extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('لا توجد فروع مضافة',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
+                  Text(title,style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
                   SizedBox(height: 20,),
-                  Text('قم بإضافة فرع جديد لعرض وإدارة جميع فروعك من هنا.',style: TextStyle(
+                  Text(subTitle,style: TextStyle(
                       color: Color(0xB2000000),
                       fontSize: 16,fontWeight: FontWeight.w400),  textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 60,),
-                  MainAppBtn(title: 'إضافة فرع',onTap: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => AddAddressScreen(),
-                      ),
-                    );
-
-                  },)
+                  MainAppBtn(title: btnTitle,
+                    onTap: func,
+                  )
                 ],
               ),
             ),

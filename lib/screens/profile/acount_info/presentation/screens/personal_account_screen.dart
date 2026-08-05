@@ -304,23 +304,23 @@ class AccountMenu extends StatelessWidget {
       "icon": "${AppImages.menus}",
       "page": MyMenuTapScreen(),
     },
+    // {
+    //   "title": "إضافة عنوان",
+    //   "icon": "${AppImages.menus}",
+    //   "page": AddAddressScreen(),
+    // },
     {
-      "title": "إضافة عنوان (جديد)",
-      "icon": "${AppImages.menus}",
-      "page": AddAddressScreen(),
-    },
-    {
-      "title": 'الدفع (جديد)',
+      "title": 'الدفع',
       "icon": "${AppImages.menus}",
       "page": CheckoutScreen(),
     },
     {
-      "title": 'المفضلة (جديد)',
+      "title": 'المفضلة',
       "icon": "${AppImages.menus}",
       "page": FavoritesScreen(),
     },
     {
-      "title": 'الإشعارات (جديد)',
+      "title": 'الإشعارات',
       "icon": "${AppImages.menus}",
       "page": NotificationsScreen(),
     },

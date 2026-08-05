@@ -170,7 +170,7 @@ class WalletScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 16,),
+                    SizedBox(height: 30,),
                 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -197,6 +197,10 @@ class WalletScreen extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 16,),
+
+                    Text('اليوم',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 14,
+                         )),
+                    SizedBox(height: 20,),
                     ListView.builder(
                         shrinkWrap: true,
                         itemCount: 7,

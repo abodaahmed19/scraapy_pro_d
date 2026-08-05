@@ -9,6 +9,7 @@ import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/service
 import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/selling_products.dart';
 import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/services_menus/add_services_menus_screen.dart';
 import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/services_menus/services_menu.dart';
+import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/services_with_contract/services_with_contract.dart';
 
 class MyMenuTapScreen extends StatelessWidget {
    MyMenuTapScreen({super.key});
@@ -32,12 +33,12 @@ class MyMenuTapScreen extends StatelessWidget {
       "page":ServicesMenu()
 
     },
-    // {
-    //   "title":"قوائم الخدمات",
-    //   "icon":"${AppImages.wallet}",
-    //   "page":WalletScreen()
-    //
-    // },
+    {
+      "title":"خدمات بعقد",
+      "icon":"${AppImages.wallet}",
+      "page":ServicesWithContract()
+
+    },
 
 
   ];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/main_app_btn.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import '../../widgets/responsive_layout.dart';
@@ -13,10 +14,7 @@ class AddAddressScreen extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        // appBar: AppBar(
-        //   title: const Text('إضافة عنوان جديد'),
-        //   centerTitle: true,
-        // ),
+
         body: ResponsiveLayout(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
@@ -24,57 +22,100 @@ class AddAddressScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 CustomAppBar(title: 'إضافة عنوان جديد'),
-                const MapPlaceholder(),
-                const SizedBox(height: 24),
+                Text('إضافة فرع جديد',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16,color: AppColors.primary),),
+                SizedBox(height: 16,),
+                Row(
+                  // mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Icon(Icons.circle, color: AppColors.terquaz, size: 8),
+
+                    const SizedBox(width: 8),
+
+                    const Text(
+                      'البيانات الاساسية',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16,),
+
                 const CustomTextField(
-                  label: 'إسم العنوان (الفرع)',
-                  hint: 'ادخل العنوان',
+                  label: 'اسم الفرع',
+                  hint: 'ادخل اسم الفرع',
                 ),
                 const CustomTextField(
-                  label: 'العنوان الأول',
-                  hint: 'ادخل العنوان',
+                  label: 'رقم الشحنة',
+                  hint: 'ادخل رقم الشحنة',
                 ),
                 const CustomTextField(
-                  label: 'اسم الموقع',
-                  hint: 'ادخل عنوانك',
+                  label: 'الشخص المسؤول',
+                  hint: 'ادخل اسم الشخص',
+                ),
+
+                const CustomTextField(
+                  label: 'رقم الهاتف',
+                  hint: 'ادخل رقم الهاتف',
                 ),
                 const CustomTextField(
-                  label: 'المدينة',
-                  hint: 'اسم المدينة',
-                ),
-                const CustomTextField(
-                  label: 'المنطقة',
-                  hint: 'ادخل المنطقة',
+                  label: 'البريد الإلكتروني',
+                  hint: 'اسم البريد الإلكتروني',
                 ),
                 const CustomTextField(
                   label: 'الرمز البريدي',
                   hint: 'ادخل الرمز',
                 ),
                 const CustomTextField(
-                  label: 'الدولة',
-                  hint: 'ادخل دولتك',
+                  label: 'جه الاتصال في الموقع',
+                  hint: 'اسم جه الاتصال',
+                ),
+
+                const CustomTextField(
+                  label: 'المدينة (اختياري)',
+                  hint: 'اختر المدينة',
                 ),
                 const CustomTextField(
-                  label: 'الشخص المسؤول',
-                  hint: 'ادخل اسم الشخص',
+                  label: 'المنطقة المختارة*',
+                  hint: 'يملأ تلقائيا من الخريطة/ادخل يدويا',
                 ),
+
                 const CustomTextField(
                   label: 'رقم الإتصال',
                   hint: 'ادخل رقم الاتصال',
                 ),
+                const MapPlaceholder(),
+                const SizedBox(height: 12),
+
+                const CustomTextField(
+                  label: 'إحداثيات الموقع',
+                  hint: 'ادخل إحداثيات الموقع',
+                ),
                 const SizedBox(height: 24),
-                // ElevatedButton(
-                //   onPressed: () {},
-                //   style: ElevatedButton.styleFrom(
-                //     padding: const EdgeInsets.symmetric(vertical: 16),
-                //     shape: RoundedRectangleBorder(
-                //       borderRadius: BorderRadius.circular(8),
-                //     ),
-                //   ),
-                //   child: const Text('حفظ العنوان', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                // ),
-                MainAppBtn(title: 'حفظ العنوان'),
-                const SizedBox(height: 24),
+
+
+                Row(
+            children: [
+              Expanded(child: MainAppBtn(title: 'إضافة فرع'),),
+              const SizedBox(width: 10),
+
+              Container(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  child: MainAppBtn(
+                onTap: (){
+
+                },
+                title: 'إلغاء',haveGradient: false,
+                btnColor:AppColors.secBtnColor ,titleStyle: TextStyle(color: Colors.black),
+                border: Border.all(color: AppColors.secBtnBorderColor),
+              )),
+
+            ],
+          ),
+
+          const SizedBox(height: 30),
               ],
             ),
           ),
