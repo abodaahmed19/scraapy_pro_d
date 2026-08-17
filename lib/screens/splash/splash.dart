@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
       }else{
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const ScrappyLoginScreen()),
+          MaterialPageRoute(builder: (context) => const FirstOnboardingScreen()),
         );
       }
 

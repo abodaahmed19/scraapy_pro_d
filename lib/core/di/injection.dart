@@ -24,6 +24,7 @@ import 'package:scraapy_pro/screens/market/data/data_source/market_data_source.d
 import 'package:scraapy_pro/screens/market/data/repositories/market_repository.dart';
 import 'package:scraapy_pro/screens/market/domain/use_cases/market_use_case.dart';
 import 'package:scraapy_pro/screens/market/presentation/cubit/market_cubit.dart';
+import 'package:scraapy_pro/screens/quotes/presentation/cubit/qoutes_cubit.dart';
 import 'package:scraapy_pro/screens/rentals/data/data_source/retals_data_source.dart';
 import 'package:scraapy_pro/screens/rentals/data/repositories/retals_repository.dart';
 import 'package:scraapy_pro/screens/rentals/domain/use_cases/retals_use_case.dart';
@@ -265,6 +266,11 @@ void setup() {
   ///User///
   getIt.registerLazySingleton<UserCubit>(
         () => UserCubit(),
+  );
+
+  ///Qoutes///
+  getIt.registerFactory(
+        () => QoutesCubit(),
   );
 
 }
