@@ -10,7 +10,7 @@ import 'package:scraapy_pro/screens/rentals/presentation/screens/retals_screen.d
 import 'package:scraapy_pro/screens/services/presentation/screens/services_screen.dart';
 import 'package:scraapy_pro/screens/stock_market/presentation/screens/stock_market_screen.dart';
 import '../../../../widgets/responsive_layout.dart';
-import '../../../notifications/notifications_screen.dart';
+import '../../../notifications/presentation/screens/notifications_screen.dart';
 import '../../../favorites/presentation/screens/favorites_screen.dart';
 import '../../../checkout/checkout_screen.dart';
 import '../../../inspection/inspection_request_screen.dart';

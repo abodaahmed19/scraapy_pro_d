@@ -12,7 +12,7 @@ import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/screens/checkout/checkout_screen.dart';
 import 'package:scraapy_pro/screens/favorites/presentation/screens/favorites_screen.dart';
 import 'package:scraapy_pro/screens/inspection/inspection_request_screen.dart';
-import 'package:scraapy_pro/screens/notifications/notifications_screen.dart';
+import 'package:scraapy_pro/screens/notifications/presentation/screens/notifications_screen.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/data/data_sources/profile_remote_data_source.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/data/repositories/profile_repository_impl.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/domain/use_cases/fetch_profile_use_case.dart';
