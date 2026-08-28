@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scraapy_pro/const/app_colors.dart';
 
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
-import 'package:scraapy_pro/screens/profile/operations/buying/presentation/cubit/buying_rentals_cubit.dart';
-import 'package:scraapy_pro/screens/profile/operations/buying/presentation/cubit/buying_rentals_state.dart';
+import 'package:scraapy_pro/screens/profile/operations/buying/presentation/cubit/bought_product_cubit.dart';
+import 'package:scraapy_pro/screens/profile/operations/buying/presentation/cubit/bought_product_state.dart';
 import 'package:scraapy_pro/screens/profile/operations/shared_widgets/order_card.dart';
 
 import '../../../../../../core/di/injection.dart';
 
-class BuyingRentalsScreen extends StatelessWidget {
+class BuyingProductsScreen extends StatelessWidget {
   final bool fromInspection;
 
-  const BuyingRentalsScreen({
+  const BuyingProductsScreen({
     super.key,
     this.fromInspection = false,
   });
@@ -21,41 +22,50 @@ class BuyingRentalsScreen extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: BlocProvider(
-        create: (_) => getIt<BuyingRentalsCubit>()..getBuyingRentals(),
+        create: (_) => getIt<BoughtProductCubit>()..getBoughtProducts(),
         child: Scaffold(
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const CustomAppBar(
-                  title: 'مستاجرة',
+                  title: 'المشتريات',
                 ),
+                Row(
+                  children: [
+                    Icon(Icons.circle,size: 8,color: AppColors.terquaz,),
+                    SizedBox(width: 8,),
+                    const Text('هنا يمكنك الإطلاع على المنتجات التي تم شراؤها.'),
+                  ],
+                ),
+                const SizedBox(height: 10),
 
                 Expanded(
-                  child: BlocBuilder<BuyingRentalsCubit, BuyingRentalsState>(
+                  child: BlocBuilder<BoughtProductCubit, BoughtProductState>(
                     builder: (context, state) {
-                      if (state is BuyingRentalsLoading) {
+                      if (state is BoughtProductLoading) {
                         return const Center(
                           child: CircularProgressIndicator(),
                         );
                       }
 
-                      if (state is BuyingRentalsError) {
+                      if (state is BoughtProductError) {
                         return Center(
                           child: Text(state.message),
                         );
                       }
 
-                      if (state is BuyingRentalsLoaded) {
-                        final rentals = state.rentals;
+                      if (state is BoughtProductLoaded) {
+                        final products = state.products;
 
-                        if (rentals.isEmpty) {
-                          return Transform.translate(
+                        if (products.isEmpty) {
+                          return  Transform.translate(
                             offset: const Offset(0, -30),
 
-                            child: const Center(
+                            child: Center(
                               child: Text(
-                                'لا توجد منتجات مؤجرة',
+                                'لا توجد منتجات مشتراة',
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.grey,
@@ -70,10 +80,10 @@ class BuyingRentalsScreen extends StatelessWidget {
                             top: 8,
                             bottom: 20,
                           ),
-                          itemCount: rentals.length +
+                          itemCount: products.length +
                               (state.hasMore ? 1 : 0),
                           itemBuilder: (context, index) {
-                            if (index == rentals.length) {
+                            if (index == products.length) {
                               return Padding(
                                 padding: const EdgeInsets.only(
                                   top: 4,
@@ -83,7 +93,7 @@ class BuyingRentalsScreen extends StatelessWidget {
                                   isLoading: state.isLoadingMore,
                                   onPressed: () {
                                     context
-                                        .read<BuyingRentalsCubit>()
+                                        .read<BoughtProductCubit>()
                                         .loadMore();
                                   },
                                 ),

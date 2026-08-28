@@ -25,6 +25,9 @@ import 'package:scraapy_pro/screens/market/data/repositories/market_repository.d
 import 'package:scraapy_pro/screens/market/domain/use_cases/market_use_case.dart';
 import 'package:scraapy_pro/screens/market/presentation/cubit/market_cubit.dart';
 import 'package:scraapy_pro/screens/notifications/dependency_injection/notifications_di.dart';
+import 'package:scraapy_pro/screens/profile/operations/buying/dependency_injection/bought_products_di.dart';
+import 'package:scraapy_pro/screens/profile/operations/buying/dependency_injection/buying_orders_di.dart';
+import 'package:scraapy_pro/screens/profile/operations/buying/dependency_injection/buying_rentals_di.dart';
 import 'package:scraapy_pro/screens/profile/operations/selling/dependency_injection/sold_products_di.dart';
 import 'package:scraapy_pro/screens/profile/operations/selling/dependency_injection/solid_rentals_di.dart';
 import 'package:scraapy_pro/screens/quotes/presentation/cubit/qoutes_cubit.dart';
@@ -282,5 +285,11 @@ void setup() {
   setupSoldProductsDI();
   ///SoldRentals///
   setupSoldRentalsDI();
+  ///BoughtProducts///
+  setupBoughtProductsDI();
+  ///BuyingOrders///
+  setupBuyingOrdersDI();
+  ///BuyingRentals///
+  setupBuyingRentalsDI();
 
 }

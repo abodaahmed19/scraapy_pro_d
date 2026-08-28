@@ -3,9 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/app_images.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
-import 'package:scraapy_pro/screens/profile/operations/buying/presentation/screens/buying_orders.dart';
+import 'package:scraapy_pro/screens/profile/operations/buying/presentation/screens/buying_services.dart';
 import 'package:scraapy_pro/screens/profile/operations/buying/presentation/screens/buying_rentals.dart';
-import 'package:scraapy_pro/screens/profile/operations/buying/presentation/screens/buying_purchase.dart';
+import 'package:scraapy_pro/screens/profile/operations/buying/presentation/screens/buying_products.dart';
 
 
 import 'package:scraapy_pro/screens/profile/operations/selling_pay_list_screen.dart';
@@ -17,13 +17,13 @@ class BuyingMenu extends StatelessWidget {
     {
       "title":"المشتريات",
       "icon":"${AppImages.sellingProduct}",
-      "page":BuyingPurchaseScreen()
+      "page":BuyingProductsScreen()
 
     },
     {
       "title":"مستاجرة",
       "icon":"${AppImages.rentalMenu}",
-      "page":BuyingRentals()
+      "page":BuyingRentalsScreen()
 
     },
     {
