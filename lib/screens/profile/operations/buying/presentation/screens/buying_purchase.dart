@@ -10,10 +10,9 @@ import 'package:scraapy_pro/screens/profile/operations/shared_widgets/order_card
 
 
 
-class SellingPayListScreen extends StatelessWidget {
-  final String title;
+class BuyingPurchaseScreen extends StatelessWidget {
   final bool fromInspection;
-  const SellingPayListScreen({super.key, required this.title,  this.fromInspection = false});
+  const BuyingPurchaseScreen({super.key, this.fromInspection = false});
 
   @override
   Widget build(BuildContext context) {
@@ -25,19 +24,19 @@ class SellingPayListScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             children: [
-              CustomAppBar(title: title),
-              
+              CustomAppBar(title: "المنتجات المباعة"),
+
               Expanded(
                 child: ListView.builder(
-                  shrinkWrap: true,
+                    shrinkWrap: true,
                     itemCount: 6,
                     padding: EdgeInsets.all(0),
                     itemBuilder: (context,index){
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: OrderCard(fromInspection: fromInspection,),
-                  );
-                }),
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: OrderCard(fromInspection: fromInspection,),
+                      );
+                    }),
               )
             ],
           ),

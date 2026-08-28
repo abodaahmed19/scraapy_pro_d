@@ -3,6 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/app_images.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
+import 'package:scraapy_pro/screens/profile/operations/selling/presentation/screens/selling_orders.dart';
+import 'package:scraapy_pro/screens/profile/operations/selling/presentation/screens/selling_purchase.dart';
+import 'package:scraapy_pro/screens/profile/operations/selling/presentation/screens/selling_rentals.dart';
 import 'package:scraapy_pro/screens/profile/operations/selling_pay_list_screen.dart';
 
 class SellingMenu extends StatelessWidget {
@@ -12,19 +15,19 @@ class SellingMenu extends StatelessWidget {
     {
       "title":"المنتجات المباعة",
       "icon":"${AppImages.sellingProduct}",
-      "page":SellingPayListScreen(title: 'المنتجات المباعة',)
+      "page":SoldProductsScreen()
 
     },
     {
       "title":"تأجير",
       "icon":"${AppImages.rentalMenu}",
-      "page":SellingPayListScreen(title: "تأجير",)
+      "page":SellingRentals()
 
     },
     {
       "title":"تقديم خدمة",
       "icon":"${AppImages.rentalMenu}",
-      "page":SellingPayListScreen(title: "تقديم خدمة",)
+      "page":SellingOrders()
 
     },
 
