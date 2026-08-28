@@ -51,12 +51,16 @@ class SoldProductsScreen extends StatelessWidget {
 
                         // Empty state
                         if (products.isEmpty) {
-                          return const Center(
-                            child: Text(
-                              'لا توجد منتجات مباعة',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey,
+                          return Transform.translate(
+                            offset: const Offset(0, -30),
+
+                            child:  Center(
+                              child: Text(
+                                'لا توجد منتجات مباعة',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey,
+                                ),
                               ),
                             ),
                           );

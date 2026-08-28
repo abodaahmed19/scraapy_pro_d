@@ -10,26 +10,26 @@ import 'package:scraapy_pro/screens/profile/operations/selling/presentation/cubi
 
 final getIt = GetIt.instance;
 
-void setupSoldProductsDI() {
-  // Products Data Source
-  getIt.registerLazySingleton<SoldProductsDs>(
-        () => SoldProductsDsImpl(getIt()),
+void setupSoldRentalsDI() {
+
+
+  // Rentals Data Source
+  getIt.registerLazySingleton<SoldRentalsDs>(
+        () => SoldRentalsDsImpl(getIt()),
   );
 
-  // Products Repository
-  getIt.registerLazySingleton<SoldProductsRepo>(
-        () => SoldProductsRepoImpl(getIt()),
+  // Rentals Repository
+  getIt.registerLazySingleton<SoldRentalsRepo>(
+        () => SoldRentalsRepoImpl(getIt()),
   );
 
-  // Products Use Case
-  getIt.registerLazySingleton<SoldProductsUseCase>(
-        () => SoldProductsUseCase(getIt()),
+  // Rentals Use Case
+  getIt.registerLazySingleton<SoldRentalsUseCase>(
+        () => SoldRentalsUseCase(getIt()),
   );
 
-  // Products Cubit
-  getIt.registerFactory<SoldProductCubit>(
-        () => SoldProductCubit(getIt()),
+  // Rentals Cubit
+  getIt.registerFactory<SoldRentalCubit>(
+        () => SoldRentalCubit(getIt()),
   );
-
-
 }
