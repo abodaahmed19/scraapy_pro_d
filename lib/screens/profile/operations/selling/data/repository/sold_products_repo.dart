@@ -1,11 +1,11 @@
 
 import 'package:scraapy_pro/screens/notifications/data/data_source/notifications_data_source.dart';
 import 'package:scraapy_pro/screens/notifications/domain/entities/notifications_entity.dart';
-import 'package:scraapy_pro/screens/profile/operations/buying/domain/entity/buying_entity.dart';
 import 'package:scraapy_pro/screens/profile/operations/selling/data/remote_data_source/sold_products_ds.dart';
+import 'package:scraapy_pro/screens/profile/operations/selling/domain/entity/selling_entity.dart';
 
 abstract class SoldProductsRepo {
-  Future <SellingOrdersEntity> getAllSoldProducts();
+  Future <SellingOrdersEntity> getAllSoldProducts(int page);
 }
 
 class SoldProductsRepoImpl implements SoldProductsRepo {
@@ -14,7 +14,7 @@ class SoldProductsRepoImpl implements SoldProductsRepo {
   SoldProductsRepoImpl(this.soldProductsDs);
 
   @override
-  Future <SellingOrdersEntity> getAllSoldProducts() async {
-    return await soldProductsDs.getSoldProducts();
+  Future <SellingOrdersEntity> getAllSoldProducts(int page) async {
+    return await soldProductsDs.getSoldProducts(page);
   }
 }

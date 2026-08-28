@@ -17,7 +17,11 @@ class SellingOrdersEntity {
       next: json['next'],
       previous: json['previous'],
       results: (json['results'] as List<dynamic>? ?? [])
-          .map((item) => SellingOrderEntity.fromJson(item))
+          .map(
+            (item) => SellingOrderEntity.fromJson(
+          item as Map<String, dynamic>,
+        ),
+      )
           .toList(),
     );
   }
