@@ -36,7 +36,7 @@ class BuyingOrders extends StatelessWidget {
                   children: [
                     Icon(Icons.circle,size: 8,color: AppColors.terquaz,),
                     SizedBox(width: 8,),
-                    const Text('هنا يمكنك الإطلاع على الخدمات التي تم طلبها.'),
+                    const Text('هنا يمكنك الإطلاع على الخدمات التي تم طلبها.',),
                   ],
                 ),
                 const SizedBox(height: 10),
