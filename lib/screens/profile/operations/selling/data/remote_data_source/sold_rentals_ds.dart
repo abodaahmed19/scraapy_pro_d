@@ -19,7 +19,7 @@ class SoldRentalsDsImpl implements SoldRentalsDs {
         '${ConstantManager.baseUrl}/billing/orders/',
         queryParameters: {
           'group_type': 'rental',
-          'type': 'bought',
+          'type': 'sold',
           'page': page,
           'query': '',
           'status': '',
