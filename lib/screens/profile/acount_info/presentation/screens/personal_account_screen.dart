@@ -23,7 +23,7 @@ import 'package:scraapy_pro/screens/profile/acount_info/presentation/screens/edi
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/widgets/baqa_widget.dart';
 import 'package:scraapy_pro/screens/profile/legal_settings/presentation/screens/legal_settings_menu.dart';
 import 'package:scraapy_pro/screens/profile/my_menu/presentation/screens/my_menu_tap_screen.dart';
-import '../../../../address/add_address_screen.dart';
+
 
 class PersonalAccountScreen extends StatelessWidget {
   const PersonalAccountScreen({super.key});
@@ -136,6 +136,7 @@ class PersonalInfoWidget extends StatelessWidget {
         String imageUrl = '';
 
         if (state is ProfileLoaded) {
+
           name = state.user.fullName.isNotEmpty ? state.user.fullName : '...';
           phone = state.user.phoneNumber.isNotEmpty
               ? state.user.phoneNumber

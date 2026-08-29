@@ -25,6 +25,8 @@ import 'package:scraapy_pro/screens/market/data/repositories/market_repository.d
 import 'package:scraapy_pro/screens/market/domain/use_cases/market_use_case.dart';
 import 'package:scraapy_pro/screens/market/presentation/cubit/market_cubit.dart';
 import 'package:scraapy_pro/screens/notifications/dependency_injection/notifications_di.dart';
+import 'package:scraapy_pro/screens/profile/acount_info/di/my_wallet_di.dart';
+import 'package:scraapy_pro/screens/profile/acount_info/di/my_wallet_transactions_di.dart';
 import 'package:scraapy_pro/screens/profile/operations/buying/dependency_injection/bought_products_di.dart';
 import 'package:scraapy_pro/screens/profile/operations/buying/dependency_injection/buying_orders_di.dart';
 import 'package:scraapy_pro/screens/profile/operations/buying/dependency_injection/buying_rentals_di.dart';
@@ -291,5 +293,9 @@ void setup() {
   setupBuyingOrdersDI();
   ///BuyingRentals///
   setupBuyingRentalsDI();
+  ///MyWallet///
+  setupMyWalletDI();
+  ///MyWalletTransactions///
+  setupMyWalletTransactionsDI();
 
 }
