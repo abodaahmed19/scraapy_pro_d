@@ -2,10 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:scraapy_pro/core/config/res/constants_manager.dart';
 import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/core/error/dio_error_handler.dart';
+import 'package:scraapy_pro/screens/profile/acount_info/domain/entities/address_entity.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/domain/entities/branches_entity.dart';
 
 abstract class BranchesDataSource {
   Future<BranchesEntity> getAllBranches();
+  Future<void> addAddress(AddressEntity addressEntity);
 }
 
 class BranchesDataSourceImp extends BranchesDataSource {
@@ -40,6 +42,22 @@ class BranchesDataSourceImp extends BranchesDataSource {
       );
 
       return BranchesEntity.fromJson(response.data);
+    } on DioException catch (e) {
+      throw DioErrorHandler.handle(e);
+
+    }
+  }
+
+  @override
+  Future<void> addAddress(AddressEntity addressEntity) async {
+    try {
+      final dio = getIt<Dio>();
+      final response = await dio.post(
+        '${ConstantManager.baseUrl}/users/address/',
+        data: addressEntity.toJson(),
+      );
+
+      // return BranchesEntity.fromJson(response.data);
     } on DioException catch (e) {
       throw DioErrorHandler.handle(e);
 
