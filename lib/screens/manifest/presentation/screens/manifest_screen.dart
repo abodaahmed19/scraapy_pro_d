@@ -7,8 +7,8 @@ import 'package:scraapy_pro/const/main_app_btn.dart';
 import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/screens/inspection/inspection_request_screen.dart';
-import 'package:scraapy_pro/screens/manifest/presentation/danger_mainfest_form.dart';
-import 'package:scraapy_pro/screens/manifest/presentation/non_danger_mainfest_form.dart';
+import 'package:scraapy_pro/screens/manifest/presentation/screens/danger_mainfest_form.dart';
+import 'package:scraapy_pro/screens/manifest/presentation/screens/non_danger_mainfest_form.dart';
 import 'package:scraapy_pro/screens/rentals/presentation/cubit/Retals_cubit.dart';
 
 class ManifestScreen extends StatelessWidget {

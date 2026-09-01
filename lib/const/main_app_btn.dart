@@ -11,9 +11,10 @@ class MainAppBtn extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final BoxBorder? border;
   final void Function()? onTap;
+  final Widget? child;
 
   const MainAppBtn({super.key, required this.title,
-     this.titleStyle,  this.btnColor, this.padding, this.width, this.onTap, this.haveGradient = true, this.border});
+     this.titleStyle,  this.btnColor, this.padding, this.width, this.onTap, this.haveGradient = true, this.border, this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,7 @@ class MainAppBtn extends StatelessWidget {
         ),
         child: Padding(
           padding: padding??EdgeInsets.all(0),
-          child: Center(child: Text(this.title,style:titleStyle??TextStyle(fontSize: 16,fontWeight: FontWeight.w500,color: AppColors.white),)),
+          child: Center(child: child ?? Text(this.title,style:titleStyle??TextStyle(fontSize: 16,fontWeight: FontWeight.w500,color: AppColors.white),)),
         ),
       ),
     );

@@ -20,6 +20,8 @@ import 'package:scraapy_pro/screens/favorites/data/repositories/favorite_reposit
 import 'package:scraapy_pro/screens/favorites/domain/use_cases/favorite_use_case.dart';
 import 'package:scraapy_pro/screens/favorites/presentation/cubit/favorite_cubit.dart';
 
+import 'package:scraapy_pro/screens/permisions/di/permisions_di.dart';
+import 'package:scraapy_pro/screens/manifest/dependency_injection/mainfest_di.dart';
 import 'package:scraapy_pro/screens/market/data/data_source/market_data_source.dart';
 import 'package:scraapy_pro/screens/market/data/repositories/market_repository.dart';
 import 'package:scraapy_pro/screens/market/domain/use_cases/market_use_case.dart';
@@ -27,6 +29,7 @@ import 'package:scraapy_pro/screens/market/presentation/cubit/market_cubit.dart'
 import 'package:scraapy_pro/screens/notifications/dependency_injection/notifications_di.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/di/my_wallet_di.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/di/my_wallet_transactions_di.dart';
+import 'package:scraapy_pro/screens/profile/acount_info/di/add_address_di.dart';
 import 'package:scraapy_pro/screens/profile/operations/buying/dependency_injection/bought_products_di.dart';
 import 'package:scraapy_pro/screens/profile/operations/buying/dependency_injection/buying_orders_di.dart';
 import 'package:scraapy_pro/screens/profile/operations/buying/dependency_injection/buying_rentals_di.dart';
@@ -297,5 +300,11 @@ void setup() {
   setupMyWalletDI();
   ///MyWalletTransactions///
   setupMyWalletTransactionsDI();
+  ///AddAddress///
+  setupAddAddressDI();
+  ///Mainfest///
+  setupMainfestDI();
+  ///Permisions///
+  setupPermisionsDI();
 
 }
