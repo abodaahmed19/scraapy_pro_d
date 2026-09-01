@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scraapy_pro/const/main_app_btn.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
-import 'package:scraapy_pro/screens/address/add_address_screen.dart';
+import 'package:scraapy_pro/screens/profile/acount_info/presentation/screens/add_address_screen.dart';
 
 class EmptyBranches extends StatelessWidget {
   const EmptyBranches({super.key});
