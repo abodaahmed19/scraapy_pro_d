@@ -3,6 +3,7 @@ import 'package:scraapy_pro/screens/manifest/domain/entities/danger_mainfest_mod
 
 abstract class MainfestRepo {
   Future<void> createMainfest(DangerMainfestModel model);
+  Future<void> createDangerMainfest(DangerMainfestModel model);
 }
 
 class MainfestRepoImpl implements MainfestRepo {
@@ -13,5 +14,10 @@ class MainfestRepoImpl implements MainfestRepo {
   @override
   Future<void> createMainfest(DangerMainfestModel model) async {
     return await mainfestDs.createMainfest(model);
+  }
+
+  @override
+  Future<void> createDangerMainfest(DangerMainfestModel model) async {
+    return await mainfestDs.createDangerMainfest(model);
   }
 }

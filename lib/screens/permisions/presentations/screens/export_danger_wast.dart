@@ -1,11 +1,46 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/main_app_btn.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/widgets/custom_text_field.dart';
 
-class ExportDangerWast extends StatelessWidget {
+class ExportDangerWast extends StatefulWidget {
   const ExportDangerWast({super.key});
+
+  @override
+  State<ExportDangerWast> createState() => _ExportDangerWastState();
+}
+
+class _ExportDangerWastState extends State<ExportDangerWast> {
+  final headquartersProofController = TextEditingController();
+  final zakatIncomeCertificateController = TextEditingController();
+  final internationalApprovalsController = TextEditingController();
+  final resourceRiskReportController = TextEditingController();
+  final laboratoryReportController = TextEditingController();
+  final transportDocumentController = TextEditingController();
+  final emergencyResponsePlanController = TextEditingController();
+  final noLocalAlternativeProofController = TextEditingController();
+
+  @override
+  void dispose() {
+    headquartersProofController.dispose();
+    zakatIncomeCertificateController.dispose();
+    internationalApprovalsController.dispose();
+    resourceRiskReportController.dispose();
+    laboratoryReportController.dispose();
+    transportDocumentController.dispose();
+    emergencyResponsePlanController.dispose();
+    noLocalAlternativeProofController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _pickUploadFile(TextEditingController controller) async {
+    final FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null && result.files.single.name.isNotEmpty) {
+      controller.text = result.files.single.name;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,19 +101,23 @@ class ExportDangerWast extends StatelessWidget {
 
                   // 4. Proof of Headquarters - File Upload (إثبات المقر)
 
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'إثبات المقر',
                     hint: 'ارفع صك الملكية',
+                    readOnly: true,
+                    onTap: () => _pickUploadFile(headquartersProofController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
-
+                    controller: headquartersProofController,
                   ),
                   // 5. Zakat & Income Certificate - File Upload (شهادة الزكاة والدخل)
 
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'شهادة الزكاة والدخل',
                     hint: 'ارفع شهادة الزكاة والدخل',
+                    readOnly: true,
+                    onTap: () => _pickUploadFile(zakatIncomeCertificateController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
-
+                    controller: zakatIncomeCertificateController,
                   ),
                   // 6. National Center Permit (تصريح المركز الوطني (موان))
                   const CustomTextField(
@@ -116,30 +155,38 @@ class ExportDangerWast extends StatelessWidget {
                   ),
 
                   // 2. Commercial Register (رقم السجل التجاري)
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'الموافقات الدولية (نازل)',
                     hint: 'ارفع الموافقات المطلوبة',
+                    readOnly: true,
+                    onTap: () => _pickUploadFile(internationalApprovalsController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
-
+                    controller: internationalApprovalsController,
                   ),
 
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'تقرير مخاطر الموارد',
                     hint: 'ارفع تقرير مخاطر الموارد',
+                    readOnly: true,
+                    onTap: () => _pickUploadFile(resourceRiskReportController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
-
+                    controller: resourceRiskReportController,
                   ),
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'التقرير المخبري',
                     hint: 'ارفع تقرير مخبر معتمد (خلال اخر 3 اشهر)',
+                    readOnly: true,
+                    onTap: () => _pickUploadFile(laboratoryReportController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
-
+                    controller: laboratoryReportController,
                   ),
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'وثيقة النقل',
                     hint: 'ارفع اداة نقل الملف',
+                    readOnly: true,
+                    onTap: () => _pickUploadFile(transportDocumentController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
-
+                    controller: transportDocumentController,
                   ),
                   Text('تعهد الاستخدام *',style: TextStyle(
                     fontSize: 14,
@@ -246,19 +293,24 @@ class ExportDangerWast extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
 
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'خطة الاستجابة للطوارئ',
                     hint: 'ارفع ملف خطة الاستجابة لحالات الطوارئ أثناء الجمع والنقل',
+                    readOnly: true,
+                    onTap: () => _pickUploadFile(emergencyResponsePlanController),
                     suffixIcon: Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
+                    controller: emergencyResponsePlanController,
                   ),
                   const SizedBox(height: 16),
 
                   // 2. إثبات احتياج السوق (Text Field)
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'اثبات عدم توافر بديل محلي',
                     hint: 'ارفع ملف يثبت عدم قدرة المرافق المحلية',
+                    readOnly: true,
+                    onTap: () => _pickUploadFile(noLocalAlternativeProofController),
                     suffixIcon: Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
-
+                    controller: noLocalAlternativeProofController,
                   ),
 
                   Text('إقرار التعديلات *',style: TextStyle(

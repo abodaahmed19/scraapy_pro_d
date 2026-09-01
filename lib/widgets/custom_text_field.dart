@@ -9,6 +9,8 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
+  final bool readOnly;
+  final VoidCallback? onTap;
 
   const CustomTextField({
     super.key,
@@ -20,6 +22,8 @@ class CustomTextField extends StatelessWidget {
     this.suffixIcon,
     this.controller,
     this.validator,
+    this.readOnly = false,
+    this.onTap,
   });
 
   @override
@@ -64,7 +68,8 @@ class CustomTextField extends StatelessWidget {
         TextFormField(
           controller: controller,
           maxLines: maxLines,
-          readOnly: isDropdown,
+          readOnly: isDropdown || readOnly,
+          onTap: onTap,
           validator: validator,
           decoration: InputDecoration(
             hintText: hint,

@@ -5,6 +5,7 @@ import 'package:scraapy_pro/screens/manifest/domain/entities/danger_mainfest_mod
 
 abstract class MainfestDs {
   Future<void> createMainfest(DangerMainfestModel model);
+  Future<void> createDangerMainfest(DangerMainfestModel model);
 }
 
 class MainfestDsImpl implements MainfestDs {
@@ -16,11 +17,26 @@ class MainfestDsImpl implements MainfestDs {
   Future<void> createMainfest(DangerMainfestModel model) async {
     try {
       await dio.post(
-        '${ConstantManager.baseUrl}/hazardous-waste-transfers//',
+        '${ConstantManager.baseUrl}/hazardous-waste-transfers/',
         data: model.toJson(),
       );
     } on DioException catch (e) {
       throw DioErrorHandler.handle(e);
     }
   }
+
+
+
+  @override
+  Future<void> createDangerMainfest(DangerMainfestModel model) async {
+    try {
+      await dio.post(
+        '${ConstantManager.baseUrl}/hazardous-waste-transfers/',
+        data: model.toJson(),
+      );
+    } on DioException catch (e) {
+      throw DioErrorHandler.handle(e);
+    }
+  }
+
 }

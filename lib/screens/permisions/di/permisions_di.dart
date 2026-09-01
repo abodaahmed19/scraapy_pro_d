@@ -7,7 +7,7 @@ import 'package:scraapy_pro/screens/permisions/domain/use_cases/import_danger_wa
 import 'package:scraapy_pro/screens/permisions/domain/use_cases/importing_non_danger_waste_use_case.dart';
 import 'package:scraapy_pro/screens/permisions/presentations/cubit/export_danger_waste_cubit.dart';
 import 'package:scraapy_pro/screens/permisions/presentations/cubit/export_non_danger_waste_cubit.dart';
-import 'package:scraapy_pro/screens/permisions/presentations/cubit/import_danger_non_waste_permissions_cubit.dart';
+import 'package:scraapy_pro/screens/permisions/presentations/cubit/import_non_danger_waste_permissions_cubit.dart';
 import 'package:scraapy_pro/screens/permisions/presentations/cubit/import_danger_waste_cubit.dart';
 
 final getIt = GetIt.instance;
@@ -45,8 +45,8 @@ void setupPermisionsDI() {
         () => ImportDangerWastePermissionsCubit(getIt()),
   );
 
-  getIt.registerFactory<ImportDangerNonWastePermissionsCubit>(
-        () => ImportDangerNonWastePermissionsCubit(getIt()),
+  getIt.registerFactory<ImportNonDangerWastePermissionsCubit>(
+        () => ImportNonDangerWastePermissionsCubit(getIt()),
   );
 
   getIt.registerFactory<ExportDangerWasteCubit>(

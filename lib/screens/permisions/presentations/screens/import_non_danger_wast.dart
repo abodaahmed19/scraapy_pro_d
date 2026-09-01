@@ -1,11 +1,38 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/main_app_btn.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/widgets/custom_text_field.dart';
 
-class ImportNonDangerWast extends StatelessWidget {
+class ImportNonDangerWast extends StatefulWidget {
   const ImportNonDangerWast({super.key});
+
+  @override
+  State<ImportNonDangerWast> createState() => _ImportNonDangerWastState();
+}
+
+class _ImportNonDangerWastState extends State<ImportNonDangerWast> {
+  final headquartersProofController = TextEditingController();
+  final zakatIncomeCertificateController = TextEditingController();
+  final wasteImagesController = TextEditingController();
+  final marketNeedProofController = TextEditingController();
+
+  @override
+  void dispose() {
+    headquartersProofController.dispose();
+    zakatIncomeCertificateController.dispose();
+    wasteImagesController.dispose();
+    marketNeedProofController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _pickUploadFile(TextEditingController controller) async {
+    final FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null && result.files.single.name.isNotEmpty) {
+      controller.text = result.files.single.name;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,19 +93,23 @@ class ImportNonDangerWast extends StatelessWidget {
 
                   // 4. Proof of Headquarters - File Upload (إثبات المقر)
 
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'إثبات المقر',
                     hint: 'ارفع صك الملكية',
+                    readOnly: true,
+                    onTap: () => _pickUploadFile(headquartersProofController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
-
+                    controller: headquartersProofController,
                   ),
                   // 5. Zakat & Income Certificate - File Upload (شهادة الزكاة والدخل)
 
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'شهادة الزكاة والدخل',
                     hint: 'ارفع شهادة الزكاة والدخل',
+                    readOnly: true,
+                    onTap: () => _pickUploadFile(zakatIncomeCertificateController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
-
+                    controller: zakatIncomeCertificateController,
                   ),
                   // 6. National Center Permit (تصريح المركز الوطني (موان))
                   const CustomTextField(
@@ -116,18 +147,22 @@ class ImportNonDangerWast extends StatelessWidget {
                   ),
 
                   // 2. Commercial Register (رقم السجل التجاري)
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'صور النفايا',
                     hint: 'ارفع صور الفايا',
+                    readOnly: true,
+                    onTap: () => _pickUploadFile(wasteImagesController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
-
+                    controller: wasteImagesController,
                   ),
 
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'احتياج السوق المحلي',
                     hint: 'اشرح ضرورة اسيراد هذا النوع لسد فجوة في السوق المحلي',
+                    readOnly: true,
+                    onTap: () => _pickUploadFile(marketNeedProofController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
-
+                    controller: marketNeedProofController,
                   ),
                   Text('تعهد التدوير*',style: TextStyle(
                     fontSize: 14,
