@@ -32,7 +32,7 @@ class TransactionsScreen extends StatelessWidget {
                 BlocBuilder<MyWalletTransactionsCubit,MyWalletTransactionsState>
                   (builder: (context,state){
                   if (state is MyWalletTransactionsLoading) {
-                    return const Expanded( child: _TransactionsShimmer(), );
+                    return const Expanded( child: TransactionsShimmer(), );
                   }
 
                   if (state is MyWalletTransactionsLoaded) {
@@ -119,8 +119,8 @@ class TransactionsScreen extends StatelessWidget {
 
 
 
-class _TransactionsShimmer extends StatelessWidget {
-  const _TransactionsShimmer();
+class TransactionsShimmer extends StatelessWidget {
+  const TransactionsShimmer();
 
   @override
   Widget build(BuildContext context) {
