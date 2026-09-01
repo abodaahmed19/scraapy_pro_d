@@ -3,7 +3,7 @@ import 'package:scraapy_pro/screens/permisions/data/remote_ds/permisions_ds.dart
 
 abstract class PermissionsRepo {
   Future<void> importingDangerWaste(FormData body);
-  Future<void> importingNonDangerWaste(Map<String, dynamic> body);
+  Future<void> importingNonDangerWaste(FormData body);
   Future<void> exportingDangerWaste(Map<String, dynamic> body);
   Future<void> exportingNonDangerWaste(Map<String, dynamic> body);
 }
@@ -19,7 +19,7 @@ class PermissionsRepoImpl implements PermissionsRepo {
   }
 
   @override
-  Future<void> importingNonDangerWaste(Map<String, dynamic> body) async {
+  Future<void> importingNonDangerWaste(FormData body) async {
     return await permissionsDs.importingNonDangerWaste(body);
   }
 

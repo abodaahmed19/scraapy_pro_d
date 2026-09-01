@@ -1,8 +1,16 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/main_app_btn.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
+import 'package:scraapy_pro/core/di/injection.dart';
+import 'package:scraapy_pro/screens/permisions/domain/entities/import_permit/import_nondanger_waste.dart';
+import 'package:scraapy_pro/screens/permisions/presentations/cubit/import_non_danger_waste_cubit.dart';
+import 'package:scraapy_pro/screens/permisions/presentations/cubit/import_non_danger_waste_state.dart';
 import 'package:scraapy_pro/widgets/custom_text_field.dart';
 
 class ImportNonDangerWast extends StatefulWidget {
@@ -13,37 +21,132 @@ class ImportNonDangerWast extends StatefulWidget {
 }
 
 class _ImportNonDangerWastState extends State<ImportNonDangerWast> {
-  final headquartersProofController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  final facilityTypeController = TextEditingController();
+  final commercialRegisterController = TextEditingController();
   final zakatIncomeCertificateController = TextEditingController();
   final wasteImagesController = TextEditingController();
   final marketNeedProofController = TextEditingController();
+  final nationalAddressController = TextEditingController();
+  final headquartersProofController = TextEditingController();
+  final nationalCenterLicenseNumberController = TextEditingController();
+  final wasteTypeController = TextEditingController();
+  final carrierLicenseNumberController = TextEditingController();
+  final tempStorageFacilityController = TextEditingController();
+  final recyclingFacilitiesController = TextEditingController();
+
+  bool recyclingCommitment = false;
+  bool additionalRequirementsAck = false;
 
   @override
   void dispose() {
-    headquartersProofController.dispose();
+    facilityTypeController.dispose();
     zakatIncomeCertificateController.dispose();
     wasteImagesController.dispose();
     marketNeedProofController.dispose();
+    commercialRegisterController.dispose();
+    nationalAddressController.dispose();
+    headquartersProofController.dispose();
+    nationalCenterLicenseNumberController.dispose();
+    wasteTypeController.dispose();
+    carrierLicenseNumberController.dispose();
+    tempStorageFacilityController.dispose();
+    recyclingFacilitiesController.dispose();
     super.dispose();
   }
 
   Future<void> _pickUploadFile(TextEditingController controller) async {
     final FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null && result.files.single.name.isNotEmpty) {
+      pickedFiles[controller] = result.files.single;
       controller.text = result.files.single.name;
     }
   }
 
+  final Map<TextEditingController, PlatformFile> pickedFiles = {};
+
+  FormData _buildImportFormData(ImportNondangerWasteModel model) {
+    final formData = FormData();
+    formData.fields.addAll([
+      MapEntry('facility_type', model.facilityType),
+      MapEntry('commercial_register', model.commercialRegister),
+      MapEntry('national_address', model.nationalAddress),
+      MapEntry(
+          'national_center_license_number', model.nationalCenterLicenseNumber),
+      MapEntry('waste_type', model.wasteType),
+      MapEntry('market_need', model.marketNeed),
+      MapEntry('recycling_commitment', '${model.recyclingCommitment}'),
+      MapEntry('carrier_license_number', model.carrierLicenseNumber),
+      MapEntry('temporary_storage_license', model.temporaryStorageLicense),
+      MapEntry('recycling_facilities', model.recyclingFacilities),
+      MapEntry('additional_requirements_ack',
+          '${model.additionalRequirementsAck}'),
+    ]);
+
+    if (model.products.isNotEmpty) {
+      formData.fields.add(MapEntry(
+        'products',
+        jsonEncode(model.products.map((p) => p.toJson()).toList()),
+      ));
+    }
+
+    void addFile(TextEditingController controller, String apiField) {
+      final PlatformFile? picked = pickedFiles[controller];
+      if (picked == null) return;
+      if (picked.path != null) {
+        formData.files.add(MapEntry(
+          apiField,
+          MultipartFile.fromFileSync(picked.path!, filename: picked.name),
+        ));
+      } else if (picked.bytes != null) {
+        formData.files.add(MapEntry(
+          apiField,
+          MultipartFile.fromBytes(picked.bytes!, filename: picked.name),
+        ));
+      }
+    }
+
+    addFile(headquartersProofController, 'facility_proof');
+    addFile(zakatIncomeCertificateController, 'zakat_certificate');
+    addFile(wasteImagesController, 'waste_images');
+
+    return formData;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Directionality(
+    return BlocProvider(
+      create: (_) => getIt<ImportNonDangerWasteCubit>(),
+      child: BlocListener<ImportNonDangerWasteCubit, ImportNonDangerWasteState>(
+        listener: (context, state) {
+          if (state is ImportDangerNonWasteSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('تم إرسال الطلب بنجاح'),
+                backgroundColor: Colors.green,
+              ),
+            );
+            Navigator.pop(context);
+          } else if (state is ImportDangerNonWasteError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
+        child: Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
 
           body: Padding(
             padding:  EdgeInsets.symmetric(horizontal: 20.0),
             child: SingleChildScrollView(
-              child: Column(
+              child: Form(
+                key: formKey,
+                child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -72,23 +175,44 @@ class _ImportNonDangerWastState extends State<ImportNonDangerWast> {
                   const SizedBox(height: 20),
 
                   // 1. Dropdown Field (نوع المنشأة)
-                  const CustomTextField(
+                   CustomTextField(
                     label: 'نوع المنشأة',
                     hint: 'اختر نوع المنشأة',
+                    controller: facilityTypeController,
                     suffixIcon:   Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
 
                   ),
 
                   // 2. Commercial Register (رقم السجل التجاري)
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'رقم السجل التجاري',
                     hint: 'ادخل رقم السجل التجاري',
+                    controller: commercialRegisterController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
 
                   // 3. National Address (العنوان الوطني)
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'العنوان الوطني',
                     hint: 'ادخل العنوان الوطني',
+                    controller: nationalAddressController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
 
                   // 4. Proof of Headquarters - File Upload (إثبات المقر)
@@ -100,6 +224,12 @@ class _ImportNonDangerWastState extends State<ImportNonDangerWast> {
                     onTap: () => _pickUploadFile(headquartersProofController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
                     controller: headquartersProofController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   // 5. Zakat & Income Certificate - File Upload (شهادة الزكاة والدخل)
 
@@ -110,11 +240,24 @@ class _ImportNonDangerWastState extends State<ImportNonDangerWast> {
                     onTap: () => _pickUploadFile(zakatIncomeCertificateController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
                     controller: zakatIncomeCertificateController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   // 6. National Center Permit (تصريح المركز الوطني (موان))
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'تصريح المركز الوطني (موان)',
                     hint: 'ادخل رقم ترخيص المركز الوطني',
+                    controller: nationalCenterLicenseNumberController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   /////////////////////////////////////////////////////////////////
 
@@ -139,10 +282,17 @@ class _ImportNonDangerWastState extends State<ImportNonDangerWast> {
                   const SizedBox(height: 20),
 
                   // 1. Dropdown Field (نوع المنشأة)
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'نوع النفايات',
                     hint: 'ادخل نوع النفايات',
+                    controller: wasteTypeController,
                     suffixIcon:   Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
 
                   ),
 
@@ -154,6 +304,12 @@ class _ImportNonDangerWastState extends State<ImportNonDangerWast> {
                     onTap: () => _pickUploadFile(wasteImagesController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
                     controller: wasteImagesController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
 
                   CustomTextField(
@@ -163,6 +319,12 @@ class _ImportNonDangerWastState extends State<ImportNonDangerWast> {
                     onTap: () => _pickUploadFile(marketNeedProofController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
                     controller: marketNeedProofController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   Text('تعهد التدوير*',style: TextStyle(
                     fontSize: 14,
@@ -183,7 +345,11 @@ class _ImportNonDangerWastState extends State<ImportNonDangerWast> {
                       child: Row(
 
                         children: [
-                          Checkbox(value: false, onChanged: (val){}),
+                          Checkbox(
+                                value: recyclingCommitment,
+                                onChanged: (val) => setState(
+                                    () => recyclingCommitment = val ?? false),
+                              ),
                           SizedBox(width: 6,),
                           Container(
                             width: MediaQuery.of(context).size.width *0.7,
@@ -218,17 +384,38 @@ class _ImportNonDangerWastState extends State<ImportNonDangerWast> {
                   ),
                   const SizedBox(height: 12),
 
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'بيانات الناقل',
                     hint: 'ادخل رقم رخصة الناقل',
+                    controller: carrierLicenseNumberController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'منشأة التخزين المؤقت (في حالة وجود تخزين)',
                     hint: 'ادخل بيانات منشأة تخزين مؤقتة مرخصة من قبل المركز',
+                    controller: tempStorageFacilityController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'مرافق التدوير',
                     hint: 'وضع توافر المرافق الجاهزة لمعالجة كميات النفايات المستوردة',
+                    controller: recyclingFacilitiesController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
 
 
@@ -273,7 +460,11 @@ class _ImportNonDangerWastState extends State<ImportNonDangerWast> {
                       child: Row(
 
                         children: [
-                          Checkbox(value: false, onChanged: (val){}),
+                          Checkbox(
+                                value: additionalRequirementsAck,
+                                onChanged: (val) => setState(() =>
+                                    additionalRequirementsAck = val ?? false),
+                              ),
                           SizedBox(width: 6,),
                           Container(
                             width: MediaQuery.of(context).size.width *0.7,
@@ -334,13 +525,90 @@ class _ImportNonDangerWastState extends State<ImportNonDangerWast> {
                     ),
                   ),
                   SizedBox(height: 24,),
+                  BlocBuilder<ImportNonDangerWasteCubit, ImportNonDangerWasteState>(
+                    builder: (context,state) {
+                      final isLoading =
+                      state is ImportDangerNonWasteLoading;
+                      return MainAppBtn(
+                        title: 'تقديم طلب',
+                        onTap: isLoading
+                            ? null
+                            :()async {
+                          if (!formKey.currentState!.validate()) return;
+
+                          if (!recyclingCommitment) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('يجب الإقرار بالتعهد بالتدوير'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                          if (!additionalRequirementsAck) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('يجب الإقرار بالمتطلبات الإضافية'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                          if (!recyclingCommitment ||
+                              !additionalRequirementsAck) {
+                            return;
+                          }
+
+                          final ImportNondangerWasteModel
+                          importNondangerWasteModel =
+                          ImportNondangerWasteModel(
+                            facilityType: facilityTypeController.text.trim(),
+                            commercialRegister: commercialRegisterController.text,
+                            nationalAddress: nationalAddressController.text,
+                            facilityProof: headquartersProofController.text,
+                            zakatCertificate: zakatIncomeCertificateController.text,
+                            nationalCenterLicenseNumber: nationalCenterLicenseNumberController.text,
+                            wasteType: wasteTypeController.text,
+                            wasteImages: wasteImagesController.text,
+                            marketNeed: marketNeedProofController.text,
+                            recyclingCommitment: recyclingCommitment,
+                            carrierLicenseNumber: carrierLicenseNumberController.text,
+                            temporaryStorageLicense: tempStorageFacilityController.text,
+                            recyclingFacilities: recyclingFacilitiesController.text,
+                            additionalRequirementsAck: additionalRequirementsAck,
+                            products: const <ProductModel>[],
+                          );
+
+                          context
+                              .read<ImportNonDangerWasteCubit>()
+                              .importingNonDangerWaste(
+                              _buildImportFormData(
+                                  importNondangerWasteModel));
+                        },
+                          child: isLoading
+                              ? const Center(
+                            child: SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: AppColors.white,
+                              ),
+                            ),
+                          )
+                              : null
+                      );
+                    }
+                  ),
+                  SizedBox(height: 24,),
 
                 ],
-              ),
-            ),
-          )
-      ),
-    );
+              ), // Column
+              ), // Form
+            ), // SingleChildScrollView
+          ), // Padding
+        ), // Scaffold
+      ), // Directionality
+      ), // BlocListener
+    ); // BlocProvider
 
   }
 }

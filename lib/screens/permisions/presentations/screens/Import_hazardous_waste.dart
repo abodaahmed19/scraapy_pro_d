@@ -627,8 +627,7 @@ class _ImportDangerWasteState extends State<ImportDangerWaste> {
                     ),
                   ),
                   SizedBox(height: 24,),
-                  BlocBuilder<ImportDangerWastePermissionsCubit,
-                      ImportDangerWastePermissionsState>(
+                  BlocBuilder<ImportDangerWastePermissionsCubit, ImportDangerWastePermissionsState>(
                     builder: (context, state) {
                       final isLoading =
                           state is ImportDangerWasteLoading;

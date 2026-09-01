@@ -45,9 +45,14 @@ class DioErrorHandler {
     final statusCode = response?.statusCode;
 
     switch (statusCode) {
+      // case 400:
+      //   return const ApiException(
+      //     message: 'Invalid request',
+      //     statusCode: 400,
+      //   );
       case 400:
-        return const ApiException(
-          message: 'Invalid request.',
+        return  ApiException(
+          message: '${response?.data}',
           statusCode: 400,
         );
 
