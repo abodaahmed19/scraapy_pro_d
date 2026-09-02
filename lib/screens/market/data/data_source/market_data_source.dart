@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:scraapy_pro/screens/market/domain/entities/market_entity.dart';
+import 'package:scraapy_pro/screens/services/domain/entities/services_entity.dart';
+import 'package:scraapy_pro/screens/services/domain/entities/services_item_entity.dart';
 
 abstract class MarketRemoteDataSource {
-  Future<MarketEntity> getMarket();
+  Future<ServicesEntity> getMarket();
 }
 
 class MarketRemoteDataSourceImpl implements MarketRemoteDataSource {
@@ -11,9 +13,9 @@ class MarketRemoteDataSourceImpl implements MarketRemoteDataSource {
   MarketRemoteDataSourceImpl(this.dio);
 
   @override
-  Future<MarketEntity> getMarket() async {
+  Future<ServicesEntity> getMarket() async {
     final response = await dio.get('https://vmi2584358.contaboserver.net/api/inventory/items/store/');
 
-    return MarketEntity.fromJson(response.data);
+    return ServicesEntity.fromJson(response.data);
   }
 }

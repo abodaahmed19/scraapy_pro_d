@@ -5,15 +5,39 @@ import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/screens/market/domain/entities/market_item_entity.dart';
 import 'package:scraapy_pro/screens/market/presentation/cubit/market_cubit.dart';
 import 'package:scraapy_pro/screens/market/presentation/cubit/market_state.dart';
+import 'package:scraapy_pro/screens/shared_feature/product_item_card/presentation/cubit/add_quotation_cubit.dart';
+import 'package:scraapy_pro/screens/shared_feature/product_item_card/presentation/cubit/add_quotation_state.dart';
+import 'package:scraapy_pro/screens/shared_feature/product_item_card/presentation/widgets/product_item_card.dart';
 
 class MarketScreen extends StatelessWidget {
-  const MarketScreen({super.key});
+  final bool? haveBack ;
+  const MarketScreen({super.key,  this.haveBack = false});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_)=> getIt<MarketCubit>()..getMarket(),
-      child: WillPopScope(
+      child: BlocProvider(
+        create: (_) => getIt<AddQuotationCubit>(),
+        child: BlocListener<AddQuotationCubit, AddQuotationState>(
+          listener: (context, state) {
+            if (state is QuotationSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('تم إرسال طلب عرض السعر بنجاح'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            } else if (state is QuotationError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+        child: WillPopScope(
         onWillPop: () async => false,
 
         child: Directionality(
@@ -23,7 +47,7 @@ class MarketScreen extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: CustomAppBar(title: 'السوق', haveBack: false),
+                  child: CustomAppBar(title: 'السوق', haveBack: haveBack),
                 ),
 
                 Expanded(
@@ -41,7 +65,7 @@ class MarketScreen extends StatelessWidget {
                             padding: EdgeInsets.all(0),
                             itemCount: state.response.data.length,
                             itemBuilder: (context, index) {
-                              return _buildProductCard(context, state.response.data[index]);
+                              return  ProductItemCard(item: state.response.data[index]);
                             },
                           ),
                         );
@@ -58,9 +82,10 @@ class MarketScreen extends StatelessWidget {
               ],
             )
           ),
+          ),
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildProductCard(BuildContext context, MarketItemEntity item) {
