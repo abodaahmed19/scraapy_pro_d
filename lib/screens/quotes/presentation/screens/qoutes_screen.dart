@@ -7,15 +7,20 @@ import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
 import 'package:scraapy_pro/screens/market/domain/entities/market_item_entity.dart';
 import 'package:scraapy_pro/screens/market/presentation/cubit/market_cubit.dart';
 import 'package:scraapy_pro/screens/market/presentation/cubit/market_state.dart';
+import 'package:scraapy_pro/screens/market/presentation/screens/market_screen.dart';
 import 'package:scraapy_pro/screens/quotes/presentation/cubit/qoutes_cubit.dart';
 import 'package:scraapy_pro/screens/quotes/presentation/cubit/qoutes_state.dart';
 import 'package:scraapy_pro/screens/quotes/presentation/screens/quotes_list.dart';
 import 'package:scraapy_pro/screens/rentals/presentation/cubit/Retals_cubit.dart';
+import 'package:scraapy_pro/screens/rentals/presentation/cubit/Retals_state.dart';
+import 'package:scraapy_pro/screens/rentals/presentation/screens/rentals_screen.dart';
+import 'package:scraapy_pro/screens/services/presentation/cubit/services_cubit.dart';
+import 'package:scraapy_pro/screens/services/presentation/cubit/services_state.dart';
+import 'package:scraapy_pro/screens/services/presentation/screens/services_screen.dart';
 import 'package:scraapy_pro/screens/shared_feature/product_item_card/presentation/cubit/add_quotation_cubit.dart';
 import 'package:scraapy_pro/screens/shared_feature/product_item_card/presentation/cubit/add_quotation_state.dart';
 import 'package:scraapy_pro/screens/shared_feature/product_item_card/presentation/widgets/product_item_card.dart';
 import 'package:scraapy_pro/widgets/custom_text_field.dart';
-import 'package:scraapy_pro/screens/services/presentation/cubit/services_cubit.dart';
 
 class QuotesScreen extends StatelessWidget {
   const QuotesScreen({super.key});
@@ -29,11 +34,9 @@ class QuotesScreen extends StatelessWidget {
           create: (_)=> getIt<ServicesCubit>()..getServices(),
         ),
         BlocProvider<MarketCubit>(
-          create: (_)=> getIt<MarketCubit>()..getMarket(),
-          // create: (_)=> getIt<MarketCubit>(),
+          create: (_)=> getIt<MarketCubit>(),
         ),
         BlocProvider<RentalsCubit>(
-          // create: (_)=> getIt<RentalsCubit>()..getRentals(),
           create: (_)=> getIt<RentalsCubit>(),
         ),
         BlocProvider<QoutesCubit>(
@@ -84,58 +87,68 @@ class QuotesScreen extends StatelessWidget {
                             Expanded(child: InkWell(
                                 onTap: (){
                                   context.read<QoutesCubit>().changeTab('service');
+                                  context.read<ServicesCubit>().getServices();
                                 },
                                 child: _buildTabButton(context, ' الخدمات','service' ))),
                             const SizedBox(width: 8),
                             Expanded(child: InkWell(
                                 onTap: (){
                                   context.read<QoutesCubit>().changeTab('market');
+                                  context.read<MarketCubit>().getMarket();
                                 },
                                 child: _buildTabButton(context, 'السوق','market' ))),
                             const SizedBox(width: 8),
                             Expanded(child: InkWell(
                                 onTap: (){
                                   context.read<QoutesCubit>().changeTab('rental');
+                                  context.read<RentalsCubit>().getRentals();
                                 },
                                 child: _buildTabButton(context, 'الإيجار','rental' ))),
                           ],
                         );
                       }
                     ),
-                    SizedBox(height: 16,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('السوق',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
-                        Text('عرض الكل',style: TextStyle(color: AppColors.primary,fontSize: 14,fontWeight: FontWeight.w500),),
-
-                      ],
+                    SizedBox(height: 20,),
+                    BlocBuilder<QoutesCubit, QoutesState>(
+                      builder: (context, tabState) {
+                        final titles = {
+                          'service': 'الخدمات',
+                          'market': 'السوق',
+                          'rental': 'الإيجار',
+                        };
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(titles[tabState.selectedTab] ?? 'الخدمات',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
+                            InkWell(
+                                onTap: (){
+                                  print(tabState.selectedTab);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => tabState.selectedTab =='service' ? ServicesScreen():
+                                      tabState.selectedTab == 'market' ? MarketScreen(haveBack: true,) : RentalsScreen()
+                                      ,
+                                    ),
+                                  );
+                                },
+                                child: Text('عرض الكل',style: TextStyle(color: AppColors.primary,fontSize: 14,fontWeight: FontWeight.w500),)),
+                          ],
+                        );
+                      },
                     ),
                     SizedBox(height: 20,),
 
                     Expanded(
-                      child: BlocBuilder<MarketCubit, MarketState>(
-                        builder: (context, state) {
-                          if (state is MarketLoading) {
-                            return const Center(child: CircularProgressIndicator());
+                      child: BlocBuilder<QoutesCubit, QoutesState>(
+                        builder: (context, tabState) {
+                          if (tabState.selectedTab == 'market') {
+                            return _marketList();
+                          } else if (tabState.selectedTab == 'rental') {
+                            return _rentalList();
+                          } else {
+                            return _servicesList();
                           }
-
-                          if (state is MarketLoaded) {
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              padding: EdgeInsets.all(0),
-                              itemCount: state.response.data.length,
-                              itemBuilder: (context, index) {
-                                return ProductItemCard(item: state.response.data[index]);
-                              },
-                            );
-                          }
-
-                          if (state is MarketError) {
-                            return const Text('حدث خطأ');
-                          }
-
-                          return const SizedBox();
                         },
                       ),
                     ),
@@ -164,6 +177,87 @@ class QuotesScreen extends StatelessWidget {
         ),
         ),
       ),
+    );
+  }
+
+  Widget _servicesList() {
+    return BlocBuilder<ServicesCubit, ServicesState>(
+      builder: (context, state) {
+        if (state is ServicesLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (state is ServicesLoaded) {
+          return ListView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            itemCount: state.response.data.length,
+            itemBuilder: (context, index) {
+              return ProductItemCard(item: state.response.data[index]);
+            },
+          );
+        }
+
+        if (state is ServicesError) {
+          return const Text('حدث خطأ');
+        }
+
+        return const SizedBox();
+      },
+    );
+  }
+
+  Widget _marketList() {
+    return BlocBuilder<MarketCubit, MarketState>(
+      builder: (context, state) {
+        if (state is MarketLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (state is MarketLoaded) {
+          return ListView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            itemCount: state.response.data.length,
+            itemBuilder: (context, index) {
+              return ProductItemCard(item: state.response.data[index]);
+            },
+          );
+        }
+
+        if (state is MarketError) {
+          return const Text('حدث خطأ');
+        }
+
+        return const SizedBox();
+      },
+    );
+  }
+
+  Widget _rentalList() {
+    return BlocBuilder<RentalsCubit, RentalsState>(
+      builder: (context, state) {
+        if (state is RentalsLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (state is RentalsLoaded) {
+          return ListView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            itemCount: state.response.data.length,
+            itemBuilder: (context, index) {
+              return ProductItemCard(item: state.response.data[index]);
+            },
+          );
+        }
+
+        if (state is RentalsError) {
+          return const Text('حدث خطأ');
+        }
+
+        return const SizedBox();
+      },
     );
   }
 
