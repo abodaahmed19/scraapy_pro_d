@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
+import 'package:scraapy_pro/const/app_images.dart';
 import 'package:scraapy_pro/screens/home/presentation/cubit/home_cubit.dart';
 import 'package:scraapy_pro/screens/home/presentation/cubit/home_state.dart';
 import 'package:scraapy_pro/screens/inspection_req/inspection_screen.dart';
 import 'package:scraapy_pro/screens/manifest/presentation/screens/manifest_screen.dart';
 import 'package:scraapy_pro/screens/permisions/presentations/screens/permession_screen.dart';
-import 'package:scraapy_pro/screens/rentals/presentation/screens/retals_screen.dart';
+import 'package:scraapy_pro/screens/rentals/presentation/screens/rentals_screen.dart';
 import 'package:scraapy_pro/screens/services/presentation/screens/services_screen.dart';
 import 'package:scraapy_pro/screens/stock_market/presentation/screens/stock_market_screen.dart';
 import '../../../../widgets/responsive_layout.dart';
@@ -121,16 +123,16 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         _buildIconAction(context, Icons.favorite_border, () {
           Navigator.push(context, MaterialPageRoute(builder: (_) => const FavoritesScreen()));
-        }),
+        },AppImages.fav),
         const SizedBox(width: 8),
         _buildIconAction(context, Icons.shopping_cart_outlined, () {
           Navigator.push(context, MaterialPageRoute(builder: (_) => const CheckoutScreen()));
-        }),
+        },AppImages.cart_home),
       ],
     );
   }
 
-  Widget _buildIconAction(BuildContext context, IconData icon, VoidCallback onTap) {
+  Widget _buildIconAction(BuildContext context, IconData icon, VoidCallback onTap,String img) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -140,7 +142,8 @@ class _HomeScreenState extends State<HomeScreen> {
           color: Colors.grey.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Icon(icon, color: Theme.of(context).primaryColor, size: 24),
+        // child: Icon(icon, color: Theme.of(context).primaryColor, size: 24),
+        child: SvgPicture.asset(img),
       ),
     );
   }
@@ -152,8 +155,10 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
 
-        image: const DecorationImage(
-          image: NetworkImage('https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'),
+        image:  DecorationImage(
+          // image: NetworkImage('https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'),
+          // image: NetworkImage('https://scraapypro.sa/assets/hero-MbUslkOM.png'),
+          image: AssetImage(AppImages.banner),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(Colors.black45, BlendMode.darken),
         ),
@@ -264,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('اسعار البورصة', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text('اسعار البورصة', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             TextButton(
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (_) =>  StockMarketScreen()));
@@ -329,7 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('خدماتنا المتميزة', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        const Text('خدماتنا المتميزة', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 16),
         Row(
           children: [
@@ -385,6 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   context,
                   state.data[index]['title'] ?? '',
                   state.data[index]['description'] ?? '',
+                  state.data[index]['img'] ?? '',
 
                 );
               },
@@ -427,7 +433,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildFeaturedItem(BuildContext context, String title, String subtitle) {
+  Widget _buildFeaturedItem(BuildContext context, String title, String subtitle,String img) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -440,11 +446,12 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Expanded(
             child: Container(
-              decoration: const BoxDecoration(
+              decoration:  BoxDecoration(
                 color: Color(0xFFE0E0E0),
                 borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
                 image: DecorationImage(
-                  image: NetworkImage('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'),
+                  // image: NetworkImage('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'),
+                  image: AssetImage(img),
                   fit: BoxFit.cover,
                 )
               ),

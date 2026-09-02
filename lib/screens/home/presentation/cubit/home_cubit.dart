@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scraapy_pro/const/app_images.dart';
 import 'package:scraapy_pro/screens/home/presentation/cubit/home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
@@ -34,26 +35,32 @@ class HomeCubit extends Cubit<HomeState> {
       {
         "title":"سكراب الحديد",
         "description":"تداول وبيع وشراء سكراب الحديد بمختلف أنواعه",
+        "img":AppImages.service1
       },
       {
         "title":"سكراب الألمنيوم",
         "description":"تداول الألمنيوم المعاد تدويره بأسعار تنافسية",
+        "img":AppImages.service1
       },
       {
         "title":"سكراب النحاس",
         "description":"بيع وشراء النحاس المستعمل بمختلف درجات النقاوة",
+        "img":AppImages.service1
       },
       {
         "title":"سكراب ستانلس ستيل",
         "description":"تداول قطع الستانلس ستيل المستعملة بجميع أنواعها وأحجامها، مناسبة لإعادة التدوير أو الاستخدام الصناعي",
+        "img":AppImages.service1
       },
       {
         "title":"سكراب طبليات الأخشاب",
         "description":"طبليات خشبية مستعملة صالحة للاستعمال",
+        "img":AppImages.service1
       },
       {
         "title":"سكراب الزجاج",
         "description":"تجميع وبيع الزجاج المعاد تدويره من المصانع والمواقع المختلفة، بجودة عالية ومناسب للاستخدام الصناعي",
+        "img":AppImages.service1
       },
 
     ];
@@ -61,14 +68,18 @@ class HomeCubit extends Cubit<HomeState> {
       {
         "title":"إعادة تدوير المعادن",
         "description":"خدمة متكاملة لإعادة تدوير المعادن بطرق صديقة للبيئة",
+        "img":AppImages.service1
+
       },
       {
         "title":"خدمة النقل والتوصيل",
         "description":"نقل السكراب من وإلى أي مكان بسرعة وأمان",
+        "img":AppImages.service2
       },
       {
         "title":"تفكيك وتجهيز",
         "description":"تفكيك المنشآت والمعدات واستخراج السكراب بمهارة",
+        "img":AppImages.service3
       },
 
 
@@ -77,14 +88,17 @@ class HomeCubit extends Cubit<HomeState> {
       {
         "title":"خدمة إيجار المعدات الثقيلة",
         "description":"توفر خدمة إيجار المعدات الثقيلة مجموعة متنوعة من المعدات الصناعية والميكانيكية الضخمة المستخدمة في المشاريع الكبرى مثل البناء والتعدين وصيانة الطرق",
+        "img":AppImages.service1
       },
       {
         "title":"خدمة إيجار معدات الحفر والنقل",
         "description":"تقدم هذه الخدمة مجموعة شاملة من معدات الحفر، مثل الحفارات والكشاطات، بالإضافة إلى مركبات النقل الثقيلة مثل الشاحنات والقاطرات لضمان سير عمليات النقل والحفر بسلاسة وكفاءة",
+        "img":AppImages.service1
       },
       {
         "title":"خدمة إيجار المعدات الخدمية",
         "description":"تشمل هذه الخدمة معدات وأدوات الدعم اللوجستي والخدمي مثل مضخات المياه، المولدات الكهربائية، أدوات التثبيت، وجميع المعدات المساعدة التي تُستخدم في الصيانة اليومية أو المشاريع الصغيرة والمتوسطة",
+        "img":AppImages.service1
       },
 
 

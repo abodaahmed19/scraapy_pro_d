@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:scraapy_pro/authentication/data/data_sources/auth_data_source.dart';
 import 'package:scraapy_pro/authentication/data/data_sources/auth_data_source_impl.dart';
@@ -21,6 +20,7 @@ import 'package:scraapy_pro/screens/favorites/domain/use_cases/favorite_use_case
 import 'package:scraapy_pro/screens/favorites/presentation/cubit/favorite_cubit.dart';
 
 import 'package:scraapy_pro/screens/permisions/di/permisions_di.dart';
+import 'package:scraapy_pro/screens/services/di/quotation_di.dart';
 import 'package:scraapy_pro/screens/manifest/dependency_injection/mainfest_di.dart';
 import 'package:scraapy_pro/screens/market/data/data_source/market_data_source.dart';
 import 'package:scraapy_pro/screens/market/data/repositories/market_repository.dart';
@@ -44,6 +44,7 @@ import 'package:scraapy_pro/screens/rentals/presentation/cubit/Retals_cubit.dart
 import 'package:scraapy_pro/screens/services/data/data_source/services_data_source.dart';
 import 'package:scraapy_pro/screens/services/data/repositories/services_repository.dart';
 import 'package:scraapy_pro/screens/services/domain/use_cases/services_use_case.dart';
+import 'package:scraapy_pro/screens/shared_feature/product_item_card/di/quotation_di.dart';
 
 import '../../screens/services/presentation/cubit/services_cubit.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/data/data_sources/branches_data_source.dart';
@@ -55,6 +56,7 @@ import 'package:scraapy_pro/screens/profile/acount_info/presentation/cubit/edit_
 import 'package:scraapy_pro/core/shared/cubits/user_cubit/user_cubit.dart';
 import 'package:scraapy_pro/core/network/network_service.dart';
 import 'package:scraapy_pro/core/network/network_service_impl.dart';
+
 
 
 
@@ -306,5 +308,8 @@ void setup() {
   setupMainfestDI();
   ///Permisions///
   setupPermisionsDI();
+  ///Quotation///
+  setupQuotationDI();
+
 
 }

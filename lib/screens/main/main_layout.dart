@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:scraapy_pro/const/app_images.dart';
 import 'package:scraapy_pro/screens/home/presentation/screens/home_screen.dart';
 import 'package:scraapy_pro/screens/profile/acount_info/presentation/screens/personal_account_screen.dart';
 import 'package:scraapy_pro/screens/quotes/presentation/screens/qoutes_screen.dart';
+import 'package:scraapy_pro/screens/quotes/presentation/screens/quotes_list.dart';
 import '../../cubit/app_cubit.dart';
 import '../../cubit/app_state.dart';
 import '../market/presentation/screens/market_screen.dart';
@@ -43,23 +46,58 @@ class MainLayout extends StatelessWidget {
                 ),
               ],
             ),
-            child: BottomNavigationBar(
-              currentIndex: currentIndex,
-              onTap: (index) {
-                context.read<AppCubit>().changeBottomNavBar(index);
-              },
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              selectedItemColor: Theme.of(context).colorScheme.primary,
-              unselectedItemColor: Colors.grey,
-              elevation: 0,
-              items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'الصفحة الرئيسية'),
-                BottomNavigationBarItem(icon: Icon(Icons.insights_outlined), activeIcon: Icon(Icons.insights), label: 'السوق'),
-                BottomNavigationBarItem(icon: Icon(Icons.local_offer_outlined), activeIcon: Icon(Icons.local_offer), label: 'طلب عرض سعر'),
-                BottomNavigationBarItem(icon: Icon(Icons.edit_document), activeIcon: Icon(Icons.edit_document), label: 'العقود'),
-                BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'الحساب الشخصي'),
-              ],
+            child: SizedBox(
+              height: 75,
+              child: BottomNavigationBar(
+                currentIndex: currentIndex,
+                onTap: (index) {
+                  context.read<AppCubit>().changeBottomNavBar(index);
+                },
+                unselectedLabelStyle: TextStyle(fontSize: 10,fontWeight: FontWeight.w500,color: Colors.black),
+                selectedLabelStyle: TextStyle(fontSize: 10,fontWeight: FontWeight.w500,color: Colors.black),
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                selectedItemColor: Theme.of(context).colorScheme.primary,
+                unselectedItemColor: Colors.black,
+                elevation: 0,
+                items:  [
+                  BottomNavigationBarItem(icon: Padding(
+                    padding:  EdgeInsets.symmetric(vertical: 6.0),
+                    child: SvgPicture.asset(AppImages.black_home),
+                  ), activeIcon: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                    child: SvgPicture.asset(AppImages.active_home),
+                  ), label: 'الصفحة الرئيسية'),
+                  BottomNavigationBarItem(icon: Padding(
+                    padding:  EdgeInsets.symmetric(vertical: 6.0),
+                    child: SvgPicture.asset(AppImages.black_market),
+                  ), activeIcon: Padding(
+                    padding:  EdgeInsets.symmetric(vertical: 6.0),
+                    child: SvgPicture.asset(AppImages.active_market),
+                  ), label: 'السوق'),
+                  BottomNavigationBarItem(icon: Padding(
+                    padding:  EdgeInsets.symmetric(vertical: 6.0),
+                    child: SvgPicture.asset(AppImages.black_offer),
+                  ), activeIcon: Padding(
+                    padding:  EdgeInsets.symmetric(vertical: 6.0),
+                    child: Icon(Icons.local_offer),
+                  ), label: 'طلب عرض سعر'),
+                  BottomNavigationBarItem(icon: Padding(
+                    padding:  EdgeInsets.symmetric(vertical: 6.0),
+                    child: SvgPicture.asset(AppImages.black_contract),
+                  ), activeIcon: Padding(
+                    padding:  EdgeInsets.symmetric(vertical: 6.0),
+                    child: SvgPicture.asset(AppImages.active_contract),
+                  ), label: 'العقود'),
+                  BottomNavigationBarItem(icon: Padding(
+                    padding:  EdgeInsets.symmetric(vertical: 6.0),
+                    child: SvgPicture.asset(AppImages.black_user),
+                  ), activeIcon: Padding(
+                    padding:  EdgeInsets.symmetric(vertical: 6.0),
+                    child: SvgPicture.asset(AppImages.active_user),
+                  ), label: 'الحساب الشخصي'),
+                ],
+              ),
             ),
           ),
         );

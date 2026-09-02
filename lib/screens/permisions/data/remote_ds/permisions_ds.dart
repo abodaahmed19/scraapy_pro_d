@@ -5,8 +5,8 @@ import 'package:scraapy_pro/core/error/dio_error_handler.dart';
 abstract class PermisionsDs {
   Future<void> importingDangerWaste(FormData body);
   Future<void> importingNonDangerWaste(FormData body);
-  Future<void> exportingDangerWaste(Map<String, dynamic> body);
-  Future<void> exportingNonDangerWaste(Map<String, dynamic> body);
+  Future<void> exportingDangerWaste(FormData body);
+  Future<void> exportingNonDangerWaste(FormData body);
 }
 
 class PermisionsDsImpl implements PermisionsDs {
@@ -42,7 +42,7 @@ class PermisionsDsImpl implements PermisionsDs {
   }
 
   @override
-  Future<void> exportingDangerWaste(Map<String, dynamic> body) async{
+  Future<void> exportingDangerWaste(FormData body) async{
     try {
       await dio.post(
         '${ConstantManager.baseUrl}/hazardous-export-license/create/',
@@ -55,7 +55,7 @@ class PermisionsDsImpl implements PermisionsDs {
   }
 
   @override
-  Future<void> exportingNonDangerWaste(Map<String, dynamic> body) async {
+  Future<void> exportingNonDangerWaste(FormData body) async {
     try {
       await dio.post(
         '${ConstantManager.baseUrl}/non-hazardous-export-license/create/',
