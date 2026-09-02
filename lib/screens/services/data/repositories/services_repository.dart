@@ -4,6 +4,7 @@ import 'package:scraapy_pro/screens/services/domain/entities/services_entity.dar
 
 abstract class ServicesRepository {
   Future<ServicesEntity> getServices();
+  Future<void> addQuotation(Map<String,dynamic> data);
 }
 
 class ServicesRepositoryImpl implements ServicesRepository {
@@ -14,5 +15,10 @@ class ServicesRepositoryImpl implements ServicesRepository {
   @override
   Future<ServicesEntity> getServices() async {
     return await servicesRemoteDataSource.getServices();
+  }
+
+  @override
+  Future<void> addQuotation(Map<String,dynamic> data) async {
+    return await servicesRemoteDataSource.reqForQuotation(data);
   }
 }
