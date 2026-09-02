@@ -9,25 +9,58 @@ import 'package:scraapy_pro/screens/market/presentation/cubit/market_cubit.dart'
 import 'package:scraapy_pro/screens/market/presentation/cubit/market_state.dart';
 import 'package:scraapy_pro/screens/quotes/presentation/cubit/qoutes_cubit.dart';
 import 'package:scraapy_pro/screens/quotes/presentation/cubit/qoutes_state.dart';
+import 'package:scraapy_pro/screens/quotes/presentation/screens/quotes_list.dart';
+import 'package:scraapy_pro/screens/rentals/presentation/cubit/Retals_cubit.dart';
+import 'package:scraapy_pro/screens/shared_feature/product_item_card/presentation/cubit/add_quotation_cubit.dart';
+import 'package:scraapy_pro/screens/shared_feature/product_item_card/presentation/cubit/add_quotation_state.dart';
+import 'package:scraapy_pro/screens/shared_feature/product_item_card/presentation/widgets/product_item_card.dart';
 import 'package:scraapy_pro/widgets/custom_text_field.dart';
+import 'package:scraapy_pro/screens/services/presentation/cubit/services_cubit.dart';
 
 class QuotesScreen extends StatelessWidget {
   const QuotesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    print('jjjjjjjjjjjjjjjjjjjjjjjj');
     return MultiBlocProvider(
       // create: (_)=> getIt<MarketCubit>()..getMarket(),
       providers: [
+        BlocProvider<ServicesCubit>(
+          create: (_)=> getIt<ServicesCubit>()..getServices(),
+        ),
         BlocProvider<MarketCubit>(
           create: (_)=> getIt<MarketCubit>()..getMarket(),
+          // create: (_)=> getIt<MarketCubit>(),
+        ),
+        BlocProvider<RentalsCubit>(
+          // create: (_)=> getIt<RentalsCubit>()..getRentals(),
+          create: (_)=> getIt<RentalsCubit>(),
         ),
         BlocProvider<QoutesCubit>(
           create: (_) => getIt<QoutesCubit>(),
         ),
-
+        BlocProvider<AddQuotationCubit>(
+          create: (_) => getIt<AddQuotationCubit>(),
+        ),
       ],
+      child: BlocListener<AddQuotationCubit, AddQuotationState>(
+        listener: (context, state) {
+          if (state is QuotationSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('تم إرسال طلب عرض السعر بنجاح'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          } else if (state is QuotationError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
       child: WillPopScope(
         onWillPop: () async => false,
 
@@ -93,7 +126,7 @@ class QuotesScreen extends StatelessWidget {
                               padding: EdgeInsets.all(0),
                               itemCount: state.response.data.length,
                               itemBuilder: (context, index) {
-                                return _buildProductCard(context, state.response.data[index]);
+                                return ProductItemCard(item: state.response.data[index]);
                               },
                             );
                           }
@@ -115,11 +148,20 @@ class QuotesScreen extends StatelessWidget {
                 child: SizedBox(
                   height: 50,
                   width: double.infinity,
-                  child: MainAppBtn(title: 'إصدار عرض سعر')
+                  child: MainAppBtn(title: 'إصدار عرض سعر',onTap: (){
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const QuotesListPage(),
+                      ),
+                    );
+                  },)
                 ),
               ),
             ),
           ),
+        ),
         ),
       ),
     );
