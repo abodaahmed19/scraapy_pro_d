@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scraapy_pro/core/error/api_exception.dart';
 import 'package:scraapy_pro/screens/permisions/domain/use_cases/exporting_danger_waste_use_case.dart';
@@ -9,8 +10,10 @@ class ExportDangerWasteCubit extends Cubit<ExportDangerWasteState> {
   ExportDangerWasteCubit(this.exportingDangerWasteUseCase)
       : super(ExportDangerWasteInitial());
 
-  Future<void> exportingDangerWaste(Map<String, dynamic> body) async {
-    emit(ExportDangerWasteInitial());
+
+
+  Future<void> exportingDangerWaste(FormData body) async {
+    emit(ExportDangerWasteLoading());
 
     try {
       await exportingDangerWasteUseCase(body);

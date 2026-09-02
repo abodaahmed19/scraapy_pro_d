@@ -1,8 +1,16 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/main_app_btn.dart';
+import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
+import 'package:scraapy_pro/screens/permisions/domain/entities/export_permit/export_danger_waste.dart';
+import 'package:scraapy_pro/screens/permisions/presentations/cubit/export_danger_waste_cubit.dart';
+import 'package:scraapy_pro/screens/permisions/presentations/cubit/export_danger_waste_state.dart';
 import 'package:scraapy_pro/widgets/custom_text_field.dart';
 
 class ExportDangerWast extends StatefulWidget {
@@ -13,45 +21,148 @@ class ExportDangerWast extends StatefulWidget {
 }
 
 class _ExportDangerWastState extends State<ExportDangerWast> {
+  final formKey = GlobalKey<FormState>();
+
+  final facilityTypeController = TextEditingController();
+  final commercialRegisterController = TextEditingController();
+  final nationalAddressController = TextEditingController();
   final headquartersProofController = TextEditingController();
   final zakatIncomeCertificateController = TextEditingController();
+  final mwanLicenseNumberController = TextEditingController();
+  final wasteTypeController = TextEditingController();
   final internationalApprovalsController = TextEditingController();
   final resourceRiskReportController = TextEditingController();
   final laboratoryReportController = TextEditingController();
   final transportDocumentController = TextEditingController();
+  final logisticsDescriptionController = TextEditingController();
+  final collectionTransportMethodController = TextEditingController();
+  final carrierLicenseNumberController = TextEditingController();
+  final temporaryStorageContractController = TextEditingController();
+  final vehiclesAndDriversController = TextEditingController();
   final emergencyResponsePlanController = TextEditingController();
   final noLocalAlternativeProofController = TextEditingController();
 
+  bool usageCommitment = false;
+  bool modificationAck = false;
+
   @override
   void dispose() {
+    facilityTypeController.dispose();
+    commercialRegisterController.dispose();
+    nationalAddressController.dispose();
     headquartersProofController.dispose();
     zakatIncomeCertificateController.dispose();
+    mwanLicenseNumberController.dispose();
+    wasteTypeController.dispose();
     internationalApprovalsController.dispose();
     resourceRiskReportController.dispose();
     laboratoryReportController.dispose();
     transportDocumentController.dispose();
+    logisticsDescriptionController.dispose();
+    collectionTransportMethodController.dispose();
+    carrierLicenseNumberController.dispose();
+    temporaryStorageContractController.dispose();
+    vehiclesAndDriversController.dispose();
     emergencyResponsePlanController.dispose();
     noLocalAlternativeProofController.dispose();
     super.dispose();
   }
 
+  final Map<TextEditingController, PlatformFile> pickedFiles = {};
+
   Future<void> _pickUploadFile(TextEditingController controller) async {
     final FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null && result.files.single.name.isNotEmpty) {
+      pickedFiles[controller] = result.files.single;
       controller.text = result.files.single.name;
     }
   }
 
+  FormData _buildExportFormData(ExportDangerWasteModel model) {
+    final formData = FormData();
+    formData.fields.addAll([
+      MapEntry('facility_type', model.facilityType),
+      MapEntry('commercial_register', model.commercialRegister),
+      MapEntry('national_address', model.nationalAddress),
+      MapEntry('mwan_license_number', model.mwanLicenseNumber),
+      MapEntry('waste_type', model.wasteType),
+      MapEntry('usage_commitment', '${model.usageCommitment}'),
+      MapEntry('logistics_description', model.logisticsDescription),
+      MapEntry('carrier_license_number', model.carrierLicenseNumber),
+      MapEntry('collection_transport_method', model.collectionTransportMethod),
+      MapEntry('temporary_storage_contract', model.temporaryStorageContract),
+      MapEntry('modification_ack', '${model.modificationAck}'),
+    ]);
+
+    if (model.products.isNotEmpty) {
+      formData.fields.add(MapEntry(
+        'products',
+        jsonEncode(model.products.map((p) => p.toJson()).toList()),
+      ));
+    }
+
+    void addFile(TextEditingController controller, String apiField) {
+      final PlatformFile? picked = pickedFiles[controller];
+      if (picked == null) return;
+      if (picked.path != null) {
+        formData.files.add(MapEntry(
+          apiField,
+          MultipartFile.fromFileSync(picked.path!, filename: picked.name),
+        ));
+      } else if (picked.bytes != null) {
+        formData.files.add(MapEntry(
+          apiField,
+          MultipartFile.fromBytes(picked.bytes!, filename: picked.name),
+        ));
+      }
+    }
+
+    addFile(headquartersProofController, 'facility_proof');
+    addFile(zakatIncomeCertificateController, 'zakat_certificate');
+    addFile(internationalApprovalsController, 'basel_approval');
+    addFile(resourceRiskReportController, 'risk_report');
+    addFile(laboratoryReportController, 'lab_report');
+    addFile(transportDocumentController, 'manifest_document');
+    addFile(vehiclesAndDriversController, 'vehicles_and_drivers_file');
+    addFile(emergencyResponsePlanController, 'emergency_plan');
+    addFile(noLocalAlternativeProofController, 'no_local_alternative_proof');
+
+    return formData;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
+    return BlocProvider(
+      create: (_) => getIt<ExportDangerWasteCubit>(),
+      child: BlocListener<ExportDangerWasteCubit, ExportDangerWasteState>(
+        listener: (context, state) {
+          if (state is ExportDangerWasteSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('تم إرسال الطلب بنجاح'),
+                backgroundColor: Colors.green,
+              ),
+            );
+            Navigator.pop(context);
+          } else if (state is ExportDangerWasteError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
+        child: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Scaffold(
 
           body: Padding(
             padding:  EdgeInsets.symmetric(horizontal: 20.0),
             child: SingleChildScrollView(
-              child: Column(
+              child: Form(
+                key: formKey,
+                child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -80,23 +191,43 @@ class _ExportDangerWastState extends State<ExportDangerWast> {
                   const SizedBox(height: 20),
 
                   // 1. Dropdown Field (نوع المنشأة)
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'نوع المنشأة',
                     hint: 'اختر نوع المنشأة',
+                    controller: facilityTypeController,
                     suffixIcon:   Icon(Icons.keyboard_arrow_down, color: Colors.grey),
-
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
 
                   // 2. Commercial Register (رقم السجل التجاري)
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'رقم السجل التجاري',
                     hint: 'ادخل رقم السجل التجاري',
+                    controller: commercialRegisterController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
 
                   // 3. National Address (العنوان الوطني)
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'العنوان الوطني',
                     hint: 'ادخل العنوان الوطني',
+                    controller: nationalAddressController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
 
                   // 4. Proof of Headquarters - File Upload (إثبات المقر)
@@ -108,6 +239,12 @@ class _ExportDangerWastState extends State<ExportDangerWast> {
                     onTap: () => _pickUploadFile(headquartersProofController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
                     controller: headquartersProofController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   // 5. Zakat & Income Certificate - File Upload (شهادة الزكاة والدخل)
 
@@ -118,11 +255,24 @@ class _ExportDangerWastState extends State<ExportDangerWast> {
                     onTap: () => _pickUploadFile(zakatIncomeCertificateController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
                     controller: zakatIncomeCertificateController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   // 6. National Center Permit (تصريح المركز الوطني (موان))
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'تصريح المركز الوطني (موان)',
                     hint: 'ادخل رقم ترخيص المركز الوطني',
+                    controller: mwanLicenseNumberController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   /////////////////////////////////////////////////////////////////
 
@@ -147,11 +297,17 @@ class _ExportDangerWastState extends State<ExportDangerWast> {
                   const SizedBox(height: 20),
 
                   // 1. Dropdown Field (نوع المنشأة)
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'نوع النفايات',
                     hint: 'ادخل نوع النفايات',
+                    controller: wasteTypeController,
                     suffixIcon:   Icon(Icons.keyboard_arrow_down, color: Colors.grey),
-
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
 
                   // 2. Commercial Register (رقم السجل التجاري)
@@ -162,6 +318,12 @@ class _ExportDangerWastState extends State<ExportDangerWast> {
                     onTap: () => _pickUploadFile(internationalApprovalsController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
                     controller: internationalApprovalsController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
 
                   CustomTextField(
@@ -171,6 +333,12 @@ class _ExportDangerWastState extends State<ExportDangerWast> {
                     onTap: () => _pickUploadFile(resourceRiskReportController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
                     controller: resourceRiskReportController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   CustomTextField(
                     label: 'التقرير المخبري',
@@ -179,6 +347,12 @@ class _ExportDangerWastState extends State<ExportDangerWast> {
                     onTap: () => _pickUploadFile(laboratoryReportController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
                     controller: laboratoryReportController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   CustomTextField(
                     label: 'وثيقة النقل',
@@ -187,6 +361,12 @@ class _ExportDangerWastState extends State<ExportDangerWast> {
                     onTap: () => _pickUploadFile(transportDocumentController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
                     controller: transportDocumentController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   Text('تعهد الاستخدام *',style: TextStyle(
                     fontSize: 14,
@@ -207,7 +387,11 @@ class _ExportDangerWastState extends State<ExportDangerWast> {
                       child: Row(
 
                         children: [
-                          Checkbox(value: false, onChanged: (val){}),
+                          Checkbox(
+                                value: usageCommitment,
+                                onChanged: (val) => setState(
+                                    () => usageCommitment = val ?? false),
+                              ),
                           SizedBox(width: 6,),
                           Container(
                             width: MediaQuery.of(context).size.width *0.7,
@@ -242,34 +426,72 @@ class _ExportDangerWastState extends State<ExportDangerWast> {
                   ),
                   const SizedBox(height: 12),
 
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'وصف الرحلة اللوجستية',
                     hint: 'اكتب وصف تفصيلي لعمليات التخزين والشحن',
+                    controller: logisticsDescriptionController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 16),
 
                   // 2. طريقة الجمع والنقل
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'طريقة الجمع والنقل',
                     hint: 'حدد آلية التعامل الفني مع النفايات الخطرة',
+                    controller: collectionTransportMethodController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 16),
 
                   // 3. بيانات الناقل
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'بيانات الناقل',
                     hint: 'ادخل رقم رخصة الناقل',
+                    controller: carrierLicenseNumberController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 16),
 
                   // 4. منشأة التخزين المؤقت (في حالة وجود تخزين)
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'منشأة التخزين المؤقت (في حالة وجود تخزين)',
                     hint: 'ادخل بيانات منشأة تخزين مؤقتة مرخصة من قبل المركز',
+                    controller: temporaryStorageContractController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'بيانات المركبات والسائقين',
                     hint: 'ارفع ملف او جدول البيانات',
+                    readOnly: true,
+                    onTap: () => _pickUploadFile(vehiclesAndDriversController),
+                    suffixIcon: Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
+                    controller: vehiclesAndDriversController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   ///////////////////////////////////////////////////////////////////
                   SizedBox(height: 16,),
@@ -300,6 +522,12 @@ class _ExportDangerWastState extends State<ExportDangerWast> {
                     onTap: () => _pickUploadFile(emergencyResponsePlanController),
                     suffixIcon: Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
                     controller: emergencyResponsePlanController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 16),
 
@@ -311,6 +539,12 @@ class _ExportDangerWastState extends State<ExportDangerWast> {
                     onTap: () => _pickUploadFile(noLocalAlternativeProofController),
                     suffixIcon: Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
                     controller: noLocalAlternativeProofController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
 
                   Text('إقرار التعديلات *',style: TextStyle(
@@ -332,7 +566,11 @@ class _ExportDangerWastState extends State<ExportDangerWast> {
                       child: Row(
 
                         children: [
-                          Checkbox(value: false, onChanged: (val){}),
+                          Checkbox(
+                                value: modificationAck,
+                                onChanged: (val) => setState(
+                                    () => modificationAck = val ?? false),
+                              ),
                           SizedBox(width: 6,),
                           Container(
                             width: MediaQuery.of(context).size.width *0.7,
@@ -392,11 +630,106 @@ class _ExportDangerWastState extends State<ExportDangerWast> {
                     ),
                   ),
                   SizedBox(height: 24,),
+                  BlocBuilder<ExportDangerWasteCubit, ExportDangerWasteState>(
+                    builder: (context, state) {
+                      final isLoading = state is ExportDangerWasteLoading;
+                      return MainAppBtn(
+                        title: 'تقديم طلب',
+                        onTap: isLoading
+                            ? null
+                            : () {
+                                if (!formKey.currentState!.validate()) {
+                                  return;
+                                }
+
+                                if (!usageCommitment) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('يجب الإقرار بتعهد الاستخدام'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  return;
+                                }
+                                if (!modificationAck) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('يجب الإقرار بالتعديلات'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                ExportDangerWasteModel
+                                    exportDangerWasteModel =
+                                    ExportDangerWasteModel(
+                                  facilityType: facilityTypeController.text.trim(),
+                                  commercialRegister:
+                                      commercialRegisterController.text,
+                                  nationalAddress: nationalAddressController.text,
+                                  facilityProof:
+                                      headquartersProofController.text,
+                                  zakatCertificate:
+                                      zakatIncomeCertificateController.text,
+                                  mwanLicenseNumber:
+                                      mwanLicenseNumberController.text,
+                                  wasteType: wasteTypeController.text,
+                                  baselApproval:
+                                      internationalApprovalsController.text,
+                                  riskReport:
+                                      resourceRiskReportController.text,
+                                  labReport: laboratoryReportController.text,
+                                  manifestDocument:
+                                      transportDocumentController.text,
+                                  usageCommitment: usageCommitment,
+                                  logisticsDescription:
+                                      logisticsDescriptionController.text,
+                                  carrierLicenseNumber:
+                                      carrierLicenseNumberController.text,
+                                  collectionTransportMethod:
+                                      collectionTransportMethodController.text,
+                                  vehiclesAndDriversFile:
+                                      vehiclesAndDriversController.text,
+                                  temporaryStorageContract:
+                                      temporaryStorageContractController.text,
+                                  emergencyPlan:
+                                      emergencyResponsePlanController.text,
+                                  noLocalAlternativeProof:
+                                      noLocalAlternativeProofController.text,
+                                  modificationAck: modificationAck,
+                                  products: const <ProductModel>[],
+                                );
+
+                                context
+                                    .read<ExportDangerWasteCubit>()
+                                    .exportingDangerWaste(_buildExportFormData(
+                                        exportDangerWasteModel));
+                              },
+                        child: isLoading
+                            ? const Center(
+                                child: SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: AppColors.white,
+                                  ),
+                                ),
+                              )
+                            : null,
+                      );
+                    },
+                  ),
+                  SizedBox(height: 24,),
 
                 ],
               ),
             ),
+          ),
           )
+        ),
+      ),
       ),
     );
 

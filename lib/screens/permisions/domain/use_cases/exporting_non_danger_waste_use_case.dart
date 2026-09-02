@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:scraapy_pro/screens/permisions/data/repository/permissions_repo.dart';
 
 class ExportingNonDangerWasteUseCase {
@@ -5,7 +6,7 @@ class ExportingNonDangerWasteUseCase {
 
   ExportingNonDangerWasteUseCase(this.repository);
 
-  Future<void> call(Map<String, dynamic> body) async {
+  Future<void> call(FormData body) async {
     return await repository.exportingNonDangerWaste(body);
   }
 }

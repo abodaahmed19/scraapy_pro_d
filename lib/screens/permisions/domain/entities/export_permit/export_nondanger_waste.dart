@@ -1,4 +1,4 @@
-class ExportNondangerWasteModel {
+class ExportNonDangerWasteModel {
   final String facilityType;
   final String commercialRegister;
   final String nationalAddress;
@@ -21,7 +21,7 @@ class ExportNondangerWasteModel {
 
   final List<ProductModel> products;
 
-  const ExportNondangerWasteModel({
+  const ExportNonDangerWasteModel({
     required this.facilityType,
     required this.commercialRegister,
     required this.nationalAddress,
@@ -41,10 +41,10 @@ class ExportNondangerWasteModel {
     required this.products,
   });
 
-  factory ExportNondangerWasteModel.fromJson(
+  factory ExportNonDangerWasteModel.fromJson(
       Map<String, dynamic> json,
       ) {
-    return ExportNondangerWasteModel(
+    return ExportNonDangerWasteModel(
       facilityType: json['facility_type'] as String,
       commercialRegister: json['commercial_register'] as String,
       nationalAddress: json['national_address'] as String,

@@ -1,8 +1,16 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
 import 'package:scraapy_pro/const/main_app_btn.dart';
+import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
+import 'package:scraapy_pro/screens/permisions/domain/entities/export_permit/export_nondanger_waste.dart';
+import 'package:scraapy_pro/screens/permisions/presentations/cubit/export_non_danger_waste_cubit.dart';
+import 'package:scraapy_pro/screens/permisions/presentations/cubit/export_non_danger_waste_state.dart';
 import 'package:scraapy_pro/widgets/custom_text_field.dart';
 
 class ExportNonDangerWast extends StatefulWidget {
@@ -13,37 +21,135 @@ class ExportNonDangerWast extends StatefulWidget {
 }
 
 class _ExportNonDangerWastState extends State<ExportNonDangerWast> {
+  final formKey = GlobalKey<FormState>();
+
+  final facilityTypeController = TextEditingController();
+  final commercialRegisterController = TextEditingController();
+  final nationalAddressController = TextEditingController();
   final headquartersProofController = TextEditingController();
   final zakatIncomeCertificateController = TextEditingController();
+  final mwanLicenseNumberController = TextEditingController();
+  final wasteTypeController = TextEditingController();
   final wasteImagesController = TextEditingController();
   final marketStatusProofController = TextEditingController();
+  final logisticsDescriptionController = TextEditingController();
+  final collectionTransportMethodController = TextEditingController();
+  final carrierLicenseNumberController = TextEditingController();
+  final temporaryStorageFacilityController = TextEditingController();
+
+  bool recyclingCommitment = false;
+  bool vehicleComplianceAck = false;
+  bool modificationAck = false;
 
   @override
   void dispose() {
+    facilityTypeController.dispose();
+    commercialRegisterController.dispose();
+    nationalAddressController.dispose();
     headquartersProofController.dispose();
     zakatIncomeCertificateController.dispose();
+    mwanLicenseNumberController.dispose();
+    wasteTypeController.dispose();
     wasteImagesController.dispose();
     marketStatusProofController.dispose();
+    logisticsDescriptionController.dispose();
+    collectionTransportMethodController.dispose();
+    carrierLicenseNumberController.dispose();
+    temporaryStorageFacilityController.dispose();
     super.dispose();
   }
+
+  final Map<TextEditingController, PlatformFile> pickedFiles = {};
 
   Future<void> _pickUploadFile(TextEditingController controller) async {
     final FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null && result.files.single.name.isNotEmpty) {
+      pickedFiles[controller] = result.files.single;
       controller.text = result.files.single.name;
     }
   }
 
+  FormData _buildExportFormData(ExportNonDangerWasteModel model) {
+    final formData = FormData();
+    formData.fields.addAll([
+      MapEntry('facility_type', model.facilityType),
+      MapEntry('commercial_register', model.commercialRegister),
+      MapEntry('national_address', model.nationalAddress),
+      MapEntry('mwan_license_number', model.mwanLicenseNumber),
+      MapEntry('waste_type', model.wasteType),
+      MapEntry('recycling_commitment', '${model.recyclingCommitment}'),
+      MapEntry('logistics_description', model.logisticsDescription),
+      MapEntry('carrier_license_number', model.carrierLicenseNumber),
+      MapEntry('collection_transport_method', model.collectionTransportMethod),
+      MapEntry('temporary_storage_facility', model.temporaryStorageFacility),
+      MapEntry('vehicle_compliance_ack', '${model.vehicleComplianceAck}'),
+      MapEntry('modification_ack', '${model.modificationAck}'),
+    ]);
+
+    if (model.products.isNotEmpty) {
+      formData.fields.add(MapEntry(
+        'products',
+        jsonEncode(model.products.map((p) => p.toJson()).toList()),
+      ));
+    }
+
+    void addFile(TextEditingController controller, String apiField) {
+      final PlatformFile? picked = pickedFiles[controller];
+      if (picked == null) return;
+      if (picked.path != null) {
+        formData.files.add(MapEntry(
+          apiField,
+          MultipartFile.fromFileSync(picked.path!, filename: picked.name),
+        ));
+      } else if (picked.bytes != null) {
+        formData.files.add(MapEntry(
+          apiField,
+          MultipartFile.fromBytes(picked.bytes!, filename: picked.name),
+        ));
+      }
+    }
+
+    addFile(headquartersProofController, 'facility_proof');
+    addFile(zakatIncomeCertificateController, 'zakat_certificate');
+    addFile(wasteImagesController, 'waste_image');
+    addFile(marketStatusProofController, 'market_proof');
+
+    return formData;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Directionality(
+    return BlocProvider(
+      create: (_) => getIt<ExportNonDangerWasteCubit>(),
+      child: BlocListener<ExportNonDangerWasteCubit, ExportNonDangerWasteState>(
+        listener: (context, state) {
+          if (state is ExportNonDangerWasteSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('تم إرسال الطلب بنجاح'),
+                backgroundColor: Colors.green,
+              ),
+            );
+            Navigator.pop(context);
+          } else if (state is ExportNonDangerWasteError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
+        child: Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
 
           body: Padding(
             padding:  EdgeInsets.symmetric(horizontal: 20.0),
             child: SingleChildScrollView(
-              child: Column(
+              child: Form(
+                key: formKey,
+                child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -72,23 +178,43 @@ class _ExportNonDangerWastState extends State<ExportNonDangerWast> {
                   const SizedBox(height: 20),
 
                   // 1. Dropdown Field (نوع المنشأة)
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'نوع المنشأة',
                     hint: 'اختر نوع المنشأة',
+                    controller: facilityTypeController,
                     suffixIcon:   Icon(Icons.keyboard_arrow_down, color: Colors.grey),
-
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
 
                   // 2. Commercial Register (رقم السجل التجاري)
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'رقم السجل التجاري',
                     hint: 'ادخل رقم السجل التجاري',
+                    controller: commercialRegisterController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
 
                   // 3. National Address (العنوان الوطني)
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'العنوان الوطني',
                     hint: 'ادخل العنوان الوطني',
+                    controller: nationalAddressController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
 
                   // 4. Proof of Headquarters - File Upload (إثبات المقر)
@@ -100,6 +226,12 @@ class _ExportNonDangerWastState extends State<ExportNonDangerWast> {
                     onTap: () => _pickUploadFile(headquartersProofController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
                     controller: headquartersProofController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   // 5. Zakat & Income Certificate - File Upload (شهادة الزكاة والدخل)
 
@@ -110,11 +242,24 @@ class _ExportNonDangerWastState extends State<ExportNonDangerWast> {
                     onTap: () => _pickUploadFile(zakatIncomeCertificateController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
                     controller: zakatIncomeCertificateController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   // 6. National Center Permit (تصريح المركز الوطني (موان))
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'تصريح المركز الوطني (موان)',
                     hint: 'ادخل رقم ترخيص المركز الوطني',
+                    controller: mwanLicenseNumberController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   /////////////////////////////////////////////////////////////////
 
@@ -139,10 +284,16 @@ class _ExportNonDangerWastState extends State<ExportNonDangerWast> {
                   const SizedBox(height: 20),
 
                   // 1. Dropdown Field (نوع المنشأة)
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'نوع النفايا',
                     hint: 'ادخل نوع النفايا',
-
+                    controller: wasteTypeController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
 
                   // 2. Commercial Register (رقم السجل التجاري)
@@ -153,6 +304,12 @@ class _ExportNonDangerWastState extends State<ExportNonDangerWast> {
                     onTap: () => _pickUploadFile(wasteImagesController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
                     controller: wasteImagesController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
 
                   CustomTextField(
@@ -162,6 +319,12 @@ class _ExportNonDangerWastState extends State<ExportNonDangerWast> {
                     onTap: () => _pickUploadFile(marketStatusProofController),
                     suffixIcon:   Icon(Icons.upload_file_outlined, color: Colors.black54, size: 20),
                     controller: marketStatusProofController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
                   Text('تعهد الاستخدام والتدوير *',style: TextStyle(
                     fontSize: 14,
@@ -182,7 +345,11 @@ class _ExportNonDangerWastState extends State<ExportNonDangerWast> {
                       child: Row(
 
                         children: [
-                          Checkbox(value: false, onChanged: (val){}),
+                          Checkbox(
+                                value: recyclingCommitment,
+                                onChanged: (val) => setState(
+                                    () => recyclingCommitment = val ?? false),
+                              ),
                           SizedBox(width: 6,),
                           Container(
                             width: MediaQuery.of(context).size.width *0.7,
@@ -218,21 +385,49 @@ class _ExportNonDangerWastState extends State<ExportNonDangerWast> {
                   const SizedBox(height: 12),
 
 
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'وصف الرحلة اللوجستية',
                     hint: 'اكتب وصف تفصيلي لعمليات التخزين والشحن',
+                    controller: logisticsDescriptionController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'طريقة الجمع والنقل',
                     hint: 'حدد الية التعامل الفني مع النفايات الخطرة',
+                    controller: collectionTransportMethodController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'بيانات الناقل',
                     hint: 'ادخل رقم رخصة الناقل',
+                    controller: carrierLicenseNumberController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
-                  const CustomTextField(
+                  CustomTextField(
                     label: 'منشأة التخزين المؤقت (في حالة وجود تخزين)',
                     hint: 'ادخل بيانات منشأة تخزين مؤقتة مرخصة من قبل المركز',
+                    controller: temporaryStorageFacilityController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'هذا الحقل مطلوب';
+                      }
+                      return null;
+                    },
                   ),
 
 
@@ -276,7 +471,11 @@ class _ExportNonDangerWastState extends State<ExportNonDangerWast> {
                       child: Row(
 
                         children: [
-                          Checkbox(value: false, onChanged: (val){}),
+                          Checkbox(
+                                value: vehicleComplianceAck,
+                                onChanged: (val) => setState(
+                                    () => vehicleComplianceAck = val ?? false),
+                              ),
                           SizedBox(width: 6,),
                           Container(
                             width: MediaQuery.of(context).size.width *0.7,
@@ -310,7 +509,11 @@ class _ExportNonDangerWastState extends State<ExportNonDangerWast> {
                       child: Row(
 
                         children: [
-                          Checkbox(value: false, onChanged: (val){}),
+                          Checkbox(
+                                value: modificationAck,
+                                onChanged: (val) => setState(
+                                    () => modificationAck = val ?? false),
+                              ),
                           SizedBox(width: 6,),
                           Container(
                             width: MediaQuery.of(context).size.width *0.7,
@@ -371,14 +574,92 @@ class _ExportNonDangerWastState extends State<ExportNonDangerWast> {
                     ),
                   ),
                   SizedBox(height: 24,),
+                  BlocBuilder<ExportNonDangerWasteCubit, ExportNonDangerWasteState>(
+                    builder: (context, state) {
+                      final isLoading = state is ExportNonDangerWasteLoading;
+                      return MainAppBtn(
+                        title: 'تقديم طلب',
+                        onTap: isLoading
+                            ? null
+                            : () {
+                    if (!formKey.currentState!.validate()) return;
 
-                ],
+                    if (!recyclingCommitment) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('يجب الإقرار بتعهد الاستخدام والتدوير'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+                    if (!vehicleComplianceAck) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('يجب الإقرار بمطابقة المركبات'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+                    if (!modificationAck) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('يجب الإقرار بحق التعديل'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+
+                    ExportNonDangerWasteModel exportNonDangerWasteModel = ExportNonDangerWasteModel(
+                        facilityType: facilityTypeController.text.trim(),
+                        commercialRegister: commercialRegisterController.text,
+                        nationalAddress: nationalAddressController.text,
+                        facilityProof: headquartersProofController.text,
+                        zakatCertificate: zakatIncomeCertificateController.text,
+                        mwanLicenseNumber: mwanLicenseNumberController.text,
+                        wasteType: wasteTypeController.text,
+                        wasteImage: wasteImagesController.text,
+                        marketProof: marketStatusProofController.text,
+                        recyclingCommitment: recyclingCommitment,
+                        logisticsDescription: logisticsDescriptionController.text,
+                        carrierLicenseNumber: carrierLicenseNumberController.text,
+                        collectionTransportMethod: collectionTransportMethodController.text,
+                        temporaryStorageFacility: temporaryStorageFacilityController.text,
+                        vehicleComplianceAck: vehicleComplianceAck,
+                        modificationAck: modificationAck,
+                        products: const <ProductModel>[]);
+
+                    context
+                        .read<ExportNonDangerWasteCubit>()
+                        .exportingNonDangerWaste(
+                            _buildExportFormData(exportNonDangerWasteModel));
+                          },
+                        child: isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: AppColors.white,
+                                ),
+                              )
+                            : null,
+                      );
+                    },
+                  ),
+                  SizedBox(height: 24,),
+
+],
               ),
             ),
-          )
+          ),
+        ),
+      ),
+        ),
       ),
     );
-
   }
 }
 
