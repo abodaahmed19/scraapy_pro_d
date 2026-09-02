@@ -48,6 +48,24 @@ class AppImages {
   static const String  pc = "$imagePath/pc.svg";
   static const String  previous_operation = "$imagePath/previous_operation.svg";
   static const String  pending_operation = "$imagePath/pending_operation.svg";
+  static const String  blue_pin = "$imagePath/blue_pin.svg";
+  static const String  service1 = "$imagePath/service1.jpeg";
+  static const String  service2 = "$imagePath/service2.jpeg";
+  static const String  service3 = "$imagePath/service3.jpeg";
+  static const String  banner = "$imagePath/banner.png";
+  static const String  black_user = "$imagePath/black_user.svg";
+  static const String  black_contract = "$imagePath/black_contract.svg";
+  static const String  black_offer = "$imagePath/black_offer.svg";
+  static const String  black_market = "$imagePath/black_market.svg";
+  static const String  black_home = "$imagePath/black_home.svg";
+  static const String  active_home = "$imagePath/active_home.svg";
+  static const String  active_market = "$imagePath/active_market.svg";
+  static const String  active_user = "$imagePath/active_user.svg";
+  static const String  active_contract = "$imagePath/active_contract.svg";
+  static const String  cart_home = "$imagePath/cart_home.svg";
+  static const String  fav = "$imagePath/fav.svg";
+
+
 
 
 }
