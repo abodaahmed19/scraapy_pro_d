@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:scraapy_pro/screens/rentals/domain/entities/rentals_entity.dart';
+import 'package:scraapy_pro/screens/services/domain/entities/services_entity.dart';
 
 
 abstract class RentalsRemoteDataSource {
-  Future<RentalsEntity> getRentals();
+  Future<ServicesEntity> getRentals();
 }
 
 class RentalsRemoteDataSourceImpl implements RentalsRemoteDataSource {
@@ -13,10 +14,10 @@ class RentalsRemoteDataSourceImpl implements RentalsRemoteDataSource {
 
 
   @override
-  Future<RentalsEntity> getRentals() async {
+  Future<ServicesEntity> getRentals() async {
     final response = await dio.get('https://vmi2584358.contaboserver.net/api/inventory/items/rental/');
 
-    return RentalsEntity.fromJson(response.data);
+    return ServicesEntity.fromJson(response.data);
   }
 
   // @override
