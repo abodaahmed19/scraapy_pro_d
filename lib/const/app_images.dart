@@ -64,6 +64,15 @@ class AppImages {
   static const String  active_contract = "$imagePath/active_contract.svg";
   static const String  cart_home = "$imagePath/cart_home.svg";
   static const String  fav = "$imagePath/fav.svg";
+  static const String  p1 = "$imagePath/p1.png";
+  static const String  p2 = "$imagePath/p2.png";
+  static const String  p3 = "$imagePath/p3.png";
+  static const String  p4 = "$imagePath/p4.png";
+  static const String  p5 = "$imagePath/p5.png";
+  static const String  p6 = "$imagePath/p6.png";
+  static const String  r1 = "$imagePath/r1.jpeg";
+  static const String  r2 = "$imagePath/r2.jpeg";
+  static const String  r3 = "$imagePath/r3.jpeg";
 
 
 

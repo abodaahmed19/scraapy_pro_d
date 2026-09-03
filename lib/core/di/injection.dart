@@ -36,6 +36,7 @@ import 'package:scraapy_pro/screens/profile/operations/buying/dependency_injecti
 import 'package:scraapy_pro/screens/profile/operations/selling/dependency_injection/sold_products_di.dart';
 import 'package:scraapy_pro/screens/profile/operations/selling/dependency_injection/solid_rentals_di.dart';
 import 'package:scraapy_pro/screens/quotes/presentation/cubit/qoutes_cubit.dart';
+import 'package:scraapy_pro/screens/quotes/di/quotes_list_di.dart';
 import 'package:scraapy_pro/screens/rentals/data/data_source/retals_data_source.dart';
 import 'package:scraapy_pro/screens/rentals/data/repositories/retals_repository.dart';
 import 'package:scraapy_pro/screens/rentals/domain/use_cases/retals_use_case.dart';
@@ -286,6 +287,7 @@ void setup() {
         () => QoutesCubit(),
   );
 
+
   ///Notifications///
   setupNotificationsDI();
   ///SoldProducts///
@@ -306,6 +308,8 @@ void setup() {
   setupAddAddressDI();
   ///Mainfest///
   setupMainfestDI();
+  ///QuotesList///
+  setupQuotesListDI();
   ///Permisions///
   setupPermisionsDI();
   ///Quotation///

@@ -1,19 +1,34 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import 'package:scraapy_pro/const/app_colors.dart';
+import 'package:scraapy_pro/const/main_app_btn.dart';
+import 'package:scraapy_pro/core/di/injection.dart';
 import 'package:scraapy_pro/core/main_app_bar/main_app_bar.dart';
+import 'package:scraapy_pro/screens/quotes/domain/entities/quotes_list_model.dart';
+import 'package:scraapy_pro/screens/quotes/presentation/cubit/quotes_list_cubit.dart';
+import 'package:scraapy_pro/screens/quotes/presentation/cubit/quotes_list_state.dart';
+
+
 
 
 
 // ── Data Models ───────────────────────────────────────────────────────────────
 
 class QuoteItem {
-  final int index;
+  final int id;
   final String name;
   int quantity;
   final double price;
 
   QuoteItem({
-    required this.index,
+    required this.id,
     required this.name,
     required this.quantity,
     required this.price,
@@ -22,48 +37,203 @@ class QuoteItem {
   double get total => quantity * price;
 }
 
+Future<void> _printQuotesPdf(BuildContext context, QuotesListModel model) async {
+  final cairoFont = pw.Font.ttf(
+    await rootBundle.load('assets/fonts/Cairo-Regular.ttf'),
+  );
+  final doc = pw.Document(
+    theme: pw.ThemeData.withFont(
+      base: cairoFont,
+      bold: pw.Font.ttf(
+        await rootBundle.load('assets/fonts/Cairo-Bold.ttf'),
+      ),
+    ),
+  );
+
+  pw.MultiPage buildSectionPage({
+    required String title,
+    required ProductRentalServiceQuote section,
+  }) {
+    return pw.MultiPage(
+      header: (context) => pw.Text(
+        title,
+        textDirection: pw.TextDirection.rtl,
+        style: pw.TextStyle(
+          fontSize: 16,
+          fontWeight: pw.FontWeight.bold,
+          color: PdfColors.blueGrey800,
+        ),
+      ),
+      build: (context) => [
+        pw.TableHelper.fromTextArray(
+          headers: ['الاسم', 'الكمية', 'السعر', 'الإجمالي'],
+          data: [
+            for (final item in section.items)
+              [
+                item.name,
+                '${item.quantity}',
+                _fmt(item.price),
+                _fmt(item.totalPrice),
+              ],
+          ],
+          headerStyle: pw.TextStyle(
+            color: PdfColors.white,
+            fontWeight: pw.FontWeight.bold,
+          ),
+          headerDecoration: const pw.BoxDecoration(
+            color: PdfColors.blueGrey700,
+          ),
+          cellStyle: pw.TextStyle(fontSize: 11),
+          cellAlignments: {
+            0: pw.Alignment.centerRight,
+            1: pw.Alignment.center,
+            2: pw.Alignment.center,
+            3: pw.Alignment.center,
+          },
+          border: pw.TableBorder.all(
+            color: PdfColors.grey300,
+            width: 0.5,
+          ),
+        ),
+        pw.SizedBox(height: 8),
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          children: [
+            pw.Text(
+              '₨ ${_fmt(section.totalPrice)}',
+              style: pw.TextStyle(
+                fontSize: 13,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.blueGrey800,
+              ),
+            ),
+            pw.Text(
+              'الإجمالي',
+              style: pw.TextStyle(
+                fontSize: 13,
+                fontWeight: pw.FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  doc.addPage(buildSectionPage(title: 'السوق', section: model.products));
+  doc.addPage(buildSectionPage(title: 'الإيجار', section: model.rentals));
+  doc.addPage(buildSectionPage(title: 'الخدمات', section: model.services));
+
+  final subtotal = model.products.totalPrice +
+      model.rentals.totalPrice +
+      model.services.totalPrice;
+  final commission = double.parse(model.grand_commission);
+  final fees = double.parse(model.grand_service_fees);
+  final vat = double.parse(model.tax_amount);
+  final grandTotal = double.parse(model.grandTotal);
+
+  doc.addPage(
+    pw.MultiPage(
+      build: (context) => [
+        pw.SizedBox(height: 8),
+        _pdfSummaryRow(('الإجمالي الفرعي', _fmt(subtotal))),
+        _pdfSummaryRow(('العمولة', _fmt(commission))),
+        _pdfSummaryRow(('الرسوم', _fmt(fees))),
+        _pdfSummaryRow(('القيمة المضافة', _fmt(vat))),
+        pw.Divider(),
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          children: [
+            pw.Text(
+              '₨ ${_fmt(grandTotal)}',
+              style: pw.TextStyle(
+                fontSize: 14,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.blueGrey800,
+              ),
+            ),
+            pw.Text(
+              'إجمالي السعر',
+              style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+
+  final bytes = await doc.save();
+
+  try {
+    await Printing.layoutPdf(
+      onLayout: (format) async => bytes,
+      name: 'عرض_السعر.pdf',
+    );
+  } catch (_) {
+    if (context.mounted) {
+      await _savePdfAndNotify(context, bytes);
+    }
+  }
+}
+
+Future<void> _savePdfAndNotify(BuildContext context, Uint8List bytes) async {
+  try {
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/عرض_السعر.pdf');
+    await file.writeAsBytes(bytes);
+
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('تم حفظ ملف PDF بنجاح: ${file.path}')),
+    );
+  } catch (e) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('تعذر حفظ ملف PDF: $e')),
+    );
+  }
+}
+
+pw.Widget _pdfSummaryRow((String, String) row) {
+  return pw.Padding(
+    padding: const pw.EdgeInsets.symmetric(vertical: 4),
+    child: pw.Row(
+      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+      children: [
+        pw.Text(row.$2, style: const pw.TextStyle(fontSize: 12)),
+        pw.Text(
+          row.$1,
+          style: const pw.TextStyle(fontSize: 12, color: PdfColors.grey700),
+        ),
+      ],
+    ),
+  );
+}
+
+String _fmt(double value) {
+  return value.toStringAsFixed(2);
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 
-class QuotesListPage extends StatefulWidget {
+class QuotesListPage extends StatelessWidget {
   const QuotesListPage({super.key});
 
   @override
-  State<QuotesListPage> createState() => _QuotesListPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => getIt<QuotesListCubit>()..getQuotesList(),
+      child: const _QuotesListPageView(),
+    );
+  }
 }
 
-class _QuotesListPageState extends State<QuotesListPage> {
-  final List<QuoteItem> _marketItems = [
-    QuoteItem(index: 1, name: 'منتج تصدير', quantity: 4, price: 10090),
-    QuoteItem(index: 2, name: 'مكينة تدوير الأطعمة الى سماد', quantity: 1, price: 3500),
-    QuoteItem(index: 3, name: 'منتج ورقي بحاله جيدة', quantity: 1, price: 3),
-    QuoteItem(index: 4, name: 'حاوية فرز نفايات مكتبية ×6', quantity: 1, price: 1500),
-    QuoteItem(index: 5, name: 'تخزين الطعام X2', quantity: 3, price: 1000),
-    QuoteItem(index: 6, name: 'منتج جديد', quantity: 2, price: 12),
-  ];
-
-  final List<QuoteItem> _rentalItems = [
-    QuoteItem(index: 1, name: 'حاويه جديده 30', quantity: 3, price: 4000),
-    QuoteItem(index: 2, name: 'حاويه 30 ياردة', quantity: 2, price: 400),
-  ];
-
-  final List<QuoteItem> _serviceItems = [
-    QuoteItem(index: 1, name: 'ديانا نقل عادي 1.5 طن تعديل', quantity: 1, price: 800),
-    QuoteItem(index: 2, name: 'فك ونقل عفش', quantity: 1, price: 2000),
-    QuoteItem(index: 3, name: 'فك ونقل عفش', quantity: 1, price: 1500),
-    QuoteItem(index: 4, name: 'توريد مياه غير صالحة للشرب', quantity: 4, price: 100),
-  ];
-
-  double get _marketTotal => _marketItems.fold(0, (s, i) => s + i.total);
-  double get _rentalTotal => _rentalItems.fold(0, (s, i) => s + i.total);
-  double get _serviceTotal => _serviceItems.fold(0, (s, i) => s + i.total);
-  double get _subtotal => _marketTotal + _rentalTotal + _serviceTotal;
-  double get _commission => _subtotal * 0.05;
-  double get _fees => 600;
-  double get _vat => (_subtotal + _commission + _fees) * 0.15;
-  double get _grandTotal => _subtotal + _commission + _fees + _vat;
+class _QuotesListPageView extends StatelessWidget {
+  const _QuotesListPageView();
 
   @override
   Widget build(BuildContext context) {
+    print(';;;;;;;;;;;;;;;;;;;;;;;;');
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -71,47 +241,25 @@ class _QuotesListPageState extends State<QuotesListPage> {
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
-
             children: [
-              CustomAppBar(title: 'إصدار عرض سعر'),
+              const CustomAppBar(title: 'إصدار عرض سعر'),
               Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
+                child: BlocBuilder<QuotesListCubit, QuotesListState>(
+                  builder: (context, state) {
+                    if (state is QuotesListLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                    children: [
-                      Column(
+                    if (state is QuotesListError) {
+                      return Center(child: Text(state.message));
+                    }
 
-                        children: [
-                          _buildCard(children: [
+                    if (state is QuotesListLoaded) {
+                      return _buildContent(context, state);
+                    }
 
-                            const SizedBox(height: 16),
-                            _buildSection(
-                              title: 'السوق',
-                              items: _marketItems,
-                              total: _marketTotal,
-                            ),
-                            const SizedBox(height: 24),
-                            _buildSection(
-                              title: 'الإيجار',
-                              items: _rentalItems,
-                              total: _rentalTotal,
-                            ),
-                            const SizedBox(height: 24),
-                            _buildSection(
-                              title: 'الخدمات',
-                              items: _serviceItems,
-                              total: _serviceTotal,
-                            ),
-                          ]),
-                          const SizedBox(height: 16),
-                          _buildSummaryCard(),
-                          const SizedBox(height: 16),
-                          _buildPrintButton(),
-                          const SizedBox(height: 24),
-                        ],
-                      ),
-                    ],
-                  ),
+                    return const SizedBox();
+                  },
                 ),
               ),
             ],
@@ -121,15 +269,93 @@ class _QuotesListPageState extends State<QuotesListPage> {
     );
   }
 
+  Widget _buildContent(BuildContext context, QuotesListLoaded state) {
+    final marketItems = state.response.products.items
+        .map((i) => QuoteItem(
+              id: i.id,
+              name: i.name,
+              quantity: i.quantity,
+              price: i.price,
+            ))
+        .toList();
 
+    final rentalItems = state.response.rentals.items
+        .map((i) => QuoteItem(
+              id: i.id,
+              name: i.name,
+              quantity: i.quantity,
+              price: i.price,
+            ))
+        .toList();
 
-  Widget _buildSection({
+    final serviceItems = state.response.services.items
+        .map((i) => QuoteItem(
+              id: i.id,
+              name: i.name,
+              quantity: i.quantity,
+              price: i.price,
+            ))
+        .toList();
+
+    final marketTotal = state.response.products.totalPrice;
+    final rentalTotal = state.response.rentals.totalPrice;
+    final serviceTotal = state.response.services.totalPrice;
+    final subtotal = marketTotal + rentalTotal + serviceTotal;
+    final commission = double.parse(state.response.grand_commission);
+    final fees = double.parse(state.response.grand_service_fees);
+    final vat = double.parse(state.response.tax_amount);
+    final grandTotal = double.parse(state.response.grandTotal);
+
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          _buildCard(
+            context,
+            children: [
+              const SizedBox(height: 16),
+              _buildSection(
+                context,
+                title: 'السوق',
+                items: marketItems,
+                total: marketTotal,
+              ),
+              const SizedBox(height: 24),
+              _buildSection(
+                context,
+                title: 'الإيجار',
+                items: rentalItems,
+                total: rentalTotal,
+              ),
+              const SizedBox(height: 24),
+              _buildSection(
+                context,
+                title: 'الخدمات',
+                items: serviceItems,
+                total: serviceTotal,
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          _buildSummaryCard(context,
+              subtotal: subtotal,
+              commission: commission,
+              fees: fees,
+              vat: vat,
+              grandTotal: grandTotal),
+          const SizedBox(height: 16),
+          _buildPrintButton(context, state.response),
+          const SizedBox(height: 24),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSection(
+    BuildContext context, {
     required String title,
     required List<QuoteItem> items,
     required double total,
   }) {
-    final isNarrow = MediaQuery.of(context).size.width < 600;600;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -162,7 +388,7 @@ class _QuotesListPageState extends State<QuotesListPage> {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: const Color(0xFFF9F9F9),
+            color: AppColors.primary.withOpacity(0.1),
             border: Border.all(color: const Color(0xFFE8E8E8)),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -191,96 +417,30 @@ class _QuotesListPageState extends State<QuotesListPage> {
   Widget _buildMobileList(List<QuoteItem> items) {
     return Column(
       children: items.map((item) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xFFE8E8E8)),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 20,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1B4F72),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text('${item.index}',
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 10)),
-                      ),
-                      const SizedBox(width: 6),
-
-                      Text(item.name,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 13)),
-
-                    ],
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete_outline,
-                        color: Colors.grey, size: 20),
-                    onPressed: () {},
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                  ),
-
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('₨ ${item.total.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1B4F72))),
-                  Row(
-                    children: [
-                      _StepperButton(
-                          icon: Icons.add,
-                          onTap: () => setState(() => item.quantity++)),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Text('${item.quantity}',
-                            style: const TextStyle(fontWeight: FontWeight.w600)),
-                      ),
-                      _StepperButton(
-                          icon: Icons.remove,
-                          onTap: () => setState(() {
-                            if (item.quantity > 1) item.quantity--;
-                          })),
-                    ],
-                  ),
-                  Text('₨ ${item.price.toStringAsFixed(2)}',
-                      style: const TextStyle(color: Colors.grey, fontSize: 13)),
-                ],
-              ),
-            ],
-          ),
+        return _QuoteItemRow(
+          key: ValueKey(item.id),
+          item: item,
         );
       }).toList(),
     );
   }
 
-  Widget _buildSummaryCard() {
+  Widget _buildSummaryCard(
+    BuildContext context, {
+    required double subtotal,
+    required double commission,
+    required double fees,
+    required double vat,
+    required double grandTotal,
+  }) {
     return _buildCard(
+        context,
         children: [
-      _summaryRow('الإجمالي الفرعي', '₨ ${_subtotal.toStringAsFixed(2)}'),
-      _summaryRow('العمولة', '₨ ${_commission.toStringAsFixed(2)}'),
-      _summaryRow('الرسوم', '₨ ${_fees.toStringAsFixed(2)}'),
-      _summaryRow('القيمة المضافة', '₨ ${_vat.toStringAsFixed(2)}'),
-      _summaryRow('التاريخ', '02-09-2026'),
+      _summaryRow(context, 'الإجمالي الفرعي', '₨ ${subtotal.toStringAsFixed(2)}'),
+      _summaryRow(context, 'العمولة', '₨ ${commission.toStringAsFixed(2)}'),
+      _summaryRow(context, 'الرسوم', '₨ ${fees.toStringAsFixed(2)}'),
+      _summaryRow(context, 'القيمة المضافة', '₨ ${vat.toStringAsFixed(2)}'),
+      _summaryRow(context, 'التاريخ', '02-09-2026'),
       const Divider(height: 24),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -290,7 +450,7 @@ class _QuotesListPageState extends State<QuotesListPage> {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Text(
-            '₨ ${_grandTotal.toStringAsFixed(2)}',
+            '₨ ${grandTotal.toStringAsFixed(2)}',
             style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
@@ -302,7 +462,7 @@ class _QuotesListPageState extends State<QuotesListPage> {
     ]);
   }
 
-  Widget _summaryRow(String label, String value) {
+  Widget _summaryRow(BuildContext context, String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -318,26 +478,25 @@ class _QuotesListPageState extends State<QuotesListPage> {
     );
   }
 
-  Widget _buildPrintButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        onPressed: () {},
-        icon: const Icon(Icons.print_outlined, color: Colors.white, size: 18),
-        label: const Text('طباعة',
-            style: TextStyle(color: Colors.white, fontSize: 15)),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF1B4F72),
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          elevation: 0,
-        ),
-      ),
-    );
+  Widget _buildPrintButton(BuildContext context, QuotesListModel model) {
+    return MainAppBtn(
+
+      haveGradient: false,
+      onTap: () => _printQuotesPdf(context, model),
+      title: 'طباعة',child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(Icons.print_outlined,color: AppColors.white,),
+        SizedBox(width: 10,),
+        Text('طباعة',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500,color: AppColors.white),),
+
+
+      ],
+    ),);
   }
 
-  Widget _buildCard({required List<Widget> children}) {
+  Widget _buildCard(BuildContext context, {required List<Widget> children}) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -356,6 +515,124 @@ class _QuotesListPageState extends State<QuotesListPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: children,
+      ),
+    );
+  }
+}
+
+// ── Item Row (stateful for quantity stepper) ───────────────────────────────────
+
+class _QuoteItemRow extends StatefulWidget {
+  final QuoteItem item;
+
+  const _QuoteItemRow({super.key, required this.item});
+
+  @override
+  State<_QuoteItemRow> createState() => _QuoteItemRowState();
+}
+
+class _QuoteItemRowState extends State<_QuoteItemRow> {
+  late int _quantity;
+
+  @override
+  void initState() {
+    super.initState();
+    _quantity = widget.item.quantity;
+  }
+
+  void _increment() {
+    setState(() {
+      _quantity++;
+      widget.item.quantity = _quantity;
+    });
+  }
+
+  void _decrement() {
+    setState(() {
+      if (_quantity > 1) {
+        _quantity--;
+        widget.item.quantity = _quantity;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final item = widget.item;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        border: Border.all(color: const Color(0xFFE8E8E8)),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1B4F72),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text('${item.id}',
+                        style: const TextStyle(
+                            color: Colors.white, fontSize: 10)),
+                  ),
+                  const SizedBox(width: 6),
+
+                  Text(item.name,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w600, fontSize: 13)),
+
+                ],
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete_outline,
+                    color: Colors.grey, size: 20),
+                onPressed: () {},
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('₨ ${(item.total).toStringAsFixed(2)}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1B4F72))),
+              Row(
+                children: [
+                  _StepperButton(
+                      icon: Icons.add,
+                      onTap: _increment),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text('$_quantity',
+                        style: const TextStyle(fontWeight: FontWeight.w600)),
+                  ),
+                  _StepperButton(
+                      icon: Icons.remove,
+                      onTap: _decrement),
+                ],
+              ),
+              Text('₨ ${item.price.toStringAsFixed(2)}',
+                  style: const TextStyle(color: Colors.grey, fontSize: 13)),
+            ],
+          ),
+        ],
       ),
     );
   }
